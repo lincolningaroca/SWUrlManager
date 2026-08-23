@@ -50,5 +50,7 @@
         <file>img/txt.png</file>
         <file>img/tsv.png</file>
         <file>img/import.png</file>
+        <file>img/userbackup.svg</file>
+        <file>img/userrestore.svg</file>
     </qresource>
 </RCC>
