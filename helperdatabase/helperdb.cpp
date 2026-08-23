@@ -573,7 +573,99 @@ bool HelperDataBase_t::ensureDatabaseAndSchemaReady(DbConfig& config, QWidget* p
   return true;
 }
 
+QJsonArray HelperDataBase_t::exportUserCategories(uint32_t userId) noexcept {
 
+  QJsonArray result;
+
+  qry_.prepare(R"(SELECT * FROM fn_export_user_data(?, ?))");
+  qry_.addBindValue(userId);
+  qry_.addBindValue(encryptionKey_);
+
+  if (!qry_.exec()) {
+	errorMessage_ = qry_.lastError().text();
+	return result;
+  }
+
+  QHash<QString, QJsonObject> categoriesByName;
+  QStringList orderedNames;
+
+  while (qry_.next()) {
+	const QString catName = qry_.value(0).toString();
+	const QString catDesc = qry_.value(1).toString();
+	const QString urlText = qry_.value(2).toString();
+	const QString urlDesc = qry_.value(3).toString();
+
+	if (!categoriesByName.contains(catName)) {
+	  QJsonObject cat;
+	  cat["name"] = catName;
+	  cat["desc"] = catDesc;
+	  cat["urls"] = QJsonArray();
+	  categoriesByName.insert(catName, cat);
+	  orderedNames.append(catName);
+	}
+
+	QJsonObject cat = categoriesByName[catName];
+	QJsonArray urls = cat["urls"].toArray();
+	QJsonObject urlObj;
+	urlObj["url"] = urlText;
+	urlObj["desc"] = urlDesc;
+	urls.append(urlObj);
+	cat["urls"] = urls;
+	categoriesByName[catName] = cat;
+  }
+
+  for (const auto& name : std::as_const(orderedNames)) {
+	result.append(categoriesByName[name]);
+  }
+
+  return result;
+}
+
+bool HelperDataBase_t::restoreUserCategories(uint32_t targetUserId, const QJsonArray& categories,
+											 DuplicateAction action, QString* errorOut) noexcept {
+
+  if (!db_.transaction()) {
+	if (errorOut) *errorOut = db_.lastError().text();
+	return false;
+  }
+
+  for (const auto& catValue : categories) {
+	const QJsonObject cat = catValue.toObject();
+	const QString catName = cat["name"].toString();
+	const QString catDesc = cat["desc"].toString();
+
+	if (!categoryExists(catName, targetUserId)) {
+	  if (!saveCategoryData(catName, catDesc, targetUserId)) {
+		db_.rollback();
+		if (errorOut) *errorOut = errorMessage_;
+		return false;
+	  }
+	}
+
+	uint32_t categoryId = 0;
+	for (const auto& pair : loadList_Category(targetUserId)) {
+	  if (pair.second == catName) { categoryId = pair.first; break; }
+	}
+	if (categoryId == 0) continue;
+
+	QList<UrlImportData> items;
+	const QJsonArray urls = cat["urls"].toArray();
+	items.reserve(urls.size());
+	for (const auto& urlValue : urls) {
+	  const QJsonObject urlObj = urlValue.toObject();
+	  items.append({urlObj["url"].toString(), urlObj["desc"].toString()});
+	}
+
+	if (!importUrlsBatch(categoryId, items, action)) {
+	  db_.rollback();
+	  if (errorOut) *errorOut = errorMessage_;
+	  return false;
+	}
+  }
+
+  db_.commit();
+  return true;
+}
 
 
 bool HelperDataBase_t::userExists(QStringView user) noexcept {

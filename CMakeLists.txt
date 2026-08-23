@@ -41,6 +41,7 @@ qt_add_executable(${PROJECT_NAME}
 
     maintenanceurldialog.hpp maintenanceurldialog.cpp maintenanceurldialog.ui
     util/urlimportworker.hpp util/urlimportworker.cpp
+    util/backupcrypto.hpp util/backupcrypto.cpp
 
 )
 

@@ -96,6 +96,7 @@ private:
   void applyIcons(Qt::ColorScheme scheme) noexcept;
 
   bool hasValidTableData() const noexcept;
+  bool hasValidUserTableData(int userId) const noexcept;
   bool validateSelectedRow() noexcept;
   bool deleteAll() noexcept;
 
@@ -168,6 +169,9 @@ private slots:
   void on_showMainContextMenu(const QPoint &p);
   void on_styleChanged(bool style);
   void onImportFromExcelFileTriggered();
+
+  void on_makeUserBackup();
+  void on_restoreUserBackup();
 
 
   // QWidget interface

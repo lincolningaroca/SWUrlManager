@@ -5,7 +5,6 @@
 #include "categorydialog.hpp"
 #include "changepwddialog.hpp"
 #include "configdialog.hpp"
-#include "util/dataimporterexporter.hpp"
 #include "dlgnewcategory.hpp"
 #include "logindialog.hpp"
 #include "midlewidget.hpp"
@@ -13,11 +12,16 @@
 #include "resetpassworddialog.hpp"
 #include "swwidgets/switemdelegate.hpp"
 #include "swwidgets/swtablemodel.hpp"
+#include "util/backupcrypto.hpp"
+#include "util/dataimporterexporter.hpp"
 
 #include <QAction>
+#include <QCheckBox>
 #include <QFile>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -202,6 +206,8 @@ MainForm::MainForm(QWidget *parent)
    * @brief QObject::connect
    */
   QObject::connect(ui->btnBackUp, &QAction::triggered, this, &MainForm::on_makeBackup);
+  QObject::connect(ui->btnUserBackup, &QAction::triggered, this, &MainForm::on_makeUserBackup);
+  QObject::connect(ui->btnRestoreBackup_user, &QAction::triggered, this, &MainForm::on_restoreUserBackup);
 
   /**
    * @brief QObject::connect
@@ -573,6 +579,7 @@ void MainForm::startImportWorker(const QString& filePath) {
 										 .arg(inserted).arg(updated).arg(skipped));
 			  setUpTable(currentCategoryId());
 			  hastvUrlData();
+			  canCreateBackUp();
 			} else if (!errorMsg.isEmpty()) {
 			  QMessageBox::critical(this, tr("Error de Importación"), errorMsg);
 			}
@@ -620,6 +627,7 @@ void MainForm::on_deleteCategory(){
 	has_data();
 	hastvUrlData();
 	checkStatusContextMenu();
+	canCreateBackUp();
   }
 
 }
@@ -731,6 +739,7 @@ void MainForm::on_quitUrl(){
 	  ui->tvUrl->model()->removeRow(ui->tvUrl->currentIndex().row());
 
 	  setUpTable(currentCategoryId());
+	  canCreateBackUp();
 	}
 
   }
@@ -946,6 +955,141 @@ void MainForm::on_restoreDatabase(){
   on_callLogout();
   QProcess::startDetached(qApp->applicationFilePath(), qApp->arguments());
   qApp->quit();
+}
+
+void MainForm::on_makeUserBackup(){
+
+  if (SW::Helper_t::sessionStatus_ != SW::SessionStatus::Session_start) {
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 tr("Debe iniciar sesión para crear una copia de seguridad de sus datos."));
+	return;
+  }
+
+  QDialog optDialog(this);
+  optDialog.setWindowTitle(tr("Copia de seguridad de mis datos"));
+
+  auto* layout = new QVBoxLayout(&optDialog);
+  auto* includePublicCheck = new QCheckBox(tr("Incluir también las URLs públicas"), &optDialog);
+  auto* passwordLabel = new QLabel(tr("Contraseña para proteger este backup:"), &optDialog);
+  auto* passwordEdit = new QLineEdit(&optDialog);
+  passwordEdit->setEchoMode(QLineEdit::Password);
+
+  auto* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &optDialog);
+
+  layout->addWidget(includePublicCheck);
+  layout->addWidget(passwordLabel);
+  layout->addWidget(passwordEdit);
+  layout->addWidget(buttons);
+
+  QObject::connect(buttons, &QDialogButtonBox::accepted, &optDialog, &QDialog::accept);
+  QObject::connect(buttons, &QDialogButtonBox::rejected, &optDialog, &QDialog::reject);
+
+  if (optDialog.exec() != QDialog::Accepted) return;
+
+  const QString password = passwordEdit->text();
+  if (password.isEmpty()) {
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Debe ingresar una contraseña para el backup."));
+	return;
+  }
+
+  const auto filePath = QFileDialog::getSaveFileName(
+	this, tr("Guardar copia de seguridad personal"),
+	SW::Helper_t::getLastOpenedDirectory(),
+	QStringLiteral("Archivos de backup (*.swbak)"));
+
+  if (filePath.isEmpty()) return;
+
+  SW::Helper_t::setLastOpenedDirectory(QFileInfo(filePath).absolutePath());
+
+  QJsonObject root;
+  root["userCategories"] = helperdb_.exportUserCategories(static_cast<uint32_t>(userId_));
+
+  if (includePublicCheck->isChecked()) {
+	const auto publicUserId = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
+	root["publicCategories"] = helperdb_.exportUserCategories(static_cast<uint32_t>(publicUserId));
+  }
+
+  QString cryptoError;
+  if (!SW::BackupCrypto::encryptToFile(QJsonDocument(root), filePath, password, &cryptoError)) {
+	QMessageBox::critical(this, SW::Helper_t::appName(),
+						  tr("No se pudo crear el backup:\n%1").arg(cryptoError));
+	return;
+  }
+
+  QMessageBox::information(this, SW::Helper_t::appName(),
+						   tr("Copia de seguridad creada en:\n%1").arg(filePath));
+}
+
+void MainForm::on_restoreUserBackup(){
+
+  if (SW::Helper_t::sessionStatus_ != SW::SessionStatus::Session_start) {
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 tr("Debe iniciar sesión para restaurar datos personales."));
+	return;
+  }
+
+  const auto filePath = QFileDialog::getOpenFileName(
+	this, tr("Abrir copia de seguridad personal"),
+	SW::Helper_t::getLastOpenedDirectory(),
+	QStringLiteral("Archivos de backup (*.swbak)"));
+
+  if (filePath.isEmpty()) return;
+
+  SW::Helper_t::setLastOpenedDirectory(QFileInfo(filePath).absolutePath());
+
+  bool ok = false;
+  const QString password = QInputDialog::getText(this, SW::Helper_t::appName(),
+												 tr("Ingrese la contraseña de este backup:"), QLineEdit::Password, QString(), &ok);
+
+  if (!ok || password.isEmpty()) return;
+
+  QString cryptoError;
+  auto docOpt = SW::BackupCrypto::decryptFromFile(filePath, password, &cryptoError);
+  if (!docOpt) {
+	QMessageBox::critical(this, SW::Helper_t::appName(),
+						  tr("No se pudo restaurar el backup:\n%1").arg(cryptoError));
+	return;
+  }
+
+  const QJsonObject root = docOpt->object();
+
+  QMessageBox msgBox(this);
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setWindowTitle(tr("Restaurar datos"));
+  msgBox.setText(tr("¿Cómo desea manejar las URLs que ya existan en su cuenta?"));
+  QPushButton* btnReplace = msgBox.addButton(tr("Reemplazar"), QMessageBox::AcceptRole);
+  msgBox.addButton(tr("Omitir"), QMessageBox::RejectRole);
+  QPushButton* btnCancel = msgBox.addButton(tr("Cancelar"), QMessageBox::DestructiveRole);
+  msgBox.exec();
+
+  if (msgBox.clickedButton() == btnCancel) return;
+  const auto action = (msgBox.clickedButton() == btnReplace)
+						? SW::DuplicateAction::Replace : SW::DuplicateAction::Omit;
+
+  QString restoreError;
+  const bool userOk = helperdb_.restoreUserCategories(
+	static_cast<uint32_t>(userId_), root["userCategories"].toArray(), action, &restoreError);
+
+  bool publicOk = true;
+  if (root.contains("publicCategories")) {
+	const auto publicUserId = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
+	publicOk = helperdb_.restoreUserCategories(
+	  static_cast<uint32_t>(publicUserId), root["publicCategories"].toArray(), action, &restoreError);
+  }
+
+  if (!userOk || !publicOk) {
+	QMessageBox::critical(this, SW::Helper_t::appName(),
+						  tr("Ocurrió un error al restaurar los datos:\n%1").arg(restoreError));
+	return;
+  }
+
+  loadListCategory(userId_);
+  setUpTable(currentCategoryId());
+  has_data();
+  hastvUrlData();
+  canCreateBackUp();
+
+  QMessageBox::information(this, SW::Helper_t::appName(), tr("Datos restaurados correctamente."));
 }
 
 void MainForm::on_cancelAction(){
@@ -1219,6 +1363,8 @@ void MainForm::applyIcons(Qt::ColorScheme scheme) noexcept{
   // --- Toolbar: base de datos ---
   ui->btnBackUp->setIcon(SW::Helper_t::svgIcon(":/img/database-backup.svg", iconColor));
   ui->btnRestore->setIcon(SW::Helper_t::svgIcon(":/img/database-zap.svg", iconColor));
+  ui->btnUserBackup->setIcon(SW::Helper_t::svgIcon(":/img/userbackup.svg", iconColor));
+  ui->btnRestoreBackup_user->setIcon(SW::Helper_t::svgIcon(":/img/userrestore.svg", iconColor));
 
   // --- Toolbar: preferencias ---
   ui->btnSettings->setIcon(SW::Helper_t::svgIcon(":/img/settings.svg", iconColor));
@@ -1330,11 +1476,18 @@ void MainForm::canRestoreDataBase() const noexcept{
   ui->btnRestore->setVisible(SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start &&
 							 sessionPerms_.role == SW::UserRole::Role_Admin);
 
+  ui->btnRestoreBackup_user->setVisible(SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start &&
+										sessionPerms_.role == SW::UserRole::Role_User);
+
 }
 
 void MainForm::canCreateBackUp() const noexcept{
   ui->btnBackUp->setVisible(hasValidTableData() &&
 							sessionPerms_.role == SW::UserRole::Role_Admin);
+
+  ui->btnUserBackup->setVisible(hasValidUserTableData(userId_) &&
+								SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start &&
+								sessionPerms_.role == SW::UserRole::Role_User);
 
 }
 
@@ -1566,6 +1719,22 @@ bool MainForm::hasValidTableData() const noexcept {
   return query.exec("SELECT EXISTS(SELECT 1 FROM urls LIMIT 1)")
 		 && query.next()
 		 && query.value(0).toBool();
+}
+
+bool MainForm::hasValidUserTableData(int userId) const noexcept {
+
+  QSqlQuery query(db_);
+  query.prepare(R"(
+	SELECT EXISTS(
+	  SELECT 1 FROM urls u
+	  JOIN category c ON c.category_id = u.categoryid
+	  WHERE c.userid = ?
+	  LIMIT 1
+	)
+  )");
+  query.addBindValue(userId);
+
+  return query.exec() && query.next() && query.value(0).toBool();
 }
 
 bool MainForm::validateSelectedRow() noexcept{

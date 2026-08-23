@@ -319,6 +319,8 @@
    </attribute>
    <addaction name="btnRestore"/>
    <addaction name="btnBackUp"/>
+   <addaction name="btnUserBackup"/>
+   <addaction name="btnRestoreBackup_user"/>
   </widget>
   <widget class="QToolBar" name="preferenceToolBar">
    <property name="cursor">
@@ -600,6 +602,36 @@
    </property>
    <property name="toolTip">
     <string>Importar desde archivo</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="btnUserBackup">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/img/userbackup.svg</normaloff>:/img/userbackup.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Back up usuario</string>
+   </property>
+   <property name="toolTip">
+    <string>Generar copia de seguridad del usuario</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="btnRestoreBackup_user">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/img/userrestore.svg</normaloff>:/img/userrestore.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Restaurar copia</string>
+   </property>
+   <property name="toolTip">
+    <string>Restaurar copia de seguridad del usuario</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

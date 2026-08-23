@@ -493,3 +493,19 @@ BEGIN
   RETURN v_type;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION public.fn_export_user_data(p_userid integer, p_key text)
+RETURNS TABLE(category_name text, category_desc text, url_text text, url_desc text)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN QUERY
+  SELECT c.category_name, COALESCE(c.category_desc, ''),
+         pgp_sym_decrypt(u.url_text, p_key),
+         pgp_sym_decrypt(u.url_desc, p_key)
+  FROM category c
+  JOIN urls u ON u.categoryid = c.category_id
+  WHERE c.userid = p_userid
+  ORDER BY c.category_name, u.url_id;
+END;
+$$;
