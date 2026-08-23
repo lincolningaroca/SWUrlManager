@@ -261,7 +261,7 @@ int MainForm::warningMessage(QWidget *parent, const QString &title, const QStrin
 
 uint32_t MainForm::currentCategoryId() const noexcept{
 
-  return ui->cboCategory->currentData().isValid() ? ui->cboCategory->currentData().toUInt() : 1;
+  return ui->cboCategory->currentData().isValid() ? ui->cboCategory->currentData().toUInt() : 0;
 
 }
 
@@ -404,6 +404,24 @@ void MainForm::on_loadLoginForm(){
 
 	userId_ = helperdb_.getUser_id(user, SW::User::U_user);
 
+	if (auto perms = helperdb_.getUserPermissions(user)) {
+	  sessionPerms_ = *perms;
+	} else {
+	  sessionPerms_ = SW::SessionPermissions{};
+	}
+
+	if (sessionPerms_.mustChangePassword) {
+	  ChangePwdDialog pwdDialog(user, this);
+
+	  if (pwdDialog.exec() != QDialog::Accepted) {
+		QMessageBox::warning(this, SW::Helper_t::appName(),
+							 tr("Debe establecer una nueva contraseña para poder continuar."));
+		return;
+	  }
+
+	  sessionPerms_.mustChangePassword = false;
+	}
+
 	writeSettings();
 
 	loadListCategory(userId_);
@@ -427,6 +445,7 @@ void MainForm::on_loadLoginForm(){
 	hastvUrlData();
 	checkStatusContextMenu();
 	canRestoreDataBase();
+	canCreateBackUp();
 	verifyUserState();
 	ui->actionActualizar_password->setVisible(true);
 
@@ -762,6 +781,8 @@ void MainForm::on_callLogout(){
 
   userId_ = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
 
+  sessionPerms_ = SW::SessionPermissions{};
+
   ui->btnLogOut->setDisabled(true);
   ui->btnLogIn->setEnabled(true);
   ui->btnResetPassword->setVisible(true);
@@ -779,6 +800,7 @@ void MainForm::on_callLogout(){
   checkStatusContextMenu();
   SW::Helper_t::current_user_ = SW::Helper_t::defaultUser;
   canRestoreDataBase();
+  canCreateBackUp();
 
   verifyUserState();
 
@@ -790,6 +812,11 @@ void MainForm::on_callLogout(){
 
 void MainForm::on_makeBackup(){
 
+  if (sessionPerms_.role != SW::UserRole::Role_Admin) {
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 tr("Solo un administrador puede crear una copia de seguridad completa."));
+	return;
+  }
   const auto filePath = QFileDialog::getSaveFileName(
 	this,
 	QStringLiteral("Crear una copia de seguridad"),
@@ -841,6 +868,12 @@ void MainForm::on_makeBackup(){
 }
 
 void MainForm::on_restoreDatabase(){
+
+  if (sessionPerms_.role != SW::UserRole::Role_Admin) {
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 tr("Solo un administrador puede restaurar la base de datos completa."));
+	return;
+  }
 
   // Mostrar advertencia SOLO si hay datos
   if(!helperdb_.isDataBase_empty()){
@@ -910,6 +943,7 @@ void MainForm::on_restoreDatabase(){
 							 ));
 
   // Relanzar la app y cerrar la instancia actual
+  on_callLogout();
   QProcess::startDetached(qApp->applicationFilePath(), qApp->arguments());
   qApp->quit();
 }
@@ -1292,17 +1326,15 @@ void MainForm::setUpTableHeaders() const noexcept{
 
 }
 
-/**
- * @brief revisar esta funcion, puede ser eliminada, ya que se cambio a postgresql
- */
 void MainForm::canRestoreDataBase() const noexcept{
-  ui->btnRestore->setVisible(static_cast<bool>(SW::Helper_t::sessionStatus_));
+  ui->btnRestore->setVisible(SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start &&
+							 sessionPerms_.role == SW::UserRole::Role_Admin);
 
 }
-//revisar esta funcion, puede ser eliminada, ya que se cambio a postgresql
 
 void MainForm::canCreateBackUp() const noexcept{
-  ui->btnBackUp->setVisible(hasValidTableData());
+  ui->btnBackUp->setVisible(hasValidTableData() &&
+							sessionPerms_.role == SW::UserRole::Role_Admin);
 
 }
 

@@ -669,6 +669,27 @@ bool HelperDataBase_t::logIn(QStringView user, QStringView password) noexcept{
   return qry_.value(0).toBool();
 }
 
+std::optional<SW::SessionPermissions> HelperDataBase_t::getUserPermissions(const QString& username) noexcept {
+
+  qry_.prepare(R"(SELECT user_priv, can_edit, must_change_password FROM fn_get_user_permissions(?))");
+  qry_.addBindValue(username);
+
+  if (!qry_.exec()) {
+	errorMessage_ = qry_.lastError().text();
+	return std::nullopt;
+  }
+
+  if (!qry_.first()) return std::nullopt;
+
+  SW::SessionPermissions perms;
+  perms.role = (qry_.value(0).toString() == QStringLiteral("ADMIN"))
+				 ? SW::UserRole::Role_Admin : SW::UserRole::Role_User;
+  perms.canEdit = qry_.value(1).toBool();
+  perms.mustChangePassword = qry_.value(2).toBool();
+
+  return perms;
+}
+
 
 bool HelperDataBase_t::saveCategoryData(QStringView catName, QStringView desc, uint32_t userid) noexcept {
 

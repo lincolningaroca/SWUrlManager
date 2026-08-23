@@ -30,6 +30,14 @@ enum class SessionStatus{ Session_start, Session_closed };
 enum class User{ U_public, U_user };
 enum class AuthType{ Numeric_pin, Secret_Question };
 
+enum class UserRole : uint8_t { Role_User, Role_Admin };
+
+struct SessionPermissions {
+  UserRole role{UserRole::Role_User};
+  bool canEdit{true};
+  bool mustChangePassword{false};
+};
+
 enum class OpenMode{ New, Edit};
 
 /**

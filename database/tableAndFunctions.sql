@@ -17,9 +17,15 @@ CREATE TABLE IF NOT EXISTS public.users (
     rescue_type character varying(40) NOT NULL,
     first_value bytea NOT NULL,
     confirm_value text NOT NULL,
+    user_priv character varying(10) NOT NULL DEFAULT 'USER',
+    is_active boolean NOT NULL DEFAULT true,
+    can_edit boolean NOT NULL DEFAULT true,
     CONSTRAINT pk_user PRIMARY KEY (user_id),
-    CONSTRAINT uq_user_name UNIQUE (user_name)
+    CONSTRAINT uq_user_name UNIQUE (user_name),
+    CONSTRAINT chk_user_priv CHECK (user_priv IN ('ADMIN', 'USER'))
 );
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS must_change_password boolean NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS public.category (
     category_id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -130,8 +136,6 @@ BEGIN
 END;
 $$;
 
--- DROP FUNCTION public.fn_create_user(text, text, text, text, text, text, text);
-
 CREATE OR REPLACE FUNCTION public.fn_create_user(p_username text, p_password text, p_profile text, p_rescue_type text, p_first_value text, p_confirm_value text, p_key text)
  RETURNS boolean
  LANGUAGE plpgsql
@@ -143,7 +147,8 @@ BEGIN
     user_profile,
     rescue_type,
     first_value,
-    confirm_value
+    confirm_value,
+    user_priv
   )
   VALUES(
     p_username,
@@ -156,7 +161,8 @@ BEGIN
       ELSE
         pgp_sym_encrypt(p_first_value, p_key)
     END,
-    encode(digest(p_confirm_value::BYTEA, 'sha512'), 'hex')
+    encode(digest(p_confirm_value::BYTEA, 'sha512'), 'hex'),
+    'USER'
   );
   RETURN TRUE;
 EXCEPTION WHEN OTHERS THEN
@@ -164,7 +170,6 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $function$
 ;
-
 
 CREATE OR REPLACE FUNCTION public.fn_delete_category(p_category_id integer) RETURNS boolean
     LANGUAGE plpgsql
@@ -311,12 +316,13 @@ CREATE OR REPLACE FUNCTION public.fn_login(p_username text, p_password text)
 AS $function$
 DECLARE
   v_stored_password TEXT;
+  v_is_active BOOLEAN;
 BEGIN
-  SELECT user_password INTO v_stored_password
+  SELECT user_password, is_active INTO v_stored_password, v_is_active
   FROM users
   WHERE user_name = p_username;
 
-  IF NOT FOUND THEN
+  IF NOT FOUND OR NOT v_is_active THEN
     RETURN FALSE;
   END IF;
 
@@ -324,6 +330,18 @@ BEGIN
 END;
 $function$
 ;
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_permissions(p_username text)
+RETURNS TABLE(user_priv text, can_edit boolean, must_change_password boolean)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN QUERY
+  SELECT u.user_priv::text, u.can_edit, u.must_change_password
+  FROM users u
+  WHERE u.user_name = p_username;
+END;
+$$;
 
 
 CREATE OR REPLACE FUNCTION public.fn_move_url_to_category(p_url_id integer, p_new_categoryid integer) RETURNS boolean
@@ -345,7 +363,8 @@ CREATE OR REPLACE FUNCTION public.fn_reset_password(p_userid integer, p_password
     AS $$
 BEGIN
   UPDATE users
-  SET user_password = crypt(p_password, gen_salt('bf', 12))
+  SET user_password = crypt(p_password, gen_salt('bf', 12)),
+      must_change_password = false
   WHERE user_id = p_userid;
   RETURN FOUND;
 END;

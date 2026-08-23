@@ -132,6 +132,8 @@ private:
   inline static int userId_{0};
   SWTableModel* xxxModel_{ nullptr };
 
+  SW::SessionPermissions sessionPerms_{};
+
   QLabel *lblIcon_{nullptr};
   QLabel *lblState_{nullptr};
   QLabel *lblInfo_{nullptr};
