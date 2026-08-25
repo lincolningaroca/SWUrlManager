@@ -13,6 +13,7 @@
 #include "swwidgets/switemdelegate.hpp"
 #include "swwidgets/swtablemodel.hpp"
 #include "util/backupcrypto.hpp"
+#include "util/cryptomanager.hpp"
 #include "util/dataimporterexporter.hpp"
 
 #include <QAction>
@@ -593,8 +594,8 @@ void MainForm::startImportWorker(const QString& filePath) {
   });
 
   connect(importThread_, &QThread::started, worker,
-		  [worker, filePath, catId]() {
-			worker->doImport(filePath, catId);
+		  [worker, filePath, catId, dek = QByteArray::fromHex(helperdb_.encryptionKey().toLatin1())]() {
+			worker->doImport(filePath, catId, dek);
 		  });
 
   importThread_->start();
@@ -952,6 +953,7 @@ void MainForm::on_restoreDatabase(){
 							 ));
 
   // Relanzar la app y cerrar la instancia actual
+  SW::CryptoManager::clearCachedLocalDEK();
   on_callLogout();
   QProcess::startDetached(qApp->applicationFilePath(), qApp->arguments());
   qApp->quit();
@@ -1434,8 +1436,6 @@ void MainForm::initFrm() noexcept{
 
 
 void MainForm::setUpTable(uint32_t categoryId) noexcept {
-
-  // xxxModel_ = new SWTableModel(this);
 
   QSqlQuery qry(db_);
   qry.prepare(R"(SELECT * FROM fn_get_urls(?, ?))");

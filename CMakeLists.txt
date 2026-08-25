@@ -42,6 +42,7 @@ qt_add_executable(${PROJECT_NAME}
     maintenanceurldialog.hpp maintenanceurldialog.cpp maintenanceurldialog.ui
     util/urlimportworker.hpp util/urlimportworker.cpp
     util/backupcrypto.hpp util/backupcrypto.cpp
+    util/cryptomanager.hpp util/cryptomanager.cpp
 
 )
 
@@ -55,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     QXlsx::QXlsx
     OpenSSL::SSL    # Nombre oficial de CMake
     OpenSSL::Crypto # Nombre oficial de CMake
+    crypt32
 )
 
 include(GNUInstallDirs)

@@ -15,7 +15,8 @@ public:
   explicit UrlImportWorker(QObject* parent = nullptr) : QObject(parent) {}
 
 public slots:
-  void doImport(const QString& filePath, uint32_t categoryId);
+
+  void doImport(const QString& filePath, uint32_t categoryId, const QByteArray& dek);
   void cancel() noexcept { cancelled_.storeRelaxed(1); }
 
 signals:

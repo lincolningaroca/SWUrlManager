@@ -9,7 +9,7 @@
 
 namespace SW {
 
-void UrlImportWorker::doImport(const QString& filePath, uint32_t categoryId) {
+void UrlImportWorker::doImport(const QString& filePath, uint32_t categoryId, const QByteArray& dek) {
 
   // 1. Conexión a BD EXCLUSIVA de este hilo — obligatorio en Qt SQL
   const QString connName = QStringLiteral("ImportWorker_%1").arg(QUuid::createUuid().toString());
@@ -30,6 +30,7 @@ void UrlImportWorker::doImport(const QString& filePath, uint32_t categoryId) {
   }
 
   SW::HelperDataBase_t helperdb(db);
+  helperdb.setEncryptionKeyRaw(dek);
 
   // 2. Parseo del archivo
   emit progressChanged(0, 0, QObject::tr("Leyendo archivo..."));

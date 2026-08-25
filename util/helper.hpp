@@ -104,6 +104,10 @@ struct Helper_t{
 						 const QByteArray& iv = QByteArray());
   static QString decrypt(const QString& encryptedText, const QByteArray& key = QByteArray(),
 						 const QByteArray& iv = QByteArray());
+
+  [[nodiscard]] static QByteArray protectLocal(const QByteArray& plain) noexcept;
+  [[nodiscard]] static QByteArray unprotectLocal(const QByteArray& cipher) noexcept;
+
   inline static const QHash<SW::User, QString> currentUser_{
 	{SW::User::U_public, "PUBLIC"},
 	{SW::User::U_user, "USER"}
@@ -112,6 +116,8 @@ struct Helper_t{
   inline static const QString defaultUser{QStringLiteral("public")};
   inline static QString current_user_{defaultUser};
   inline static SW::SessionStatus sessionStatus_{SW::SessionStatus::Session_closed};
+
+  inline static QByteArray sessionEncryptionKey_{};
 
   static void saveDbConfig(const DbConfig& config) noexcept;
   static DbConfig loadDbConfig() noexcept;

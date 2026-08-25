@@ -25,7 +25,7 @@ static QString s_cachedPgBinDir;
 HelperDataBase_t::HelperDataBase_t()
   :db_{QSqlDatabase::database(QStringLiteral("xxxConection"))},
   qry_(db_),
-  encryptionKey_{SW::Helper_t::deriveEncryptionKey()}
+  encryptionKey_{QString::fromLatin1(SW::Helper_t::sessionEncryptionKey_.toHex())}
 {
 }
 
@@ -33,8 +33,8 @@ HelperDataBase_t::HelperDataBase_t()
 // Qt SQL no permite compartir una QSqlDatabase entre hilos distintos.
 HelperDataBase_t::HelperDataBase_t(QSqlDatabase db) noexcept
   : db_{std::move(db)},
-  qry_(db_),
-  encryptionKey_{SW::Helper_t::deriveEncryptionKey()}
+  qry_(db_)/*,
+  encryptionKey_{SW::Helper_t::deriveEncryptionKey()}*/
 {
 }
 
@@ -624,11 +624,6 @@ QJsonArray HelperDataBase_t::exportUserCategories(uint32_t userId) noexcept {
 bool HelperDataBase_t::restoreUserCategories(uint32_t targetUserId, const QJsonArray& categories,
 											 DuplicateAction action, QString* errorOut) noexcept {
 
-  if (!db_.transaction()) {
-	if (errorOut) *errorOut = db_.lastError().text();
-	return false;
-  }
-
   for (const auto& catValue : categories) {
 	const QJsonObject cat = catValue.toObject();
 	const QString catName = cat["name"].toString();
@@ -636,7 +631,6 @@ bool HelperDataBase_t::restoreUserCategories(uint32_t targetUserId, const QJsonA
 
 	if (!categoryExists(catName, targetUserId)) {
 	  if (!saveCategoryData(catName, catDesc, targetUserId)) {
-		db_.rollback();
 		if (errorOut) *errorOut = errorMessage_;
 		return false;
 	  }
@@ -657,13 +651,11 @@ bool HelperDataBase_t::restoreUserCategories(uint32_t targetUserId, const QJsonA
 	}
 
 	if (!importUrlsBatch(categoryId, items, action)) {
-	  db_.rollback();
 	  if (errorOut) *errorOut = errorMessage_;
 	  return false;
 	}
   }
 
-  db_.commit();
   return true;
 }
 

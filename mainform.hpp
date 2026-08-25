@@ -34,6 +34,8 @@ public:
   MainForm(QWidget *parent = nullptr);
   ~MainForm();
 
+  void setEncryptionKey(const QByteArray& dek) noexcept { helperdb_.setEncryptionKeyRaw(dek); }
+
 private:
   Ui::MainForm *ui;
 

@@ -509,3 +509,43 @@ BEGIN
   ORDER BY c.category_name, u.url_id;
 END;
 $$;
+
+CREATE TABLE IF NOT EXISTS public.security_settings (
+    id              smallint NOT NULL DEFAULT 1,
+    kdf_salt        bytea    NOT NULL,
+    dek_nonce       bytea    NOT NULL,
+    dek_tag         bytea    NOT NULL,
+    wrapped_dek     bytea    NOT NULL,
+    kdf_iterations  integer  NOT NULL,
+    schema_version  smallint NOT NULL,
+    updated_at      timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_security_settings PRIMARY KEY (id),
+    CONSTRAINT chk_security_settings_single_row CHECK (id = 1)
+);
+
+CREATE OR REPLACE FUNCTION public.fn_bootstrap_admin(p_password text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM users WHERE user_priv = 'ADMIN') THEN
+    RETURN FALSE;
+  END IF;
+
+  INSERT INTO users(
+    user_name, user_password, user_profile, rescue_type, first_value, confirm_value, user_priv, must_change_password
+  )
+  VALUES(
+    'admin',
+    crypt(p_password, gen_salt('bf', 12)),
+    'USER',
+    'Pin numérico',
+    encode(digest('0000'::bytea, 'sha512'), 'hex')::bytea,
+    encode(digest('0000'::bytea, 'sha512'), 'hex'),
+    'ADMIN',
+    true
+  )
+  ON CONFLICT (user_name) DO NOTHING;
+
+  RETURN TRUE;
+END;
+$$;

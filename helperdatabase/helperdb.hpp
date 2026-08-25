@@ -60,6 +60,12 @@ struct HelperDataBase_t{
   static QString getPostgresToolPath(const QString& toolName, bool* found = nullptr);
   // helperdb.hpp — en la sección public
   [[nodiscard]] QString encryptionKey() const noexcept { return encryptionKey_; }
+
+  void setEncryptionKeyRaw(const QByteArray& dek) noexcept {
+	encryptionKey_ = QString::fromLatin1(dek.toHex());
+  }
+  [[nodiscard]] bool hasEncryptionKey() const noexcept { return !encryptionKey_.isEmpty(); }
+
   bool userExists(QStringView user) noexcept;
   bool userExists() noexcept;
   bool categoryExists(QStringView category, uint32_t userId) noexcept;

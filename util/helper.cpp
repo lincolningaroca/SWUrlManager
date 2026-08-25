@@ -24,6 +24,50 @@ extern "C"{
 
 namespace SW {
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <wincrypt.h>
+#endif
+
+QByteArray Helper_t::protectLocal(const QByteArray& plain) noexcept {
+#ifdef Q_OS_WIN
+  if (plain.isEmpty()) return {};
+  DATA_BLOB in{ static_cast<DWORD>(plain.size()),
+			   reinterpret_cast<BYTE*>(const_cast<char*>(plain.data())) };
+  DATA_BLOB out{};
+  if (!CryptProtectData(&in, L"SWUrlManager", nullptr, nullptr, nullptr,
+						CRYPTPROTECT_UI_FORBIDDEN, &out)) {
+	return {};
+  }
+  QByteArray result(reinterpret_cast<char*>(out.pbData), static_cast<int>(out.cbData));
+  LocalFree(out.pbData);
+  return result;
+#else
+  Q_UNUSED(plain);
+  qWarning() << "protectLocal: no implementado fuera de Windows";
+  return {};
+#endif
+}
+
+QByteArray Helper_t::unprotectLocal(const QByteArray& cipher) noexcept {
+#ifdef Q_OS_WIN
+  if (cipher.isEmpty()) return {};
+  DATA_BLOB in{ static_cast<DWORD>(cipher.size()),
+			   reinterpret_cast<BYTE*>(const_cast<char*>(cipher.data())) };
+  DATA_BLOB out{};
+  if (!CryptUnprotectData(&in, nullptr, nullptr, nullptr, nullptr,
+						  CRYPTPROTECT_UI_FORBIDDEN, &out)) {
+	return {};
+  }
+  QByteArray result(reinterpret_cast<char*>(out.pbData), static_cast<int>(out.cbData));
+  LocalFree(out.pbData);
+  return result;
+#else
+  Q_UNUSED(cipher);
+  qWarning() << "unprotectLocal: no implementado fuera de Windows";
+  return {};
+#endif
+}
 
 QString Helper_t::deriveEncryptionKey() noexcept {
 
