@@ -1345,7 +1345,7 @@ void MainForm::writeUserPreferences() const{
 void MainForm::updateLblInfo() noexcept{
 
   const auto linkColor = qApp->palette().color(QPalette::Active, QPalette::Link);
-  lblInfo_->setText(QString("<a href='about dialog' style='color:%1;'>"
+  lblInfo_->setText(QStringLiteral("<a href='about dialog' style='color:%1;'>"
 							"<span>SWSystem's - Lincoln Ingaroca</span>"
 							"</a>").arg(linkColor.name()));
 }

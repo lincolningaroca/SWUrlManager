@@ -32,8 +32,8 @@ void ChangePwdDialog::initDialog(){
   setWindowTitle("Actualizar cantraseña");
 
   ui->lblUser->setText(QString("<strong>Estas a punto de cambiar o actualizar la clave de acceso para el usuario: <cite>\"%1\"</cite></strong>").arg(user_));
-  ui->lblMessage->setText("<p><strong>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
-						  "<br>y una longitud mínina de 8 caracteres</strong></p>");
+  ui->lblMessage->setText(QStringLiteral("<p><strong>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
+										 "<br>y una longitud mínina de 8 caracteres</strong></p>"));
 
   ui->txtNewPassword->setEchoMode(QLineEdit::Password);
   ui->txtRePassword->setEchoMode(QLineEdit::Password);
