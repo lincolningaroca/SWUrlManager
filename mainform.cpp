@@ -986,16 +986,22 @@ void MainForm::on_makeUserBackup(){
 
   optDialog.setMinimumWidth(350);
 
-  QObject::connect(buttons, &QDialogButtonBox::accepted, &optDialog, &QDialog::accept);
+  // Solo conectamos 'rejected' directamente para Cancelar
   QObject::connect(buttons, &QDialogButtonBox::rejected, &optDialog, &QDialog::reject);
+
+  // Validamos la clave antes de cerrar el diálogo con 'accepted'
+  QObject::connect(buttons->button(QDialogButtonBox::Ok), &QPushButton::clicked, &optDialog, [&]() {
+	if (passwordEdit->text().trimmed().isEmpty()) {
+	  QMessageBox::warning(&optDialog, SW::Helper_t::appName(), tr("Debe ingresar una contraseña para el backup."));
+	  passwordEdit->setFocus();
+	  return; // Permanece en el diálogo sin llamar a accept()
+	}
+	optDialog.accept(); // Cierra el diálogo solo si hay contraseña
+  });
 
   if (optDialog.exec() != QDialog::Accepted) return;
 
   const QString password = passwordEdit->text();
-  if (password.isEmpty()) {
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Debe ingresar una contraseña para el backup."));
-	return;
-  }
 
   const auto filePath = QFileDialog::getSaveFileName(
 	this, tr("Guardar copia de seguridad personal"),
