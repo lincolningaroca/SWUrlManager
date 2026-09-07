@@ -968,6 +968,7 @@ void MainForm::on_makeUserBackup(){
   }
 
   QDialog optDialog(this);
+  optDialog.setWindowFlags(optDialog.windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   optDialog.setWindowTitle(tr("Copia de seguridad de mis datos"));
 
   auto* layout = new QVBoxLayout(&optDialog);
@@ -982,6 +983,8 @@ void MainForm::on_makeUserBackup(){
   layout->addWidget(passwordLabel);
   layout->addWidget(passwordEdit);
   layout->addWidget(buttons);
+
+  optDialog.setMinimumWidth(350);
 
   QObject::connect(buttons, &QDialogButtonBox::accepted, &optDialog, &QDialog::accept);
   QObject::connect(buttons, &QDialogButtonBox::rejected, &optDialog, &QDialog::reject);
@@ -1040,8 +1043,20 @@ void MainForm::on_restoreUserBackup(){
   SW::Helper_t::setLastOpenedDirectory(QFileInfo(filePath).absolutePath());
 
   bool ok = false;
-  const QString password = QInputDialog::getText(this, SW::Helper_t::appName(),
-												 tr("Ingrese la contraseña de este backup:"), QLineEdit::Password, QString(), &ok);
+  QString password;
+
+  QInputDialog inputDialog(this);
+  inputDialog.setWindowTitle(SW::Helper_t::appName());
+  inputDialog.setLabelText(tr("Ingrese la contraseña de este backup:"));
+  inputDialog.setTextEchoMode(QLineEdit::Password);
+
+  inputDialog.setWindowFlags(inputDialog.windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+
+  inputDialog.resize(350, inputDialog.sizeHint().height());
+  if (inputDialog.exec() == QDialog::Accepted) {
+	ok = true;
+	password = inputDialog.textValue();
+  }
 
   if (!ok || password.isEmpty()) return;
 
