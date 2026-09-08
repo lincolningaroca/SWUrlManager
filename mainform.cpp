@@ -1566,6 +1566,7 @@ void MainForm::setUpMainContextMenu() noexcept{
   importFromFile_ = new QAction( importFromFileIcon,"Importar datos desde archivo", this);
   showPublicUrl_ = new QAction(QStringLiteral("Ver url's públicas"), this);
   checkStatusContextMenu();
+  has_data();
 
 }
 
