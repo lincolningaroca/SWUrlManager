@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QComboBox>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
@@ -11,17 +12,16 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QScreen>
-#include <QStandardPaths>
 #include <QSizePolicy>
+#include <QStandardPaths>
 #include <QSysInfo>
 #include <QTabWidget>
+#include <QTextEdit>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QVBoxLayout>
-#include <QComboBox>
-#include <QPushButton>
-#include <QTextEdit>
 
 namespace {
 constexpr int kMaxUrlBodyLength = 6000; // margen de seguridad bajo el límite práctico de URL de la mayoría de navegadores

@@ -66,9 +66,6 @@ struct Helper_t{
   [[nodiscard]]static bool open_Url(const QUrl& url) noexcept{return QDesktopServices::openUrl(url);}
   [[nodiscard]]static bool urlValidate(QStringView url) noexcept;
 
-  [[nodiscard]] static QString deriveEncryptionKey() noexcept;
-
-
   [[nodiscard]]static bool createDataBase_dir() noexcept;
 
   [[nodiscard]]static QString generateSecurePassword(uint32_t length = 8) noexcept;
@@ -98,13 +95,6 @@ struct Helper_t{
 
   static bool nativeRegistryKeyExists(const QString &path);
 
-  //encryp/decrypt metods
-
-  static QString encrypt(const QString& plainText, const QByteArray& key = QByteArray(),
-						 const QByteArray& iv = QByteArray());
-  static QString decrypt(const QString& encryptedText, const QByteArray& key = QByteArray(),
-						 const QByteArray& iv = QByteArray());
-
   [[nodiscard]] static QByteArray protectLocal(const QByteArray& plain) noexcept;
   [[nodiscard]] static QByteArray unprotectLocal(const QByteArray& cipher) noexcept;
 
@@ -128,22 +118,6 @@ private:
 
   inline static const QString dbDir_name{"/xxxdatabase"};
   inline static const QPalette standardPalette_{QGuiApplication::palette()};
-
-  static const QByteArray& encryptKey() noexcept {
-	static const QByteArray key = QByteArray::fromHex(
-	  deriveEncryptionKey().toLatin1()
-	  );
-	return key;
-  }
-
-  static const QByteArray& encryptIv() noexcept {
-	// IV derivado como hash del machineUniqueId
-	static const QByteArray iv = QCryptographicHash::hash(
-	  QSysInfo::machineUniqueId(),
-	  QCryptographicHash::Md5
-	  );
-	return iv;
-  }
 
 };
 

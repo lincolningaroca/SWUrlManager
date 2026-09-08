@@ -69,34 +69,6 @@ QByteArray Helper_t::unprotectLocal(const QByteArray& cipher) noexcept {
 #endif
 }
 
-QString Helper_t::deriveEncryptionKey() noexcept {
-
-  const QByteArray machineId = QByteArray::fromHex("2ae14bf7be6ffc6b6dc4bd07e87b2bbb55c57a500ff79e104f71cc89891678da");
-  const auto orgName    = qApp->organizationName().toLatin1();
-  const auto appName    = qApp->applicationName().toLatin1();
-
-  // Salt desde datos del sistema
-  const QByteArray salt = machineId + orgName + appName;
-
-  // Passphrase base — no es la clave final
-  const QByteArray passphrase = machineId + QByteArray::fromHex("4efbfcda9e5b67a25a651cd3847801de0b71c11369122c01cff3b20ca1db75a7");
-
-  // Derivar clave con PBKDF2-SHA256 — 100000 iteraciones
-  QByteArray derived(32, 0);  // 256 bits
-
-  PKCS5_PBKDF2_HMAC(
-	passphrase.constData(),
-	static_cast<int>(passphrase.size()),
-	reinterpret_cast<const unsigned char*>(salt.constData()),
-	static_cast<int>(salt.size()),
-	100000,
-	EVP_sha256(),
-	32,
-	reinterpret_cast<unsigned char*>(derived.data())
-	);
-
-  return QString::fromLatin1(derived.toHex());
-}
 
 QColor Helper_t::currentIconColor(Qt::ColorScheme scheme) noexcept {
   bool isDark = false;
@@ -314,53 +286,6 @@ QIcon SW::Helper_t::svgIcon(const QString& resourcePath,
   return svgIcon(resourcePath, color, QSize(24, 24));
 }
 
-
-QString Helper_t::encrypt(const QString& plainText, const QByteArray& key, const QByteArray& iv){
-
-  const QByteArray& k = key.isEmpty() ? encryptKey() : key;
-  const QByteArray& i = iv.isEmpty()  ? encryptIv()  : iv;
-
-  QByteArray plainData = plainText.toUtf8();
-  QByteArray encryptedData(plainData.size() + EVP_MAX_BLOCK_LENGTH, 0);
-  int encryptedLen = 0;
-
-  EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-  EVP_EncryptInit(ctx, EVP_aes_256_cbc(), reinterpret_cast<const unsigned char*>(k.data()), reinterpret_cast<const unsigned char*>(i.data()));
-  EVP_EncryptUpdate(ctx, reinterpret_cast<unsigned char*>(encryptedData.data()), &encryptedLen, reinterpret_cast<const unsigned char*>(plainData.data()), static_cast<int>(plainData.size()));
-
-  int finalLen = 0;
-  EVP_EncryptFinal(ctx, reinterpret_cast<unsigned char*>(encryptedData.data()) + encryptedLen, &finalLen);
-  encryptedLen += finalLen;
-
-  EVP_CIPHER_CTX_free(ctx);
-
-  return QString::fromUtf8(encryptedData.left(encryptedLen).toBase64());
-}
-
-
-QString Helper_t::decrypt(const QString& encryptedText, const QByteArray& key, const QByteArray& iv){
-
-  const QByteArray& k = key.isEmpty() ? encryptKey() : key;
-  const QByteArray& i = iv.isEmpty()  ? encryptIv()  : iv;
-
-  QByteArray encryptedData = QByteArray::fromBase64(encryptedText.toUtf8());
-  QByteArray decryptedData(encryptedData.size(), 0);
-  int decryptedLen = 0;
-
-  EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-  EVP_DecryptInit(ctx, EVP_aes_256_cbc(), reinterpret_cast<const unsigned char*>(k.data()), reinterpret_cast<const unsigned char*>(i.data()));
-  EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char*>(decryptedData.data()), &decryptedLen, reinterpret_cast<const unsigned char*>(encryptedData.data()), static_cast<int>(encryptedData.size()));
-
-  int finalLen = 0;
-  EVP_DecryptFinal(ctx, reinterpret_cast<unsigned char*>(decryptedData.data()) + decryptedLen, &finalLen);
-  decryptedLen += finalLen;
-
-  EVP_CIPHER_CTX_free(ctx);
-
-  return QString::fromUtf8(decryptedData.left(decryptedLen));
-}
-
-
 void Helper_t::saveDbConfig(const DbConfig& config) noexcept {
 
   QSettings settings(qApp->organizationName(), qApp->applicationName());
@@ -371,10 +296,11 @@ void Helper_t::saveDbConfig(const DbConfig& config) noexcept {
   settings.setValue(QStringLiteral("dbName"),   config.dbName);
   settings.setValue(QStringLiteral("userName"), config.userName);
 
-  // Password cifrado con clave derivada del hardware
-  settings.setValue(QStringLiteral("password"),
-					config.password.isEmpty() ? QString() : encrypt(config.password));
+  const auto protectedPwd = config.password.isEmpty()
+							  ? QByteArray()
+							  : protectLocal(config.password.toUtf8());
 
+  settings.setValue(QStringLiteral("password"), protectedPwd.toBase64());
   settings.endGroup();
 }
 
@@ -382,15 +308,29 @@ DbConfig Helper_t::loadDbConfig() noexcept{
 
   QSettings settings(qApp->organizationName(), qApp->applicationName());
   settings.beginGroup("Database");
+
   DbConfig config;
   config.host     = settings.value("host",     "localhost").toString();
   config.port     = settings.value("port",     5432).toInt();
   config.dbName   = settings.value("dbName",   "xdatabase").toString();
   config.userName = settings.value("userName", "postgres").toString();
-  config.password = decrypt(settings.value("password", "").toString());
+
+  const auto storedValue = settings.value("password", "").toString();
+
+  if (!storedValue.isEmpty()) {
+	const auto decoded = QByteArray::fromBase64(storedValue.toUtf8());
+	const auto unprotected = unprotectLocal(decoded);
+
+	if (!unprotected.isEmpty()) {
+	  // Formato nuevo: DPAPI descifró correctamente.
+	  config.password = QString::fromUtf8(unprotected);
+	} else {
+	  qWarning() << "No se pudo leer la contraseña de conexión guardada — formato obsoleto. Se solicitará nuevamente.";
+	}
+  }
+
   settings.endGroup();
   return config;
-
 }
 
 bool Helper_t::hasDbConfig() noexcept{
@@ -424,13 +364,9 @@ QByteArray Helper_t::writeData(const QVariant &data){
 }
 
 bool Helper_t::nativeRegistryKeyExists(const QString &path) {
-  // Usamos el formato Nativo y el nombre de tu organización/app
-  // Esto apunta a HKEY_CURRENT_USER\Software\SWSystem's\xxxApp
+
   QSettings settings(QSettings::NativeFormat, QSettings::UserScope, QApplication::organizationName(), appName());
 
-  // contains() es muy potente en Qt:
-  // Si le pasas "Theme", verifica si existe el grupo o carpeta.
-  // Si le pasas "Theme/ColorMode", verifica si existe esa clave específica dentro.
   return settings.contains(path) || settings.childGroups().contains(path);
 }
 
