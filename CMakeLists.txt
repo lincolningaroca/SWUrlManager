@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(xxxApp LANGUAGES CXX)
+project(SWUrlManager LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Network Svg)
 
