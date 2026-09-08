@@ -43,6 +43,7 @@ qt_add_executable(${PROJECT_NAME}
     util/urlimportworker.hpp util/urlimportworker.cpp
     util/backupcrypto.hpp util/backupcrypto.cpp
     util/cryptomanager.hpp util/cryptomanager.cpp
+    dialogs/reportbugdialog.hpp dialogs/reportbugdialog.cpp
 
 )
 

@@ -33,8 +33,7 @@ HelperDataBase_t::HelperDataBase_t()
 // Qt SQL no permite compartir una QSqlDatabase entre hilos distintos.
 HelperDataBase_t::HelperDataBase_t(QSqlDatabase db) noexcept
   : db_{std::move(db)},
-  qry_(db_)/*,
-  encryptionKey_{SW::Helper_t::deriveEncryptionKey()}*/
+  qry_(db_)
 {
 }
 
