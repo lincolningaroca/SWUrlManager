@@ -171,6 +171,8 @@ private slots:
   void on_showMainContextMenu(const QPoint &p);
   void on_styleChanged(bool style);
   void onImportFromExcelFileTriggered();
+  void on_showReportBugDialog();
+
 
   void on_makeUserBackup();
   void on_restoreUserBackup();

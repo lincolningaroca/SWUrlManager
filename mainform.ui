@@ -243,6 +243,7 @@
      <string>Ayuda</string>
     </property>
     <addaction name="actionAcerca_del_autor"/>
+    <addaction name="ReportaBugAction"/>
    </widget>
    <widget class="QMenu" name="menuVer">
     <property name="title">
@@ -635,6 +636,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="ReportaBugAction">
+   <property name="text">
+    <string>Reportar un problema</string>
    </property>
   </action>
  </widget>

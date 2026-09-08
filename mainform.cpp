@@ -5,6 +5,7 @@
 #include "categorydialog.hpp"
 #include "changepwddialog.hpp"
 #include "configdialog.hpp"
+#include "dialogs/reportbugdialog.hpp"
 #include "dlgnewcategory.hpp"
 #include "logindialog.hpp"
 #include "midlewidget.hpp"
@@ -45,6 +46,8 @@ MainForm::MainForm(QWidget *parent)
   ui->setupUi(this);
 
   defaultStyleName_ = qApp->style()->objectName();
+
+  QObject::connect(ui->ReportaBugAction, &QAction::triggered, this, &MainForm::on_showReportBugDialog);
 
   QObject::connect(ui->showHideDatabaseAction, &QAction::toggled, this, [this](bool checked = false){
 
@@ -1928,6 +1931,13 @@ void MainForm::onImportFromExcelFileTriggered() {
   if (!filePath.isEmpty()) {
 	processImportFile(filePath);
   }
+}
+
+void MainForm::on_showReportBugDialog(){
+
+  ReportBugDialog reportBugDialog(this);
+  reportBugDialog.exec();
+
 }
 
 void MainForm::changeEvent(QEvent *event){
