@@ -1,7 +1,7 @@
 #include "maintenanceurldialog.hpp"
 #include "ui_maintenanceurldialog.h"
 
-#include "midlewidget.hpp"
+#include "swwidgets/midlewidget.hpp"
 
 #include <QCloseEvent>
 #include <QMessageBox>

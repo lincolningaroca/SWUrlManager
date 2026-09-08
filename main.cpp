@@ -1,4 +1,4 @@
-#include "configdialog.hpp"
+#include "dialogs/configdialog.hpp"
 #include "helperdatabase/helperdb.hpp"
 #include "mainform.hpp"
 #include "util/cryptomanager.hpp"

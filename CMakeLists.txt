@@ -26,20 +26,20 @@ qt_add_executable(${PROJECT_NAME}
     mainform.ui
     rsc.qrc
     helperdatabase/helperdb.cpp helperdatabase/helperdb.hpp util/dataimporterexporter.cpp util/dataimporterexporter.hpp util/helper.cpp util/helper.hpp
-    acercadedialog.hpp acercadedialog.cpp acercadedialog.ui
-    categorydialog.cpp categorydialog.hpp categorydialog.ui
-    dlgnewcategory.cpp dlgnewcategory.hpp dlgnewcategory.ui
-    logindialog.cpp logindialog.hpp logindialog.ui
-    resetpassworddialog.cpp resetpassworddialog.hpp resetpassworddialog.ui
-    publicurldialog.cpp publicurldialog.hpp publicurldialog.ui
+    dialogs/acercadedialog.hpp dialogs/acercadedialog.cpp dialogs/acercadedialog.ui
+    dialogs/categorydialog.cpp dialogs/categorydialog.hpp dialogs/categorydialog.ui
+    dialogs/dlgnewcategory.cpp dialogs/dlgnewcategory.hpp dialogs/dlgnewcategory.ui
+    dialogs/logindialog.cpp dialogs/logindialog.hpp dialogs/logindialog.ui
+    dialogs/resetpassworddialog.cpp dialogs/resetpassworddialog.hpp dialogs/resetpassworddialog.ui
+    dialogs/publicurldialog.cpp dialogs/publicurldialog.hpp dialogs/publicurldialog.ui
     swwidgets/switemdelegate.cpp swwidgets/switemdelegate.hpp swwidgets/swlabel.cpp swwidgets/swlabel.hpp swwidgets/swtablemodel.cpp swwidgets/swtablemodel.hpp
     ${APP_ICON}
-    configdialog.hpp configdialog.cpp configdialog.ui
+    dialogs/configdialog.hpp dialogs/configdialog.cpp dialogs/configdialog.ui
     swwidgets/swtextedit.hpp swwidgets/swtextedit.cpp
-    changepwddialog.hpp changepwddialog.cpp changepwddialog.ui
-    midlewidget.hpp midlewidget.cpp midlewidget.ui
+    dialogs/changepwddialog.hpp dialogs/changepwddialog.cpp dialogs/changepwddialog.ui
+    swwidgets/midlewidget.hpp swwidgets/midlewidget.cpp swwidgets/midlewidget.ui
 
-    maintenanceurldialog.hpp maintenanceurldialog.cpp maintenanceurldialog.ui
+    dialogs/maintenanceurldialog.hpp dialogs/maintenanceurldialog.cpp dialogs/maintenanceurldialog.ui
     util/urlimportworker.hpp util/urlimportworker.cpp
     util/backupcrypto.hpp util/backupcrypto.cpp
     util/cryptomanager.hpp util/cryptomanager.cpp
