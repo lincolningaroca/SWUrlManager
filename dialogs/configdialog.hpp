@@ -38,6 +38,8 @@ private:
   void saveLastSelection();
   void restoreLastSelection();
 
+  void applyAllStyles() noexcept;
+
 private slots:
   void on_btnSystem_clicked();
   void on_btnLight_clicked();
@@ -57,4 +59,5 @@ signals:
   // QWidget interface
 protected:
   virtual void closeEvent(QCloseEvent *event) override;
+  virtual void changeEvent(QEvent *event) override;
 };

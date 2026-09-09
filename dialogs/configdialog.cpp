@@ -139,6 +139,8 @@ void ConfigDialog::initDialog() noexcept{
   ui->listMenu->setIconSize(QSize(24, 24));
   ui->listMenu->setSpacing(2);
 
+  applyAllStyles();
+
   auto *itemApariencia = new QListWidgetItem(QIcon(":/img/palette.png"), "  Apariencia");
   itemApariencia->setSizeHint(QSize(130, 40));
   ui->listMenu->addItem(itemApariencia);
@@ -166,51 +168,99 @@ void ConfigDialog::initDialog() noexcept{
   ui->listMenu->addItem(itemDbConexion);
 }
 
+void ConfigDialog::applyAllStyles() noexcept {
+  // Colores dinámicos de la paleta del sistema
+  const QColor accentColor   = qApp->palette().color(QPalette::Accent);    // hover — acento genérico, no selección
+  const QColor selectedColor = qApp->palette().color(QPalette::Highlight); // ítem/botón realmente seleccionado
+  const QColor textColor     = qApp->palette().color(QPalette::ButtonText);
+  const QColor borderColor   = qApp->palette().color(QPalette::Mid);
 
-void ConfigDialog::setCurrentTheme(Qt::ColorScheme scheme) noexcept{
+  // Color tenue para hover (Alpha = 100 de 255)
+  QColor hoverColor = accentColor;
+  hoverColor.setAlpha(90);
 
-  const QString selectedStyle = R"(
-	QPushButton {
-	  border: 2px solid #4A90D9;
-	  border-radius: 6px;
-	  background-color: #2D5A8E;
-	  color: white;
-	  font-weight: bold;
-	}
-  )";
+  // Estilo para botones en estado NORMAL y HOVER
+  const QString btnNormalStyle = QString(R"(
+		QPushButton {
+			border: 1px solid %1;
+			border-radius: 6px;
+			background-color: transparent;
+			color: %2;
+			padding: 8px;
+		}
+		QPushButton:hover {
+			border: 1px solid %3;
+			background-color: %3;
+			color: white;
+		}
+	)").arg(borderColor.name(QColor::HexArgb),
+										textColor.name(QColor::HexArgb),
+										hoverColor.name(QColor::HexArgb));
 
-  const QString textColor = qApp->palette().color(QPalette::ButtonText).name();
-  const QString hoverColor = qApp->palette().color(QPalette::Highlight).name();
+  // Estilo para botón SELECCIONADO (usa color sólido con alpha completo)
+  const QString btnSelectedStyle = QString(R"(
+		QPushButton {
+			border: 2px solid %1;
+			border-radius: 6px;
+			background-color: %1;
+			color: white;
+			font-weight: bold;
+			padding: 8px;
+		}
+	)").arg(selectedColor.name(QColor::HexArgb));
 
-  const QString normalStyle = QString(R"(
-	QPushButton {
-	  border: 1px solid #555;
-	  border-radius: 6px;
-	  background-color: transparent;
-	  color: %1;
-	}
-	QPushButton:hover {
-	  border: 1px solid %2;
-	  background-color: %2;
-	  color: white;
-	}
-  )").arg(textColor, hoverColor);
+  // Estilo para el menú lateral (QListWidget)
+  const QString menuStyle = QString(R"(
+		QListWidget {
+			border: none;
+			background-color: transparent;
+			outline: none;
+		}
+		QListWidget::item {
+			border: none;
+			padding: 10px 8px;
+			border-radius: 6px;
+			margin: 2px 4px;
+			color: %1;
+		}
+		QListWidget::item:hover {
+			background-color: %2;
+		}
+		QListWidget::item:selected {
+			background-color: %3;
+			color: white;
+			font-weight: bold;
+		}
+	)").arg(textColor.name(QColor::HexArgb),
+								   hoverColor.name(QColor::HexArgb),
+								   selectedColor.name(QColor::HexArgb));
 
-  ui->btnSystem->setStyleSheet(normalStyle);
-  ui->btnLight->setStyleSheet(normalStyle);
-  ui->btnDark->setStyleSheet(normalStyle);
+  // Aplicar estilos
+  ui->btnSystem->setStyleSheet(btnNormalStyle);
+  ui->btnLight->setStyleSheet(btnNormalStyle);
+  ui->btnDark->setStyleSheet(btnNormalStyle);
+  ui->listMenu->setStyleSheet(menuStyle);
 
-  switch(scheme){
+  // Aplicar estilo seleccionado al botón activo
+  switch(selectedScheme_){
 	case Qt::ColorScheme::Unknown:
-	  ui->btnSystem->setStyleSheet(selectedStyle);
+	  ui->btnSystem->setStyleSheet(btnSelectedStyle);
 	  break;
 	case Qt::ColorScheme::Light:
-	  ui->btnLight->setStyleSheet(selectedStyle);
+	  ui->btnLight->setStyleSheet(btnSelectedStyle);
 	  break;
 	case Qt::ColorScheme::Dark:
-	  ui->btnDark->setStyleSheet(selectedStyle);
+	  ui->btnDark->setStyleSheet(btnSelectedStyle);
 	  break;
   }
+}
+
+
+void ConfigDialog::setCurrentTheme(Qt::ColorScheme scheme) noexcept {
+
+  selectedScheme_ = scheme;
+  applyAllStyles();
+
 }
 
 void ConfigDialog::applyThemeSelection() noexcept{
@@ -252,22 +302,19 @@ void ConfigDialog::restoreLastSelection(){
 
 void ConfigDialog::on_btnSystem_clicked(){
 
-  selectedScheme_ = Qt::ColorScheme::Unknown;
-  setCurrentTheme(selectedScheme_);
+  setCurrentTheme(Qt::ColorScheme::Unknown);
 
 }
 
 void ConfigDialog::on_btnLight_clicked(){
 
-  selectedScheme_ = Qt::ColorScheme::Light;
-  setCurrentTheme(selectedScheme_);
+  setCurrentTheme(Qt::ColorScheme::Light);
 
 }
 
 void ConfigDialog::on_btnDark_clicked(){
 
-  selectedScheme_ = Qt::ColorScheme::Dark;
-  setCurrentTheme(selectedScheme_);
+  setCurrentTheme(Qt::ColorScheme::Dark);
 
 }
 
@@ -316,4 +363,13 @@ void ConfigDialog::closeEvent(QCloseEvent *event){
   emit styleChanged(originalStyle_);
   event->accept();
 
+}
+
+void ConfigDialog::changeEvent(QEvent *event){
+  if (event->type() == QEvent::PaletteChange ||
+	  event->type() == QEvent::ApplicationPaletteChange) {
+	// Actualizar todos los estilos cuando cambie el color de énfasis del sistema
+	applyAllStyles();
+  }
+  QDialog::changeEvent(event);
 }
