@@ -28,8 +28,8 @@ void SWItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
   if (opt.state & QStyle::State_MouseOver) {
 
 	//! Definimos un color sutil para el hover
-	QColor hoverColor = opt.palette.color(QPalette::Highlight);
-	// hoverColor.setAlpha(40);
+	QColor hoverColor = opt.palette.color(QPalette::Accent);
+	hoverColor.setAlpha(100);
 
 	//! Pintamos nuestro fondo con bordes redondeados
 	painter->save();
