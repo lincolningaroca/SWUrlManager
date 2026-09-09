@@ -10,25 +10,8 @@
 #include <optional>
 
 class QStringView;
+
 namespace SW {
-
-struct UrlImportData {
-  QString url;
-  QString description;
-};
-
-// En helperdb.hpp, antes del struct
-enum class DeleteUrlMode : uint8_t {
-  ByCategory = 1,
-  ByUrlId    = 2
-};
-
-
-enum class DuplicateAction {
-  Omit,
-  Replace
-};
-
 struct HelperDataBase_t{
 
   explicit HelperDataBase_t();
@@ -41,8 +24,8 @@ struct HelperDataBase_t{
 
 
   bool importUrlsBatch(uint32_t categoryId,
-					   const QList<UrlImportData>& items,
-					   DuplicateAction action,
+					   const QList<SW::UrlImportData>& items,
+					   SW::DuplicateAction action,
 					   int* insertedCount = nullptr,
 					   int* updatedCount = nullptr,
 					   const std::function<void (int, int)> &onProgress = nullptr) noexcept;

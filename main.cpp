@@ -190,7 +190,7 @@ struct SingleIntsanceManager{
  * @brief connectToDatabase
  * Establece la conexión principal de la app usando la configuración guardada
  */
-bool connectToDatabase(const DbConfig& config) {
+bool connectToDatabase(const SW::DbConfig& config) {
   const QString connectionName = QStringLiteral("xxxConection");
 
   if (QSqlDatabase::contains(connectionName)) {

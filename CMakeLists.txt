@@ -44,6 +44,7 @@ qt_add_executable(${PROJECT_NAME}
     util/backupcrypto.hpp util/backupcrypto.cpp
     util/cryptomanager.hpp util/cryptomanager.cpp
     dialogs/reportbugdialog.hpp dialogs/reportbugdialog.cpp
+    util/sw_types.hpp
 
 )
 

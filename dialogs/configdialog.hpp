@@ -16,8 +16,8 @@ public:
   // Retorna el esquema seleccionado por el usuario
   Qt::ColorScheme selectedScheme() const noexcept;
 
-  DbConfig getDbConfig() const noexcept;
-  void setDbConfig(const DbConfig& config) noexcept;
+  SW::DbConfig getDbConfig() const noexcept;
+  void setDbConfig(const SW::DbConfig& config) noexcept;
 
   void setCurrentPage(int index);
 
@@ -54,7 +54,7 @@ private slots:
 signals:
   void themeChanged(Qt::ColorScheme scheme);
   void styleChanged(bool style);
-  void dbConfigSaved(const DbConfig& config);
+  void dbConfigSaved(const SW::DbConfig& config);
 
   // QWidget interface
 protected:

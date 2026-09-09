@@ -61,9 +61,9 @@ ConfigDialog::~ConfigDialog()
   delete ui;
 }
 
-DbConfig ConfigDialog::getDbConfig() const noexcept {
+SW::DbConfig ConfigDialog::getDbConfig() const noexcept {
 
-  DbConfig cfg;
+  SW::DbConfig cfg;
   cfg.host     = ui->txtHost->text().trimmed();
   cfg.port     = ui->txtPort->text().toInt();
   cfg.dbName   = ui->txtDbName->text().trimmed();
@@ -72,7 +72,7 @@ DbConfig ConfigDialog::getDbConfig() const noexcept {
   return cfg;
 }
 
-void ConfigDialog::setDbConfig(const DbConfig& config) noexcept {
+void ConfigDialog::setDbConfig(const SW::DbConfig &config) noexcept {
 
   ui->txtHost->setText(config.host);
   ui->txtPort->setText(QString::number(config.port));
@@ -90,7 +90,7 @@ void ConfigDialog::setCurrentPage(int index) {
 
 void ConfigDialog::on_btnTestDB_clicked() {
 
-  const DbConfig cfg = getDbConfig();
+  const SW::DbConfig cfg = getDbConfig();
   const QString tempConnName = QStringLiteral("TestDbConnection");
 
   // Si por alguna razón la conexión previa quedó en memoria, la removemos

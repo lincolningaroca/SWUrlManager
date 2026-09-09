@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/sw_types.hpp"
+
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDesktopServices>
@@ -9,36 +11,7 @@
 #include <QStringView>
 #include <QtGlobal>
 
-struct DbConfig {
-  QString host{"localhost"};
-  QString dbName{"xdatabase"};
-  QString userName{"postgres"};
-  QString password{};
-  int     port{5432};
-};
-
-struct PgCheckResult {
-  bool isInstalled{false};
-  int majorVersion{0};
-  QString rawOutput{};
-};
-
 namespace SW {
-
-enum class [[deprecated("Usar mejor Qt::ColorScheme")]] Theme{ Light_Mode, Dark_Mode };
-enum class SessionStatus{ Session_start, Session_closed };
-enum class User{ U_public, U_user };
-enum class AuthType{ Numeric_pin, Secret_Question };
-
-enum class UserRole : uint8_t { Role_User, Role_Admin };
-
-struct SessionPermissions {
-  UserRole role{UserRole::Role_User};
-  bool canEdit{true};
-  bool mustChangePassword{false};
-};
-
-enum class OpenMode{ New, Edit};
 
 /**
  * @brief Manejador personalizado de mensajes para redirigir qInfo, qWarning, etc. a un archivo .log

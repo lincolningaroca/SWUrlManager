@@ -464,7 +464,7 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   return exeName;
 }
 
-bool HelperDataBase_t::ensureDatabaseAndSchemaReady(DbConfig& config, QWidget* parent) {
+bool HelperDataBase_t::ensureDatabaseAndSchemaReady(DbConfig &config, QWidget* parent) {
   const QString adminConnName = QStringLiteral("AdminConnection");
   bool adminConnected = false;
 
