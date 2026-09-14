@@ -42,6 +42,7 @@ struct Helper_t{
   [[nodiscard]]static bool createDataBase_dir() noexcept;
 
   [[nodiscard]]static QString generateSecurePassword(uint32_t length = 8) noexcept;
+  [[nodiscard]] static QFont monospaceFont(int pointSize = 9) noexcept;
   [[nodiscard]]static bool isPasswordSecure(const QString& password) noexcept;
 
   static void set_Theme(Qt::ColorScheme theme) noexcept;

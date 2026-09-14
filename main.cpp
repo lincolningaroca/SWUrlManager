@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
 
 
   // Instalar el interceptor de Logs de Qt
-  qInstallMessageHandler(SW::customLogHandler);
+  // qInstallMessageHandler(SW::customLogHandler);
 
   qInfo() << "============================================";
   qInfo() << "Iniciando aplicación:" << a.applicationName() << a.applicationVersion();

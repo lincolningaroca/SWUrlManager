@@ -4,7 +4,6 @@
 #include "util/helper.hpp"
 
 #include <QFile>
-#include <QFontDataBase>
 #include <QMessageBox>
 #include <QSettings>
 
@@ -18,8 +17,8 @@ AcercaDeDialog::AcercaDeDialog(Qt::ColorScheme colorMode, QWidget *parent)
   ui->setupUi(this);
 
   const auto scheme = (colorMode_ == Qt::ColorScheme::Unknown)
-                        ? SW::Helper_t::detectSystemColorScheme()
-                        : colorMode_;
+						? SW::Helper_t::detectSystemColorScheme()
+						: colorMode_;
 
   setImage(scheme);
 
@@ -62,18 +61,18 @@ void AcercaDeDialog::loadInfo_app() const noexcept{
   ui->tbLicencia->setAcceptRichText(true);
   ui->tbLicencia->setOpenExternalLinks(true);
   ui->tbLicencia->setHtml(QStringLiteral(
-    "<p style='text-align: justify;'>SWUrlManager:<br><br>Es software libre, puede "
-    "redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública "
-    "General de GNU según se encuentra publicada por la <a "
-    "href=\"https://www.fsf.org\">Free Software "
-    "Foundation</a>, bien de la versión 3 de dicha Licencia o bien (según su "
-    "elección) de cualquier versión posterior.<br><br>"
-    "Este programa se distribuye con la esperanza de que sea útil, pero <strong>SIN "
-    "NINGUNA "
-    "GARANTÍA</strong>, incluso sin la garantía <strong>MERCANTIL</strong> implícita ni la de "
-    "garantizar la <strong>ADECUACIÓN A UN PROPÓSITO PARTICULAR.</strong> Véase la <a "
-    "href=\"https://www.gnu.org/licenses/\">Licencia "
-    "Pública General</a> de GNU para más detalles.</p>"));
+	"<p style='text-align: justify;'>SWUrlManager:<br><br>Es software libre, puede "
+	"redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública "
+	"General de GNU según se encuentra publicada por la <a "
+	"href=\"https://www.fsf.org\">Free Software "
+	"Foundation</a>, bien de la versión 3 de dicha Licencia o bien (según su "
+	"elección) de cualquier versión posterior.<br><br>"
+	"Este programa se distribuye con la esperanza de que sea útil, pero <strong>SIN "
+	"NINGUNA "
+	"GARANTÍA</strong>, incluso sin la garantía <strong>MERCANTIL</strong> implícita ni la de "
+	"garantizar la <strong>ADECUACIÓN A UN PROPÓSITO PARTICULAR.</strong> Véase la <a "
+	"href=\"https://www.gnu.org/licenses/\">Licencia "
+	"Pública General</a> de GNU para más detalles.</p>"));
 
 }
 
@@ -82,33 +81,33 @@ void AcercaDeDialog::setTextToAbout() const{
   ui->tbAcercaDe->setFont(customFont_);
   ui->tbAcercaDe->setOpenExternalLinks(true);
   ui->tbAcercaDe->setHtml(QStringLiteral(
-    "<p>Powered by:"
-    "<ul>"
-    "<li>Lincoln Ingaroca De La Cruz.</li>"
-    "<li>SWSystem's.</li>"
-    "</ul>"
-    "Contacto:"
-    "<ul>"
-    "<li>lincolningaroca@gmail.com</li>"
-    "</ul>"
-    "Lincoln Ingaroca:"
-    "<ul>"
-    "<li>Analista de sistemas informáticos.</li>"
-    "<li>Software development.</li>"
-    "</ul><br>"
-    "Bibliotecas:"
-    "<p>SWUrlManager incluye código fuente de los siguientes proyectos:</p>"
-    "<ul>"
-    "<li><a href=\"https://www.openssl.org/\">OpenSSL.</a></li>"
-    "<li><a href=\"https://www.qt.io//\">QtFrameWork and QtWidgets.</a></li>"
-    "<li><a href=\"https://www.sqlite.org/index.html\">SQLite.</a></li>"
-    "<li><a href=\"https://github.com/QtExcel/QXlsx\">QXlsx library.</a></li>"
+	"<p>Powered by:"
+	"<ul>"
+	"<li>Lincoln Ingaroca De La Cruz.</li>"
+	"<li>SWSystem's.</li>"
+	"</ul>"
+	"Contacto:"
+	"<ul>"
+	"<li>lincolningaroca@gmail.com</li>"
+	"</ul>"
+	"Lincoln Ingaroca:"
+	"<ul>"
+	"<li>Analista de sistemas informáticos.</li>"
+	"<li>Software development.</li>"
+	"</ul><br>"
+	"Bibliotecas:"
+	"<p>SWUrlManager incluye código fuente de los siguientes proyectos:</p>"
+	"<ul>"
+	"<li><a href=\"https://www.openssl.org/\">OpenSSL.</a></li>"
+	"<li><a href=\"https://www.qt.io//\">QtFrameWork and QtWidgets.</a></li>"
+	"<li><a href=\"https://www.sqlite.org/index.html\">SQLite.</a></li>"
+	"<li><a href=\"https://github.com/QtExcel/QXlsx\">QXlsx library.</a></li>"
 	"<li><a href=\"https://www.postgresql.org/\">PostgreSQL.</a></li>"
-    "</ul>"
-    "</p>"
-    "<p>Repositorio del programa:"
+	"</ul>"
+	"</p>"
+	"<p>Repositorio del programa:"
 	"<ul><li><a href=\"https://github.com/lincolningaroca/SWUrlManager\">SWUrlManager</a></li></ul>"
-    "</p>"));
+	"</p>"));
 
 }
 
@@ -126,35 +125,14 @@ void AcercaDeDialog::setImage(Qt::ColorScheme colorMode) {
   ui->lblLogo->setAlignment(Qt::AlignCenter);
 }
 
-
 void AcercaDeDialog::setupCustomFont() {
-  bool fontLoaded = false;
 
-  [[maybe_unused]]const int deliusId = QFontDatabase::addApplicationFont(":/font/Delius-Regular.ttf");
-  // qDebug() << "Delius families:" << QFontDatabase::applicationFontFamilies(deliusId);
-  const int fontId = QFontDatabase::addApplicationFont(":/font/FiraCode-Regular.ttf");
-  if (fontId != -1) {
-	const QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-	if (!fontFamilies.isEmpty()) {
-	  customFont_ = QFont(fontFamilies.at(0), 9);
-	  qDebug() << "Fuente personalizada cargada:" << fontFamilies.at(0);
-	  fontLoaded = true;
-	} else {
-	  qWarning() << "No se pudo obtener la familia de la fuente personalizada";
-	}
-  } else {
-	qWarning() << "No se pudo cargar la fuente desde recursos";
-  }
-
-  if (!fontLoaded) {
-	customFont_ = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-	customFont_.setPointSize(10);
-	customFont_.setStyleHint(QFont::Monospace);
-  }
+  customFont_ = SW::Helper_t::monospaceFont(9);
 
   ui->tbAcercaDe->setFont(customFont_);
   ui->tbLicencia->setFont(customFont_);
 }
+
 
 void AcercaDeDialog::setupUI(){
 
@@ -174,7 +152,7 @@ void AcercaDeDialog::setupConnections(){
   connect(ui->btnCerrar, &QPushButton::clicked, this, &AcercaDeDialog::close);
   connect(ui->lblLicencia, &QLabel::linkActivated, this, &AcercaDeDialog::showLicense);
   connect(ui->lblAcercaQt, &QLabel::linkActivated, this, [this]() {
-    QMessageBox::aboutQt(this, SW::Helper_t::appName());
+	QMessageBox::aboutQt(this, SW::Helper_t::appName());
   });
 
 }
@@ -195,10 +173,10 @@ void AcercaDeDialog::showLicense(){
 
   QFile fileName(QStringLiteral(":/licencia/gnu-gpl-v3-license.html"));
   if (!fileName.open(QFile::ReadOnly | QFile::Text)) {
-    QMessageBox::warning(this, SW::Helper_t::appName(),
-                         tr("Error al abrir el archivo de licencia:\n%1")
-                           .arg(fileName.errorString()));
-    return;
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 tr("Error al abrir el archivo de licencia:\n%1")
+						   .arg(fileName.errorString()));
+	return;
   }
 
   teLicencia->setHtml(fileName.readAll());

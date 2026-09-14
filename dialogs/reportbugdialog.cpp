@@ -1,5 +1,7 @@
 #include "reportbugdialog.hpp"
 
+#include "util/helper.hpp"
+
 #include <QApplication>
 #include <QClipboard>
 #include <QComboBox>
@@ -23,6 +25,7 @@
 #include <QUrlQuery>
 #include <QVBoxLayout>
 
+
 namespace {
 constexpr int kMaxUrlBodyLength = 6000; // margen de seguridad bajo el límite práctico de URL de la mayoría de navegadores
 const auto kGitHubIssueUrl = QStringLiteral("https://github.com/lincolningaroca/SWUrlManager/issues/new");
@@ -31,6 +34,7 @@ const auto kGitHubIssueUrl = QStringLiteral("https://github.com/lincolningaroca/
 ReportBugDialog::ReportBugDialog(QWidget *parent)
   : QDialog(parent)
 {
+
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle(QStringLiteral("Reportar un error"));
   setMinimumWidth(580);
@@ -48,7 +52,7 @@ void ReportBugDialog::setupUi()
 
   // --- Encabezado ---
   auto *header = new QLabel(
-	QStringLiteral("<h3>🐛 Reportar un problema o bug</h3>"
+	QStringLiteral("<h3> Reportar un problema o bug</h3>"
 				   "<p>Describe el problema con el mayor detalle posible. "
 				   "El reporte se abrirá como un Issue en GitHub, listo para enviar.</p>"),
 	this);
@@ -84,14 +88,14 @@ void ReportBugDialog::setupUi()
   formLayout->addRow(QStringLiteral("*Descripción:"), m_descriptionEdit);
 
   auto *attachNote = new QLabel(
-	QStringLiteral("<i>💡 Si desea adjuntar capturas de pantalla, GIFs o videos del problema, "
+	QStringLiteral("<i> Si desea adjuntar capturas de pantalla, GIFs o videos del problema, "
 				   "puede arrastrarlos directamente dentro del cuadro de texto del Issue "
 				   "una vez que se abra en GitHub.</i>"),
 	this);
   attachNote->setWordWrap(true);
   formLayout->addRow(attachNote);
 
-  tabs->addTab(formPage, QStringLiteral("📝 Reporte"));
+  tabs->addTab(formPage, QStringLiteral(" Reporte"));
 
   // ==== TAB 2: Info del sistema ====
   auto *infoPage = new QWidget(this);
@@ -105,17 +109,17 @@ void ReportBugDialog::setupUi()
 
   m_systemInfoEdit = new QTextEdit(infoPage);
   m_systemInfoEdit->setReadOnly(false);
-  m_systemInfoEdit->setFont(QFont(QStringLiteral("Consolas"), 9));
+  m_systemInfoEdit->setFont(SW::Helper_t::monospaceFont(9));
   m_systemInfoEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   infoLayout->addWidget(m_systemInfoEdit);
 
-  tabs->addTab(infoPage, QStringLiteral("💻 Info del sistema"));
+  tabs->addTab(infoPage, QStringLiteral("Info del sistema"));
 
   mainLayout->addWidget(tabs);
 
   // --- Botones de acción ---
   auto *actionLayout = new QHBoxLayout();
-  m_btnReport = new QPushButton(QStringLiteral("📤 Reportar en GitHub"), this);
+  m_btnReport = new QPushButton(QIcon(":/img/github.png"), QStringLiteral(" Reportar en GitHub"), this);
   auto *btnClose = new QPushButton(QStringLiteral("Cerrar"), this);
 
   actionLayout->addWidget(m_btnReport);

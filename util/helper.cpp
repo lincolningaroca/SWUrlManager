@@ -4,6 +4,7 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QFontDatabase>
 #include <QIODevice>
 #include <QMutex>
 #include <QPainter>
@@ -192,6 +193,35 @@ QString Helper_t::generateSecurePassword(uint32_t length) noexcept {
   std::shuffle(password.begin(), password.end(), rng);
 
   return password;
+}
+
+QFont Helper_t::monospaceFont(int pointSize) noexcept {
+
+  static const QString familyName = []() -> QString {
+	const int fontId = QFontDatabase::addApplicationFont(":/font/FiraCode-Regular.ttf");
+
+	if (fontId != -1) {
+	  const QStringList families = QFontDatabase::applicationFontFamilies(fontId);
+	  if (!families.isEmpty()) {
+		qDebug() << "Fuente monoespaciada personalizada cargada:" << families.at(0);
+		return families.at(0);
+	  }
+	  qWarning() << "No se pudo obtener la familia de la fuente personalizada";
+	} else {
+	  qWarning() << "No se pudo cargar la fuente desde recursos";
+	}
+
+	return QString(); // vacío → señal de usar el fallback del sistema
+  }();
+
+  if (familyName.isEmpty()) {
+	QFont fallback = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+	fallback.setPointSize(pointSize);
+	fallback.setStyleHint(QFont::Monospace);
+	return fallback;
+  }
+
+  return QFont(familyName, pointSize);
 }
 
 bool Helper_t::isPasswordSecure(const QString &password) noexcept{
