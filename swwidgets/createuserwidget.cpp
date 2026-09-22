@@ -23,7 +23,7 @@ CreateUserWidget::CreateUserWidget(QWidget *parent)
   //coneccion de combo box metodo de recuperacion
   QObject::connect(ui->cboRestoreType, &QComboBox::currentIndexChanged, this, &CreateUserWidget::setOptionsToComboBox);
   //connect to create user button
-  QObject::connect(ui->btnCreateUser, &QAbstractButton::clicked, this, &CreateUserWidget::on_btnCreateUser_cliked);
+  QObject::connect(ui->btnCreateUser, &QAbstractButton::clicked, this, &CreateUserWidget::on_btnCreateUser_clicked);
 
   QObject::connect(ui->btnResetPassword, &QPushButton::clicked, this, [this](){
 
@@ -46,7 +46,7 @@ CreateUserWidget::CreateUserWidget(QWidget *parent)
 	setFeatures(ui->txtConfirmValue, ui->checkBox_5, checked);
   });
 
-  QObject::connect(ui->chkGenPassword, &QCheckBox::clicked, this, &CreateUserWidget::on_chkGenPassword_cliked);
+  QObject::connect(ui->chkGenPassword, &QCheckBox::clicked, this, &CreateUserWidget::on_chkGenPassword_clicked);
 
   //gen passowrd button
   QObject::connect(ui->btnGenPassword, &QPushButton::clicked, this, [this](){
@@ -90,7 +90,7 @@ void CreateUserWidget::restoreControlStates(){
   auto cboRestoreType_value = settings.value("cboRestoreType", QString()).toString();
 
   ui->chkGenPassword->setChecked(chkState);
-  on_chkGenPassword_cliked(chkState);
+  on_chkGenPassword_clicked(chkState);
 
   const auto findIndex = ui->cboRestoreType->findText(cboRestoreType_value);
   if(findIndex != -1){
@@ -124,7 +124,7 @@ void CreateUserWidget::setFeatures(QLineEdit *lineEdit, QCheckBox *checkBox, boo
 
 }
 
-void CreateUserWidget::on_chkGenPassword_cliked(bool checked){
+void CreateUserWidget::on_chkGenPassword_clicked(bool checked){
 
   if(checked){
 
@@ -149,7 +149,7 @@ void CreateUserWidget::on_chkGenPassword_cliked(bool checked){
 
 }
 
-void CreateUserWidget::on_btnCreateUser_cliked(bool checked){
+void CreateUserWidget::on_btnCreateUser_clicked(bool checked){
 
   if(Validate_hasNoEmpty()){
 	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span><em>Todos los campos son requeridos!</em></span>"));

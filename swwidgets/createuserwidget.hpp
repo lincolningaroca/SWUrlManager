@@ -39,7 +39,7 @@ private:
   void setFeatures(QLineEdit *lineEdit, QCheckBox *checkBox, bool checked) noexcept;
 
 private slots:
-  void on_chkGenPassword_cliked(bool checked);
-  void on_btnCreateUser_cliked(bool checked);
+  void on_chkGenPassword_clicked(bool checked);
+  void on_btnCreateUser_clicked(bool checked);
 
 };
