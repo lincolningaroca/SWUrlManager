@@ -156,6 +156,14 @@ bool Helper_t::createDataBase_dir() noexcept{
 
 }
 
+QString Helper_t::authTypeLabel(SW::AuthType type) noexcept {
+  switch (type) {
+	case SW::AuthType::Numeric_pin:     return QStringLiteral("Pin numérico");
+	case SW::AuthType::Secret_Question: return QStringLiteral("Pregunta secreta");
+  }
+  return QString();
+}
+
 QString Helper_t::generateSecurePassword(uint32_t length) noexcept {
   static constexpr uint32_t kMinLength = 4;
   if (length < kMinLength) length = kMinLength;

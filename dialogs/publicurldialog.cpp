@@ -24,10 +24,9 @@ PublicUrlDialog::PublicUrlDialog(Qt::ColorScheme colorScheme, QWidget *parent) :
 
   setMaximumSize(QSize(950,500));
 
-  model = new SWTableModel(this);
-  ui->urlTableView->setModel(model);
-
   loadDataComboBox();
+  initialTableSetup();
+  on_loadDataTableView();
 
   readSettings();
 
@@ -175,18 +174,9 @@ void PublicUrlDialog::on_loadDataTableView(){
 
   model->setQuery(std::move(qry));
 
-  ui->urlTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-  ui->urlTableView->hideColumn(0);  // url_id
-
   model->setHeaderData(1, Qt::Horizontal, "Dirección URL");
   model->setHeaderData(2, Qt::Horizontal, "Descripción");
 
-  ui->urlTableView->setItemDelegate(new SWItemDelegate(ui->urlTableView));
-  ui->urlTableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-  ui->urlTableView->verticalHeader()->setDefaultSectionSize(20);
-  ui->urlTableView->setAlternatingRowColors(true);
-  ui->urlTableView->setMouseTracking(true);
 }
 
 void PublicUrlDialog::on_showContextMenu(const QPoint &pos){
@@ -267,6 +257,24 @@ void PublicUrlDialog::setupContextMenu(){
   connect(editUrl_, &QAction::triggered, this, [this](){on_showMaintenanceDialog(SW::OpenMode::Edit);});
   connect(deleteUrl_, &QAction::triggered, this, &PublicUrlDialog::on_deleteUrl);
   connect(openUrl_, &QAction::triggered, this, &PublicUrlDialog::on_openUrl);
+
+}
+
+void PublicUrlDialog::initialTableSetup(){
+
+  model = new SWTableModel(this);
+  ui->urlTableView->setModel(model);
+
+  ui->urlTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+  ui->urlTableView->hideColumn(0);  // url_id
+
+  ui->urlTableView->setItemDelegate(new SWItemDelegate(ui->urlTableView));
+  ui->urlTableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+  ui->urlTableView->verticalHeader()->setDefaultSectionSize(20);
+  ui->urlTableView->setAlternatingRowColors(true);
+  ui->urlTableView->setMouseTracking(true);
+
 
 }
 

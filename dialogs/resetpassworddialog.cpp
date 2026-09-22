@@ -1,7 +1,6 @@
 #include "resetpassworddialog.hpp"
 #include "ui_resetpassworddialog.h"
 
-#include "logindialog.hpp"
 #include "mainform.hpp"
 #include "util/helper.hpp"
 
@@ -22,42 +21,41 @@ ResetPasswordDialog::ResetPasswordDialog(QWidget *parent)
 
   });
 
+
   QObject::connect(ui->btnValidarUsuario, &QPushButton::clicked, this, [this](){
 
-    if(ui->txtUser->text() == SW::Helper_t::defaultUser || ui->txtUser->text().isEmpty()){
-      ui->txtUser->clear();
-      ui->txtUser->setFocus(Qt::OtherFocusReason);
-      return;
-    }
+	if(ui->txtUser->text() == SW::Helper_t::defaultUser || ui->txtUser->text().isEmpty()){
+	  ui->txtUser->clear();
+	  ui->txtUser->setFocus(Qt::OtherFocusReason);
+	  return;
+	}
 
-    if(!helper.userExists(ui->txtUser->text().simplified())){
-      QMessageBox::warning(this, SW::Helper_t::appName(),
-                           QStringLiteral("<p><cite>Nombre de usuario incorrecto.</cite></p>"));
-      ui->txtUser->selectAll();
-      ui->txtUser->setFocus(Qt::OtherFocusReason);
-      return;
-    }
+	if(!helper.userExists(ui->txtUser->text().simplified())){
+	  QMessageBox::warning(this, SW::Helper_t::appName(),
+						   QStringLiteral("<p>Nombre de usuario incorrecto.</p>"));
+	  ui->txtUser->selectAll();
+	  ui->txtUser->setFocus(Qt::OtherFocusReason);
+	  return;
+	}
 	const auto user = ui->txtUser->text().simplified();
-    userId_ = helper.getUser_id(user, SW::User::U_user);
+	userId_ = helper.getUser_id(user, SW::User::U_user);
 	const auto rescue_type = helper.validateRescueType(userId_);
 
-	LogInDialog login(this);
+	if(rescue_type == SW::Helper_t::authTypeLabel(SW::AuthType::Secret_Question)){
+	  ui->stackedWidget->setCurrentIndex(1);
+	  ui->txtPregunta->setPlainText(helper.getQuestion(userId_));
+	  ui->btnRespuesta->setDefault(true);
+	  ui->txtRespuesta->setFocus(Qt::OtherFocusReason);
 
-	if(rescue_type == login.getTextForAuthType(SW::AuthType::Secret_Question)){
-      ui->stackedWidget->setCurrentIndex(1);
-      ui->txtPregunta->setPlainText(helper.getQuestion(userId_));
-      ui->btnRespuesta->setDefault(true);
-      ui->txtRespuesta->setFocus(Qt::OtherFocusReason);
-
-    }
-    else{
-      ui->stackedWidget->setCurrentIndex(2);
-      ui->btnClaveNumerica->setDefault(true);
-      ui->txtPIN->setFocus(Qt::OtherFocusReason);
-    }
-
+	}
+	else{
+	  ui->stackedWidget->setCurrentIndex(2);
+	  ui->btnClaveNumerica->setDefault(true);
+	  ui->txtPIN->setFocus(Qt::OtherFocusReason);
+	}
 
   });
+
 
   //btn pregunta secreta
   QObject::connect(ui->btnRespuesta, &QAbstractButton::clicked, this, [this](){

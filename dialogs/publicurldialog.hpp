@@ -42,6 +42,8 @@ private:
 
   void setupContextMenu();
 
+  void initialTableSetup();
+
   void applyIcons(Qt::ColorScheme scheme) noexcept;
 
   uint32_t currentCategoryId() const noexcept;

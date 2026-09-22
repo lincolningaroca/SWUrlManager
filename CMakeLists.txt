@@ -45,6 +45,8 @@ qt_add_executable(${PROJECT_NAME}
     util/cryptomanager.hpp util/cryptomanager.cpp
     dialogs/reportbugdialog.hpp dialogs/reportbugdialog.cpp
     util/sw_types.hpp
+    swwidgets/createuserwidget.hpp swwidgets/createuserwidget.cpp swwidgets/createuserwidget.ui
+    dialogs/createnewuserdialog.hpp dialogs/createnewuserdialog.cpp dialogs/createnewuserdialog.ui
 
 )
 

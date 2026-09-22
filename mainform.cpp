@@ -16,6 +16,7 @@
 #include "util/backupcrypto.hpp"
 #include "util/cryptomanager.hpp"
 #include "util/dataimporterexporter.hpp"
+#include "dialogs/createnewuserdialog.hpp"
 
 #include <QAction>
 #include <QCheckBox>
@@ -87,6 +88,7 @@ MainForm::MainForm(QWidget *parent)
   loadListCategory(userId_);
 
   setUpTable(currentCategoryId());
+  setUpTableHeaders();
 
 
   canCreateBackUp();
@@ -1207,12 +1209,8 @@ void MainForm::on_moveUrl(){
 
 void MainForm::on_firstTimeLoginDialog(){
 
-  LogInDialog login(this, LogInDialog::FIRST_TIME);
-  login.setToggledToButton(true);
-  if(login.exec() == QDialog::Accepted){
-	canStartSession();
-	ui->firstTimeLogInBtn->setVisible(false);
-  }
+ CreateNewUserDialog createNewUserDialog(this);
+ createNewUserDialog.exec();
 
 }
 
@@ -1482,8 +1480,6 @@ void MainForm::setUpTable(uint32_t categoryId) noexcept {
 
   xxxModel_->setQuery(std::move(qry));
 
-  setUpTableHeaders();
-  ui->tvUrl->setMouseTracking(true);
 }
 
 void MainForm::setUpTableHeaders() const noexcept{
@@ -1497,6 +1493,7 @@ void MainForm::setUpTableHeaders() const noexcept{
   ui->tvUrl->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
   ui->tvUrl->verticalHeader()->setDefaultSectionSize(20);
   ui->tvUrl->setAlternatingRowColors(true);
+  ui->tvUrl->setMouseTracking(true);
 
 }
 
@@ -1522,7 +1519,6 @@ void MainForm::canCreateBackUp() const noexcept{
 void MainForm::canStartSession() noexcept{
   ui->btnLogIn->setEnabled(helperdb_.userExists());
   ui->btnResetPassword->setEnabled(helperdb_.userExists());
-  ui->firstTimeLogInBtn->setVisible(!helperdb_.userExists());
 
 }
 

@@ -49,6 +49,8 @@ struct Helper_t{
   [[nodiscard]] static QIcon svgIcon(const QString& resourcePath,
 									 const QColor& color) noexcept;
 
+[[nodiscard]] static QString authTypeLabel(SW::AuthType type) noexcept;
+
 
   [[nodiscard]] static QIcon svgIcon(const QString& resourcePath,
 									 const QColor& color,
