@@ -446,6 +446,7 @@ void MainForm::on_loadLoginForm(){
 	ui->btnLogOut->setEnabled(true);
 	ui->btnLogIn->setDisabled(true);
 	ui->btnResetPassword->setVisible(false);
+	ui->firstTimeLogInBtn->setVisible(false);
 
 	const auto userDes = QString(" - Sesión inicada como: '%1'").arg(SW::Helper_t::current_user_);
 	setWindowTitle(QApplication::applicationName().append(userDes));
@@ -805,6 +806,7 @@ void MainForm::on_callLogout(){
   ui->btnLogOut->setDisabled(true);
   ui->btnLogIn->setEnabled(true);
   ui->btnResetPassword->setVisible(true);
+  ui->firstTimeLogInBtn->setVisible(true);
   setWindowTitle(QApplication::applicationName());
 
   writeUserPreferences();
@@ -1452,10 +1454,7 @@ void MainForm::initFrm() noexcept{
 
   ui->btnResetPassword->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
 
-  ui->firstTimeLogInBtn->setToolTip("<p>Crear un usuario: <br>"
-									"<cite>\"Este boton se muestra solo por una vez; "
-									"esto es por la razón de que, al abrir la aplicación por primera vez, no existen usuarios,"
-									" aparte del usario por defecto\"</cite></p>");
+  ui->firstTimeLogInBtn->setToolTip("Crear nuevo usuario");
 
 
 }
