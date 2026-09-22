@@ -391,8 +391,12 @@ void MainForm::applyPreferredTheme(Qt::ColorScheme scheme){
   qApp->setPalette(qApp->palette());
   applyIcons(scheme);
 
+  const auto resolvedScheme = (scheme == Qt::ColorScheme::Unknown)
+								? SW::Helper_t::detectSystemColorScheme()
+								: scheme;
+
   QPalette tablePalette = ui->tvUrl->palette();
-  if (scheme == Qt::ColorScheme::Dark || scheme == Qt::ColorScheme::Unknown) {
+  if (resolvedScheme == Qt::ColorScheme::Dark) {
 	tablePalette.setColor(QPalette::AlternateBase, QColor(35, 35, 35));
   } else {
 	tablePalette.setColor(QPalette::AlternateBase, QColor(245, 245, 245));
@@ -1944,6 +1948,9 @@ void MainForm::on_showReportBugDialog(){
 void MainForm::changeEvent(QEvent *event){
 
   if (event->type() == QEvent::PaletteChange || event->type() == QEvent::ApplicationPaletteChange) {
+	if (currentScheme_ == Qt::ColorScheme::Unknown) {
+	  applyPreferredTheme(Qt::ColorScheme::Unknown);
+	}
 	verifyUserState();
 	updateLblInfo();
   }
