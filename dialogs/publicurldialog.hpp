@@ -49,6 +49,8 @@ private:
   uint32_t currentCategoryId() const noexcept;
   void applyTablePalette(Qt::ColorScheme scheme);
 
+  void setupUiConnections();
+
 private slots:
   void on_openUrl();
   void on_loadDataTableView();

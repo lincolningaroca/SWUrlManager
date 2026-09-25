@@ -27,25 +27,13 @@ PublicUrlDialog::PublicUrlDialog(Qt::ColorScheme colorScheme, QWidget *parent) :
   loadDataComboBox();
   initialTableSetup();
   on_loadDataTableView();
-
-  readSettings();
-
   setupContextMenu();
+  applyTablePalette(colorScheme);
   applyIcons(colorScheme);
 
-  ui->urlTableView->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(ui->urlTableView, &QTableView::customContextMenuRequested, this, &PublicUrlDialog::on_showContextMenu);
+  readSettings();  
 
-  QObject::connect(ui->categoryComboBox, &QComboBox::currentIndexChanged, this, &PublicUrlDialog::on_categorySelectedChanged);
-
-
-  QObject::connect(ui->newToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::New);});
-  QObject::connect(ui->editToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::Edit);});
-  QObject::connect(ui->quitarToolButton, &QToolButton::clicked, this, PublicUrlDialog::on_deleteUrl);
-  QObject::connect(ui->openPushButton, &QToolButton::clicked, this, &PublicUrlDialog::on_openUrl);
-
-  applyTablePalette(colorScheme);
-
+  setupUiConnections();
 }
 
 PublicUrlDialog::~PublicUrlDialog(){
@@ -61,6 +49,21 @@ void PublicUrlDialog::applyTablePalette(Qt::ColorScheme scheme) {
 	tablePalette.setColor(QPalette::AlternateBase, QColor(245, 245, 245));
   }
   ui->urlTableView->setPalette(tablePalette);
+}
+
+void PublicUrlDialog::setupUiConnections(){
+
+  ui->urlTableView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui->urlTableView, &QTableView::customContextMenuRequested, this, &PublicUrlDialog::on_showContextMenu);
+
+  QObject::connect(ui->categoryComboBox, &QComboBox::currentIndexChanged, this, &PublicUrlDialog::on_categorySelectedChanged);
+
+
+  QObject::connect(ui->newToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::New);});
+  QObject::connect(ui->editToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::Edit);});
+  QObject::connect(ui->quitarToolButton, &QToolButton::clicked, this, PublicUrlDialog::on_deleteUrl);
+  QObject::connect(ui->openPushButton, &QToolButton::clicked, this, &PublicUrlDialog::on_openUrl);
+
 }
 
 void PublicUrlDialog::setShowGrid(bool checked){

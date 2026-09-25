@@ -27,12 +27,13 @@ private:
   const uint32_t currentCategoryId_{};
   MidleWidget *midleWidget{nullptr};
   SW::HelperDataBase_t helperdb_{};
-
   int id{};
-
+  SW::OpenMode mode_;
+  const QList<QVariant> &dataUrl_{};
 
   void writeSettings() const;
   void readSettings();
+  void initForm();
 
 public slots:
   void on_acceptPushButton();

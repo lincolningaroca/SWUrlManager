@@ -7,37 +7,25 @@
 #include <QMessageBox>
 #include <QSettings>
 
-MaintenanceUrlDialog::MaintenanceUrlDialog(Qt::ColorScheme colorScheme, SW::OpenMode mode,
-										   const QList<QVariant> &dataUrl, uint32_t categoryId, QWidget *parent)
-  : QDialog(parent), ui(new Ui::MaintenanceUrlDialog), currentCategoryId_(categoryId)
+MaintenanceUrlDialog::MaintenanceUrlDialog(Qt::ColorScheme colorScheme,
+  SW::OpenMode mode, const QList<QVariant> &dataUrl,
+  uint32_t categoryId, QWidget *parent)
+  : QDialog(parent),
+  ui(new Ui::MaintenanceUrlDialog),
+  currentCategoryId_(categoryId),
+  mode_(mode),
+  dataUrl_(dataUrl)
 {
   ui->setupUi(this);
 
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-
-  midleWidget = new MidleWidget(this);
-  ui->insertLayout->addWidget(midleWidget);
+  initForm();
 
   const auto iconColor = SW::Helper_t::currentIconColor(colorScheme);
-
   midleWidget->applyIcons(iconColor);
   midleWidget->setPlacesHolders();
 
   readSettings();
-
-  if(mode == SW::OpenMode::New){
-
-	setWindowTitle("Agregar nueva url");
-	ui->aceptpushButton->setText("Guardar datos");
-  }else{
-
-	setWindowTitle("Editar datos url");
-	id = dataUrl.value(0).toInt();
-
-	midleWidget->setUrl(dataUrl.value(1).toString());
-	midleWidget->setDescription(dataUrl.value(2).toString());
-	ui->aceptpushButton->setText("Guardar cambios");
-  }
 
   connect(ui->cancelPushButton, &QPushButton::clicked, this, &MaintenanceUrlDialog::reject);
   connect(ui->aceptpushButton, &QPushButton::clicked, this, &MaintenanceUrlDialog::on_acceptPushButton);
@@ -90,6 +78,27 @@ void MaintenanceUrlDialog::readSettings(){
   settings.endGroup();
 
   midleWidget->restoreFont(fontFamily, fontSize, textColor);
+
+}
+
+void MaintenanceUrlDialog::initForm(){
+
+  midleWidget = new MidleWidget(this);
+  ui->insertLayout->addWidget(midleWidget);
+
+  if(mode_ == SW::OpenMode::New){
+
+	setWindowTitle("Agregar nueva url");
+	ui->aceptpushButton->setText("Guardar datos");
+  }else{
+
+	setWindowTitle("Editar datos url");
+	id = dataUrl_.value(0).toInt();
+
+	midleWidget->setUrl(dataUrl_.value(1).toString());
+	midleWidget->setDescription(dataUrl_.value(2).toString());
+	ui->aceptpushButton->setText("Guardar cambios");
+  }
 
 }
 

@@ -38,8 +38,10 @@ private:
   void clearControls() noexcept;
   void setFeatures(QLineEdit *lineEdit, QCheckBox *checkBox, bool checked) noexcept;
 
+  void setupUiConnections();
+
 private slots:
-  void on_chkGenPassword_clicked(bool checked);
-  void on_btnCreateUser_clicked(bool checked);
+  void handleGenPasswordToggle(bool checked);
+  void handleCreateUserClicked();
 
 };

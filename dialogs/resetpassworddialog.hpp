@@ -20,6 +20,7 @@ public:
   ~ResetPasswordDialog();
 
 private:
+
   Ui::ResetPasswordDialog *ui;
   SW::HelperDataBase_t helper;
 
@@ -29,5 +30,14 @@ private:
 
   void applyIcons() noexcept;
   void setInit_Form() noexcept;
+
+  void setupConnections();
+
+private slots:
+  void onbtnValidarUsuario();
+  void onbtnRespuesta();
+  void onbtnClaveNumerica();
+  void onbtnAtras();
+  void onbtnReset();
 };
 

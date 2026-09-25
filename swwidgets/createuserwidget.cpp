@@ -20,41 +20,7 @@ CreateUserWidget::CreateUserWidget(QWidget *parent)
   restoreControlStates();
   applyIcons();
 
-  //coneccion de combo box metodo de recuperacion
-  QObject::connect(ui->cboRestoreType, &QComboBox::currentIndexChanged, this, &CreateUserWidget::setOptionsToComboBox);
-  //connect to create user button
-  QObject::connect(ui->btnCreateUser, &QAbstractButton::clicked, this, &CreateUserWidget::on_btnCreateUser_clicked);
-
-  QObject::connect(ui->btnResetPassword, &QPushButton::clicked, this, [this](){
-
-	ResetPasswordDialog resetPassword{this};
-	resetPassword.setWindowTitle(SW::Helper_t::appName().append(" - Restablecer clave o password"));
-	resetPassword.exec();
-
-  });
-
-  QObject::connect(ui->checkBox_2, &QCheckBox::clicked, this, [this](bool checked){
-	setFeatures(ui->txtNewPassword, ui->checkBox_2, checked);
-  });
-  QObject::connect(ui->checkBox_3, &QCheckBox::clicked, this, [this](bool checked){
-	setFeatures(ui->txtRePassword, ui->checkBox_3, checked);
-  });
-  QObject::connect(ui->checkBox_4, &QCheckBox::clicked, this, [this](bool checked){
-	setFeatures(ui->txtfirstValue, ui->checkBox_4, checked);
-  });
-  QObject::connect(ui->checkBox_5, &QCheckBox::clicked, this, [this](bool checked){
-	setFeatures(ui->txtConfirmValue, ui->checkBox_5, checked);
-  });
-
-  QObject::connect(ui->chkGenPassword, &QCheckBox::clicked, this, &CreateUserWidget::on_chkGenPassword_clicked);
-
-  //gen passowrd button
-  QObject::connect(ui->btnGenPassword, &QPushButton::clicked, this, [this](){
-
-	const auto password{SW::Helper_t::generateSecurePassword()};
-	ui->txtNewPassword->setText(password);
-	ui->txtRePassword->setText(password);
-  });
+  setupUiConnections();
 
 
 }
@@ -90,7 +56,7 @@ void CreateUserWidget::restoreControlStates(){
   auto cboRestoreType_value = settings.value("cboRestoreType", QString()).toString();
 
   ui->chkGenPassword->setChecked(chkState);
-  on_chkGenPassword_clicked(chkState);
+  handleGenPasswordToggle(chkState);
 
   const auto findIndex = ui->cboRestoreType->findText(cboRestoreType_value);
   if(findIndex != -1){
@@ -124,7 +90,47 @@ void CreateUserWidget::setFeatures(QLineEdit *lineEdit, QCheckBox *checkBox, boo
 
 }
 
-void CreateUserWidget::on_chkGenPassword_clicked(bool checked){
+void CreateUserWidget::setupUiConnections(){
+
+  //coneccion de combo box metodo de recuperacion
+  QObject::connect(ui->cboRestoreType, &QComboBox::currentIndexChanged, this, &CreateUserWidget::setOptionsToComboBox);
+  //connect to create user button
+  QObject::connect(ui->btnCreateUser, &QAbstractButton::clicked, this, &CreateUserWidget::handleCreateUserClicked);
+
+  QObject::connect(ui->btnResetPassword, &QPushButton::clicked, this, [this](){
+
+	ResetPasswordDialog resetPassword{this};
+	resetPassword.setWindowTitle(SW::Helper_t::appName().append(" - Restablecer clave o password"));
+	resetPassword.exec();
+
+  });
+
+  QObject::connect(ui->checkBox_2, &QCheckBox::clicked, this, [this](bool checked){
+	setFeatures(ui->txtNewPassword, ui->checkBox_2, checked);
+  });
+  QObject::connect(ui->checkBox_3, &QCheckBox::clicked, this, [this](bool checked){
+	setFeatures(ui->txtRePassword, ui->checkBox_3, checked);
+  });
+  QObject::connect(ui->checkBox_4, &QCheckBox::clicked, this, [this](bool checked){
+	setFeatures(ui->txtfirstValue, ui->checkBox_4, checked);
+  });
+  QObject::connect(ui->checkBox_5, &QCheckBox::clicked, this, [this](bool checked){
+	setFeatures(ui->txtConfirmValue, ui->checkBox_5, checked);
+  });
+
+  QObject::connect(ui->chkGenPassword, &QCheckBox::clicked, this, &CreateUserWidget::handleGenPasswordToggle);
+
+  //gen passowrd button
+  QObject::connect(ui->btnGenPassword, &QPushButton::clicked, this, [this](){
+
+	const auto password{SW::Helper_t::generateSecurePassword()};
+	ui->txtNewPassword->setText(password);
+	ui->txtRePassword->setText(password);
+  });
+
+}
+
+void CreateUserWidget::handleGenPasswordToggle(bool checked){
 
   if(checked){
 
@@ -149,7 +155,7 @@ void CreateUserWidget::on_chkGenPassword_clicked(bool checked){
 
 }
 
-void CreateUserWidget::on_btnCreateUser_clicked(bool checked){
+void CreateUserWidget::handleCreateUserClicked(){
 
   if(Validate_hasNoEmpty()){
 	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span><em>Todos los campos son requeridos!</em></span>"));

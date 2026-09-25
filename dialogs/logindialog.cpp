@@ -21,42 +21,13 @@ LogInDialog::LogInDialog(QWidget *parent) :
 
   setupAnimation();
 
-  QObject::connect(createUserWidget_, &CreateUserWidget::userCreated, this, [this](){
-	// Vuelve a la vista de inicio de sesión tras crear el usuario con éxito.
-	ui->btnOtherOptions->setChecked(false);
-  });
-
-
   setUp_Form();
+  applyIcons();
 
   readSettings();
-  ui->pbLogIn->setDefault(true);
+  ui->pbLogIn->setDefault(true);  
 
-  QObject::connect(ui->pbCancel, &QPushButton::clicked, this, &LogInDialog::reject_form);
-
-  QObject::connect(ui->pbLogIn, &QPushButton::clicked, this, [this](){
-
-	if(!helperdb_.logIn(ui->txtUser->text().simplified(), ui->txtPassword->text().simplified())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span>"
-																		 "<strong>"
-																		 "Los datos que ingreso son incorrectos\n"
-																		 "vuelva a intentarlo."
-																		 "</strong>"
-																		 "</span>"));
-	  ui->txtUser->selectAll();
-	  ui->txtUser->setFocus(Qt::OtherFocusReason);
-
-	  return;
-	}
-
-	userName_ = ui->txtUser->text();
-	accept();
-  });
-
-  ui->btnOtherOptions->setCheckable(true);
-  QObject::connect(ui->btnOtherOptions, &QToolButton::toggled, this, &LogInDialog::handleToggleAnimation);
-
-  applyIcons();
+  setupUiConnections();
 
 }//end constructor
 
@@ -105,6 +76,22 @@ void LogInDialog::applyIcons() noexcept {
   ui->btnOtherOptions->setIcon(SW::Helper_t::svgIcon(arrowIcon, iconColor));
 }
 
+void LogInDialog::setupUiConnections() const{
+
+  QObject::connect(createUserWidget_, &CreateUserWidget::userCreated, this, [this](){
+	// Vuelve a la vista de inicio de sesión tras crear el usuario con éxito.
+	ui->btnOtherOptions->setChecked(false);
+  });
+
+  QObject::connect(ui->pbCancel, &QPushButton::clicked, this, &LogInDialog::reject_form);
+
+  QObject::connect(ui->pbLogIn, &QPushButton::clicked, this, &LogInDialog::on_userLogin);
+
+  ui->btnOtherOptions->setCheckable(true);
+  QObject::connect(ui->btnOtherOptions, &QToolButton::toggled, this, &LogInDialog::on_handleToggleAnimation);
+
+}
+
 void LogInDialog::writeSettings() const noexcept{
   QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
 
@@ -124,7 +111,7 @@ void LogInDialog::reject_form() noexcept{
   reject();
 }
 
-void LogInDialog::handleToggleAnimation(bool checked){
+void LogInDialog::on_handleToggleAnimation(bool checked){
 
   if(checked){
 
@@ -173,6 +160,26 @@ void LogInDialog::handleToggleAnimation(bool checked){
 
   QTimer::singleShot(collapseAnimation_->duration(), this, &LogInDialog::adjustSize);
   applyIcons();
+
+}
+
+void LogInDialog::on_userLogin(){
+
+  if(!helperdb_.logIn(ui->txtUser->text().simplified(), ui->txtPassword->text().simplified())){
+	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span>"
+																	   "<strong>"
+																	   "Los datos que ingreso son incorrectos\n"
+																	   "vuelva a intentarlo."
+																	   "</strong>"
+																	   "</span>"));
+	ui->txtUser->selectAll();
+	ui->txtUser->setFocus(Qt::OtherFocusReason);
+
+	return;
+  }
+
+  userName_ = ui->txtUser->text();
+  accept();
 
 }
 

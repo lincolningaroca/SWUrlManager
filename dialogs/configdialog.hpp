@@ -40,6 +40,8 @@ private:
 
   void applyAllStyles() noexcept;
 
+  void setupUiConnections();
+
 private slots:
   void on_btnSystem_clicked();
   void on_btnLight_clicked();

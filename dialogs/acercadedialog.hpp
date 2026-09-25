@@ -25,7 +25,7 @@ private:
 
   void setupCustomFont();
   void setupUI();
-  void setupConnections();
+  void setupUiConnections();
   void showLicense();
 
 

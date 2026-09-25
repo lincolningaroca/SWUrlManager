@@ -26,6 +26,13 @@ public:
 
 private:
   Ui::dlgNewCategory *ui;
+  SW::OpenMode mode_;
+  QStringList list_{};
+
+  void initForm();
+
+private slots:
+  void onAcceptOption();
 
   bool validateData() noexcept;
 

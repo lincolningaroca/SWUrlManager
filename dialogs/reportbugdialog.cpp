@@ -35,13 +35,14 @@ ReportBugDialog::ReportBugDialog(QWidget *parent)
   : QDialog(parent)
 {
 
+  setupUi();
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle(QStringLiteral("Reportar un error"));
   setMinimumWidth(580);
-  setupUi();
-  setupConnections();
   collectSystemInfo();
   adjustSize();
+
+  setupConnections();
 }
 
 ReportBugDialog::~ReportBugDialog() = default;

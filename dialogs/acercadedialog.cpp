@@ -15,19 +15,18 @@ AcercaDeDialog::AcercaDeDialog(Qt::ColorScheme colorMode, QWidget *parent)
 {
 
   ui->setupUi(this);
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+  setupUI();
 
   const auto scheme = (colorMode_ == Qt::ColorScheme::Unknown)
 						? SW::Helper_t::detectSystemColorScheme()
 						: colorMode_;
 
   setImage(scheme);
-
-  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-
-  setupCustomFont();
-  setupUI();
+  setupCustomFont();  
   readSettings();
-  setupConnections();
+
+  setupUiConnections();
 
 }
 
@@ -147,7 +146,7 @@ void AcercaDeDialog::setupUI(){
 
 }
 
-void AcercaDeDialog::setupConnections(){
+void AcercaDeDialog::setupUiConnections(){
 
   connect(ui->btnCerrar, &QPushButton::clicked, this, &AcercaDeDialog::close);
   connect(ui->lblLicencia, &QLabel::linkActivated, this, &AcercaDeDialog::showLicense);

@@ -16,44 +16,18 @@ ConfigDialog::ConfigDialog(Qt::ColorScheme currentScheme, bool isFusionActive, Q
 {
 
   ui->setupUi(this);
-
-  ui->txtPassword->setEchoMode(QLineEdit::Password);
-
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle(QStringLiteral("Configuración"));
 
-  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+  ui->txtPassword->setEchoMode(QLineEdit::Password);
+  ui->chkFusionStyle->setChecked(selectedStyle_);
 
   initDialog();
   setCurrentTheme(selectedScheme_);
-
-  ui->chkFusionStyle->setChecked(selectedStyle_);
-
   setDbConfig(SW::Helper_t::loadDbConfig());
-
   restoreLastSelection();
 
-  // Navegación lateral
-  QObject::connect(ui->listMenu, &QListWidget::currentRowChanged, this, &ConfigDialog::on_listMenu_currentRowChanged);
-
-  // Botones de tema
-  QObject::connect(ui->btnSystem, &QPushButton::clicked, this, &ConfigDialog::on_btnSystem_clicked);
-  QObject::connect(ui->btnLight,  &QPushButton::clicked, this, &ConfigDialog::on_btnLight_clicked);
-  QObject::connect(ui->btnDark,   &QPushButton::clicked, this, &ConfigDialog::on_btnDark_clicked);
-
-  QObject::connect(ui->chkFusionStyle, &QCheckBox::toggled, this, [this](bool checked){
-	selectedStyle_ = checked;
-	// emit styleChanged(checked); // Si deseas previsualización en tiempo real
-  });
-
-  // Cuando MainForm aplica el tema (via Apply), refrescamos los botones del diálogo
-  QObject::connect(this, &ConfigDialog::themeChanged, this, [this](Qt::ColorScheme scheme){
-	setCurrentTheme(scheme);
-  });
-
-  // Botones de diálogo
-  QObject::connect(ui->btnOk,     &QPushButton::clicked, this, &ConfigDialog::on_btnOk_clicked);
-  QObject::connect(ui->btnApply,  &QPushButton::clicked, this, &ConfigDialog::on_btnApply_clicked);
-  QObject::connect(ui->btnCancel, &QPushButton::clicked, this, &ConfigDialog::on_btnCancel_clicked);
+  setupUiConnections();
 }
 
 ConfigDialog::~ConfigDialog()
@@ -253,6 +227,33 @@ void ConfigDialog::applyAllStyles() noexcept {
 	  ui->btnDark->setStyleSheet(btnSelectedStyle);
 	  break;
   }
+}
+
+void ConfigDialog::setupUiConnections(){
+
+  // Navegación lateral
+  QObject::connect(ui->listMenu, &QListWidget::currentRowChanged, this, &ConfigDialog::on_listMenu_currentRowChanged);
+
+  // Botones de tema
+  QObject::connect(ui->btnSystem, &QPushButton::clicked, this, &ConfigDialog::on_btnSystem_clicked);
+  QObject::connect(ui->btnLight,  &QPushButton::clicked, this, &ConfigDialog::on_btnLight_clicked);
+  QObject::connect(ui->btnDark,   &QPushButton::clicked, this, &ConfigDialog::on_btnDark_clicked);
+
+  QObject::connect(ui->chkFusionStyle, &QCheckBox::toggled, this, [this](bool checked){
+	selectedStyle_ = checked;
+	// emit styleChanged(checked); // Si deseas previsualización en tiempo real
+  });
+
+  // Cuando MainForm aplica el tema (via Apply), refrescamos los botones del diálogo
+  QObject::connect(this, &ConfigDialog::themeChanged, this, [this](Qt::ColorScheme scheme){
+	setCurrentTheme(scheme);
+  });
+
+  // Botones de diálogo
+  QObject::connect(ui->btnOk,     &QPushButton::clicked, this, &ConfigDialog::on_btnOk_clicked);
+  QObject::connect(ui->btnApply,  &QPushButton::clicked, this, &ConfigDialog::on_btnApply_clicked);
+  QObject::connect(ui->btnCancel, &QPushButton::clicked, this, &ConfigDialog::on_btnCancel_clicked);
+
 }
 
 

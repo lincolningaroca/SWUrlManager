@@ -1,7 +1,6 @@
 #pragma once
 
 #include "helperdatabase/helperdb.hpp"
-#include "util/helper.hpp"
 
 #include <QDialog>
 
@@ -41,10 +40,14 @@ private:
   void readSettings();
   void reject_form() noexcept;
 
-  void handleToggleAnimation(bool checked);
   void setupAnimation();
-
   void applyIcons() noexcept;
+  //metodo para conecciones a las señales y slots
+  void setupUiConnections() const;
+
+private slots:
+  void on_handleToggleAnimation(bool checked);
+  void on_userLogin();
 
 protected:
   void closeEvent(QCloseEvent *event) override;
