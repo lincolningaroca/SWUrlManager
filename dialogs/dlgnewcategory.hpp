@@ -16,7 +16,9 @@ class dlgNewCategory : public QDialog
 
 public:
 
-  explicit dlgNewCategory(SW::OpenMode mode, const QStringList& list = {}, QWidget *parent = nullptr);
+  using categoryData = std::pair<QString, QString>;
+  explicit dlgNewCategory(SW::OpenMode mode, const std::optional<categoryData>& list = std::nullopt,
+						  QWidget *parent = nullptr);
 
   ~dlgNewCategory();
 
@@ -27,9 +29,8 @@ public:
 private:
   Ui::dlgNewCategory *ui;
   SW::OpenMode mode_;
-  QStringList list_{};
 
-  void initForm();
+  void initForm(const std::optional<categoryData>& list);
 
 private slots:
   void onAcceptOption();

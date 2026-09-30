@@ -14,6 +14,8 @@ class QStringView;
 namespace SW {
 struct HelperDataBase_t{
 
+  using CategoryData = std::pair<QString, QString>;
+
   explicit HelperDataBase_t();
   explicit HelperDataBase_t(QSqlDatabase db) noexcept;
 
@@ -71,10 +73,10 @@ struct HelperDataBase_t{
   bool isDataBase_empty() noexcept;
 
   QList<QPair<uint32_t, QString>> loadList_Category(uint32_t user_id) noexcept;
-  int getUser_id(const QString &user, SW::User user_profile) noexcept;
-  QStringList dataCategory(uint32_t category_id) noexcept;
-  QString validateRescueType(uint32_t userId) noexcept;
-  QString getQuestion(uint32_t userId) noexcept;
+  [[nodiscard]]std::optional<uint32_t> getUser_id(const QString &user, SW::User user_profile) noexcept;
+  [[nodiscard]]std::optional<CategoryData> dataCategory(uint32_t category_id) noexcept;
+  [[nodiscard]]std::optional<QString> validateRescueType(uint32_t userId) noexcept;
+  [[nodiscard]]std::optional<QString> getQuestion(uint32_t userId) noexcept;
 
   // Devuelve nullopt si la consulta falla o el usuario no existe.
   [[nodiscard]] std::optional<SW::SessionPermissions> getUserPermissions(const QString& username) noexcept;

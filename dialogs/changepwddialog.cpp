@@ -130,9 +130,10 @@ void ChangePwdDialog::on_acceptRole(){
   SW::HelperDataBase_t helperDb{};
 
   // const auto user = user_.simplified();
-  auto userId = helperDb.getUser_id(user_.simplified(), SW::User::U_user);
+  const auto userId = helperDb.getUser_id(user_.simplified(), SW::User::U_user);
+  if(!userId) return;
 
-  if(helperDb.resetPassword(ui->txtNewPassword->text().simplified(), userId)){
+  if(helperDb.resetPassword(ui->txtNewPassword->text().simplified(), userId.value())){
 
 	QMessageBox::information(this, qApp->applicationName(),
 							 QString("<strong>Se cambio la clave o contraseña para el usuario: <cite>\"%1\"</cite>"

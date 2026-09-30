@@ -58,8 +58,8 @@ void ResetPasswordDialog::setInit_Form() noexcept{
 
 
   auto msg = QString("<p>Al restaurar su password o clave, se le solicitará, los datos que ingresó,<br>"
-					"al momento de registrar su usuario, segun sea el caso, que haya elegido<br>"
-					"un <strong><i>PIN numérico</i></strong> o una <strong><i>pregunta secreta</i></strong>, para la restauración de su clave.</p>");
+					 "al momento de registrar su usuario, segun sea el caso, que haya elegido<br>"
+					 "un <strong><i>PIN numérico</i></strong> o una <strong><i>pregunta secreta</i></strong>, para la restauración de su clave.</p>");
   ui->lblDesc->setText(msg);
 
   auto icon = QPixmap(":/img/contrasena.png").scaled(
@@ -120,11 +120,26 @@ void ResetPasswordDialog::onbtnValidarUsuario(){
   }
   const auto user = ui->txtUser->text().simplified();
   userId_ = helper.getUser_id(user, SW::User::U_user);
-  const auto rescue_type = helper.validateRescueType(userId_);
+  if(!userId_) return;
 
-  if(rescue_type == SW::Helper_t::authTypeLabel(SW::AuthType::Secret_Question)){
+  const auto rescue_type = helper.validateRescueType(userId_.value());
+
+  if (!rescue_type) {
+	QMessageBox::critical(this, SW::Helper_t::appName(),
+						  QStringLiteral("<p>Error al obtener el método de recuperación del usuario.<br>%1</p>")
+							.arg(helper.errorMessage()));
+	return;
+  }
+
+  if(rescue_type.value() == SW::Helper_t::authTypeLabel(SW::AuthType::Secret_Question)){
 	ui->stackedWidget->setCurrentIndex(1);
-	ui->txtPregunta->setPlainText(helper.getQuestion(userId_));
+	if (const auto question = helper.getQuestion(userId_.value())) {
+	  ui->txtPregunta->setPlainText(question.value());
+	} else {
+	  QMessageBox::warning(this, SW::Helper_t::appName(),
+						   QStringLiteral("<p>No se pudo cargar la pregunta secreta de seguridad.</p>"));
+	  return;
+	}
 	ui->btnRespuesta->setDefault(true);
 	ui->txtRespuesta->setFocus(Qt::OtherFocusReason);
 
@@ -139,7 +154,7 @@ void ResetPasswordDialog::onbtnValidarUsuario(){
 
 void ResetPasswordDialog::onbtnRespuesta(){
 
-  if(!helper.validateAnswer(ui->txtRespuesta->text(), userId_)){
+  if(!helper.validateAnswer(ui->txtRespuesta->text(), userId_.value())){
 	QMessageBox::warning(this, SW::Helper_t::appName(),
 						 QStringLiteral("<p><cite>Su respuesta es incorrecta.</cite></p>"));
 	ui->txtRespuesta->selectAll();
@@ -161,7 +176,7 @@ void ResetPasswordDialog::onbtnClaveNumerica(){
 	ui->txtPIN->setFocus(Qt::OtherFocusReason);
 	return;
   }
-  if(!helper.validateAnswer(ui->txtPIN->text(), userId_)){
+  if(!helper.validateAnswer(ui->txtPIN->text(), userId_.value())){
 	QMessageBox::warning(this, SW::Helper_t::appName(),
 						 QStringLiteral("<p><em>El número que ingreso es incorrecto.</em></p>"));
 	ui->txtPIN->selectAll();
@@ -239,7 +254,7 @@ void ResetPasswordDialog::onbtnReset(){
 	ui->txtRePassword->setFocus();
 	return;
   }
-  if(helper.resetPassword(ui->txtRePassword->text(), userId_)){
+  if(helper.resetPassword(ui->txtRePassword->text(), userId_.value())){
 	QMessageBox::information(this, SW::Helper_t::appName(), QStringLiteral("<span><em>Su clave o password de acceso fue cambiado con éxito!</em></strong></span>"));
 
 	accept();

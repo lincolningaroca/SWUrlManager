@@ -24,7 +24,7 @@ private:
   Ui::ResetPasswordDialog *ui;
   SW::HelperDataBase_t helper;
 
-  uint32_t userId_{0};
+  std::optional<uint32_t> userId_{0};
 
   void setFeatures(QLineEdit* w, QCheckBox* b, bool checked) noexcept;
 

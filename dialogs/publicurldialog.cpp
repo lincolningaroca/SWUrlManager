@@ -82,8 +82,9 @@ void PublicUrlDialog::loadDataComboBox(){
   QSignalBlocker blocker(ui->categoryComboBox);
 
   ui->categoryComboBox->clear();
-  auto user_id = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
- auto data_i = helperdb_.loadList_Category(user_id);
+  const auto user_id = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
+  if(!user_id) return;
+  auto data_i = helperdb_.loadList_Category(user_id.value());
 
   // Recorremos la lista manteniendo el orden exacto
   for (const auto& [id, name] : std::as_const(data_i)) {

@@ -70,7 +70,7 @@ MainForm::MainForm(QWidget *parent)
   QObject::connect(ui->actionPreference, &QAction::triggered, this, &MainForm::on_showSettingsDialog);
 
 
-  userId_ = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
+  userId_ = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public).value();
 
 
 
@@ -85,7 +85,7 @@ MainForm::MainForm(QWidget *parent)
 
   setUpStatusBar();
 
-  loadListCategory(userId_);
+  loadListCategory(userId_.value());
 
   setUpTable(currentCategoryId());
   setUpTableHeaders();
@@ -325,19 +325,19 @@ void MainForm::hastvUrlData() noexcept {
 
 void MainForm::on_showNewCategoryDialog(){
 
-  dlgNewCategory newCategory(SW::OpenMode::New, QStringList(), this);
+  dlgNewCategory newCategory(SW::OpenMode::New, std::nullopt, this);
 
   if(newCategory.exec() == QDialog::Rejected)
 	return;
 
-  if(!helperdb_.saveCategoryData(newCategory.category(), newCategory.description(), userId_)){
+  if(!helperdb_.saveCategoryData(newCategory.category(), newCategory.description(), userId_.value())){
 
 	QMessageBox::critical(this, SW::Helper_t::appName(), QStringLiteral("Error al guardar los datos!\n%1").arg(
 														   helperdb_.errorMessage()));
 	return;
   }
 
-  loadListCategory(userId_);
+  loadListCategory(userId_.value());
   ui->cboCategory->setCurrentText(newCategory.category());
   setUpTable(currentCategoryId());
   has_data();
@@ -419,6 +419,7 @@ void MainForm::on_loadLoginForm(){
 	const auto user = logDialog.userName();
 
 	userId_ = helperdb_.getUser_id(user, SW::User::U_user);
+	if(!userId_.value()) return;
 
 	if (auto perms = helperdb_.getUserPermissions(user)) {
 	  sessionPerms_ = *perms;
@@ -440,7 +441,7 @@ void MainForm::on_loadLoginForm(){
 
 	writeSettings();
 
-	loadListCategory(userId_);
+	loadListCategory(userId_.value());
 
 
 	ui->btnLogOut->setEnabled(true);
@@ -633,7 +634,7 @@ void MainForm::on_deleteCategory(){
 	midleWidget->clearInputs();
 	ui->btnAdd->setText(openMode.value(SW::OpenMode::New));
 
-	loadListCategory(userId_);
+	loadListCategory(userId_.value());
 	setUpTable(currentCategoryId());
 	has_data();
 	hastvUrlData();
@@ -710,16 +711,23 @@ void MainForm::on_addNewUrl(){
 void MainForm::on_editCategory(){
 
   const auto id = currentCategoryId();
+  const auto categoryData = helperdb_.dataCategory(id);
 
-  const QStringList dataLocal = helperdb_.dataCategory(id);
-  dlgNewCategory editCategory(SW::OpenMode::Edit, dataLocal, this);
+  if (!categoryData) {
+	QMessageBox::warning(this, SW::Helper_t::appName(),
+						 QStringLiteral("No se pudieron obtener los datos de la categoría.\n%1")
+						   .arg(helperdb_.errorMessage()));
+	return;
+  }
+
+  dlgNewCategory editCategory(SW::OpenMode::Edit, categoryData, this);
   if(editCategory.exec() == QDialog::Rejected){
 	return;
   }
-  if(helperdb_.updateCategory(editCategory.category(), editCategory.description(), id, userId_)){
+  if(helperdb_.updateCategory(editCategory.category(), editCategory.description(), id, userId_.value())){
 	QMessageBox::information(this, SW::Helper_t::appName(), QStringLiteral("Datos actualizados!\n"));
 	ui->cboCategory->clear();
-	loadListCategory(userId_);
+	loadListCategory(userId_.value());
 
 	setUpTable(currentCategoryId());
 	setCboCategoryToolTip();
@@ -800,6 +808,7 @@ void MainForm::on_categorySelectedChanged(int index){
 void MainForm::on_callLogout(){
 
   userId_ = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
+  if(!userId_) return;
 
   sessionPerms_ = SW::SessionPermissions{};
 
@@ -811,7 +820,7 @@ void MainForm::on_callLogout(){
 
   writeUserPreferences();
 
-  loadListCategory(userId_);
+  loadListCategory(userId_.value());
   setUpTable(currentCategoryId());
 
   lblIcon_->setPixmap(QPixmap(":/img/user-public.png").scaled(16,16, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -1024,11 +1033,11 @@ void MainForm::on_makeUserBackup(){
   SW::Helper_t::setLastOpenedDirectory(QFileInfo(filePath).absolutePath());
 
   QJsonObject root;
-  root["userCategories"] = helperdb_.exportUserCategories(static_cast<uint32_t>(userId_));
+  root["userCategories"] = helperdb_.exportUserCategories(userId_.value());
 
   if (includePublicCheck->isChecked()) {
 	const auto publicUserId = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
-	root["publicCategories"] = helperdb_.exportUserCategories(static_cast<uint32_t>(publicUserId));
+	root["publicCategories"] = helperdb_.exportUserCategories(static_cast<uint32_t>(publicUserId.value()));
   }
 
   QString cryptoError;
@@ -1101,14 +1110,12 @@ void MainForm::on_restoreUserBackup(){
 						? SW::DuplicateAction::Replace : SW::DuplicateAction::Omit;
 
   QString restoreError;
-  const bool userOk = helperdb_.restoreUserCategories(
-	static_cast<uint32_t>(userId_), root["userCategories"].toArray(), action, &restoreError);
+  const bool userOk = helperdb_.restoreUserCategories(userId_.value(), root["userCategories"].toArray(), action, &restoreError);
 
   bool publicOk = true;
   if (root.contains("publicCategories")) {
 	const auto publicUserId = helperdb_.getUser_id(SW::Helper_t::defaultUser, SW::User::U_public);
-	publicOk = helperdb_.restoreUserCategories(
-	  static_cast<uint32_t>(publicUserId), root["publicCategories"].toArray(), action, &restoreError);
+	publicOk = helperdb_.restoreUserCategories(publicUserId.value(), root["publicCategories"].toArray(), action, &restoreError);
   }
 
   if (!userOk || !publicOk) {
@@ -1117,7 +1124,7 @@ void MainForm::on_restoreUserBackup(){
 	return;
   }
 
-  loadListCategory(userId_);
+  loadListCategory(userId_.value());
   setUpTable(currentCategoryId());
   has_data();
   hastvUrlData();
@@ -1172,7 +1179,7 @@ void MainForm::on_moveUrl(){
   const auto currentCategoryId_ =currentCategoryId();
   const auto urlid = xxxModel_->index(currentRow_, 0).data().toUInt();
 
-  auto data_ = helperdb_.loadList_Category(userId_);
+  auto data_ = helperdb_.loadList_Category(userId_.value());
 
   data_.removeIf([currentCategoryId_](const QPair<uint32_t, QString>& item) {
 	return item.first == currentCategoryId_;
@@ -1509,7 +1516,7 @@ void MainForm::canCreateBackUp() const noexcept{
   ui->btnBackUp->setVisible(hasValidTableData() &&
 							sessionPerms_.role == SW::UserRole::Role_Admin);
 
-  ui->btnUserBackup->setVisible(hasValidUserTableData(userId_) &&
+  ui->btnUserBackup->setVisible(hasValidUserTableData(userId_.value()) &&
 								SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start &&
 								sessionPerms_.role == SW::UserRole::Role_User);
 
@@ -1721,17 +1728,16 @@ void MainForm::setCboCategoryToolTip() noexcept{
   const auto id = currentCategoryId();
 
   const auto categoryData = helperdb_.dataCategory(id);
-  const auto desc=categoryData.value(1);
-  //  QString desc{};
-  if(desc.isEmpty()){
-	ui->cboCategory->setToolTip(QStringLiteral("<p><cite><strong>Descripción de la categoría:</strong><br><br>"
-											   "Esta categoría no cuenta con una descripción!</cite></p>"));
+  if (!categoryData || categoryData->second.trimmed().isEmpty()) {
+	ui->cboCategory->setToolTip(QStringLiteral(
+	  "<p><cite><strong>Descripción de la categoría:</strong><br><br>"
+	  "Esta categoría no cuenta con una descripción!</cite></p>"));
 	return;
   }
 
-  ui->cboCategory->setToolTip(QString("<p>"
-									  "<cite><strong>Descripción de la categoría:</strong>"
-									  "<br><br>%1</cite></p>").arg(desc));
+  ui->cboCategory->setToolTip(QString(
+								"<p><cite><strong>Descripción de la categoría:</strong>"
+								"<br><br>%1</cite></p>").arg(categoryData->second));
 
 
 }

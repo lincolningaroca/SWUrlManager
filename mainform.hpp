@@ -132,7 +132,7 @@ private:
   };
 
   SW::HelperDataBase_t helperdb_{};
-  inline static int userId_{0};
+  inline static std::optional<uint32_t> userId_{0};
   SWTableModel* xxxModel_{ nullptr };
 
   SW::SessionPermissions sessionPerms_{};

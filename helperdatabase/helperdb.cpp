@@ -38,11 +38,11 @@ HelperDataBase_t::HelperDataBase_t(QSqlDatabase db) noexcept
 }
 
 bool HelperDataBase_t::importUrlsBatch(uint32_t categoryId,
-									   const QList<UrlImportData>& items,
-									   DuplicateAction action,
-									   int* insertedCount,
-									   int* updatedCount,
-									   const std::function<void(int done, int total)>& onProgress) noexcept {
+  const QList<UrlImportData>& items,
+  DuplicateAction action,
+  int* insertedCount,
+  int* updatedCount,
+  const std::function<void(int done, int total)>& onProgress) noexcept {
   if (items.isEmpty()) return true;
 
   // Ahora db_.transaction() funcionará correctamente
@@ -163,8 +163,8 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
   const QStringList envVars = {
-	"PGBIN", "PGHOME", "POSTGRES_HOME", "POSTGRESQL_HOME",
-	"PGROOT", "PG_DIR", "POSTGRES_DIR"
+																																																																																																																																																																																					"PGBIN", "PGHOME", "POSTGRES_HOME", "POSTGRESQL_HOME",
+																																																																																																																																																																																					"PGROOT", "PG_DIR", "POSTGRES_DIR"
   };
   for (const QString &var : envVars) {
 	QString val = env.value(var);
@@ -204,16 +204,16 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 3. REGISTRO DE WINDOWS - Múltiples hives y claves
   // -------------------------------------------------------------------------
   const QStringList registryPaths = {
-	// Instaladores oficiales de EDB (64-bit)
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL\\Installations",
-	// Instaladores oficiales de EDB (32-bit en Windows 64-bit)
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL\\Installations",
-	// BigSQL / PostgreSQL installer antiguos
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL",
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL",
-	// EnterpriseDB antiguo
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\EnterpriseDB",
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\EnterpriseDB",
+																																																																																																																																																																																					// Instaladores oficiales de EDB (64-bit)
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL\\Installations",
+																																																																																																																																																																																					// Instaladores oficiales de EDB (32-bit en Windows 64-bit)
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL\\Installations",
+																																																																																																																																																																																					// BigSQL / PostgreSQL installer antiguos
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL",
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL",
+																																																																																																																																																																																					// EnterpriseDB antiguo
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\EnterpriseDB",
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\EnterpriseDB",
   };
 
   for (const QString &regPath : registryPaths) {
@@ -255,9 +255,9 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
 
   // 3b. Registro de desinstalación (donde Windows guarda TODAS las apps instaladas)
   const QStringList uninstallPaths = {
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-	"HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+																																																																																																																																																																																					"HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
   };
   for (const QString &regPath : uninstallPaths) {
 	QSettings reg(regPath, QSettings::NativeFormat);
@@ -312,12 +312,12 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 4. BÚSQUEDA HEURÍSTICA EN DISCO (Windows)
   // -------------------------------------------------------------------------
   const QStringList searchRoots = {
-	qEnvironmentVariable("ProgramW6432"),      /*C:\Program Files*/
-	qEnvironmentVariable("ProgramFiles(x86)"), /*C:\Program Files (x86)*/
-	qEnvironmentVariable("ProgramFiles"),      /*Fallback*/
-	  qEnvironmentVariable("SystemDrive") + "/", /*C:\*/
-	qEnvironmentVariable("LOCALAPPDATA"),      /*%LOCALAPPDATA%*/
-	qEnvironmentVariable("APPDATA"),           /*%APPDATA%*/
+																																																																																																																																																																																					qEnvironmentVariable("ProgramW6432"),      /*C:\Program Files*/
+																																																																																																																																																																																					qEnvironmentVariable("ProgramFiles(x86)"), /*C:\Program Files (x86)*/
+																																																																																																																																																																																					qEnvironmentVariable("ProgramFiles"),      /*Fallback*/
+																																																																																																																																																																																					  qEnvironmentVariable("SystemDrive") + "/", /*C:\*/
+																																																																																																																																																																																					qEnvironmentVariable("LOCALAPPDATA"),      /*%LOCALAPPDATA%*/
+																																																																																																																																																																																					qEnvironmentVariable("APPDATA"),           /*%APPDATA%*/
   };
 
   auto sortVersionsDescending = [](QStringList &versions) {
@@ -391,16 +391,16 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 5. RUTAS ESTÁNDAR EN LINUX / macOS
   // -------------------------------------------------------------------------
   const QStringList unixPaths = {
-	"/usr/lib/postgresql",           // Debian/Ubuntu: /usr/lib/postgresql/16/bin
-	"/usr/pgsql",                    // RHEL/CentOS/Fedora: /usr/pgsql-16/bin
-	"/opt/PostgreSQL",               // Instalador EDB oficial
-	"/opt/postgres",                 // Instalaciones manuales
-	"/usr/local/pgsql",              // Compilación desde fuentes
-	"/usr/local/postgres",
-	"/var/lib/pgsql",                // Algunas distros
-	"/Applications/Postgres.app/Contents/Versions", // macOS Postgres.app
-	"/opt/homebrew/opt/postgresql",  // macOS Homebrew (Apple Silicon)
-	"/usr/local/opt/postgresql",     // macOS Homebrew (Intel)
+																																																																																																																																																																																					"/usr/lib/postgresql",           // Debian/Ubuntu: /usr/lib/postgresql/16/bin
+																																																																																																																																																																																					"/usr/pgsql",                    // RHEL/CentOS/Fedora: /usr/pgsql-16/bin
+																																																																																																																																																																																					"/opt/PostgreSQL",               // Instalador EDB oficial
+																																																																																																																																																																																					"/opt/postgres",                 // Instalaciones manuales
+																																																																																																																																																																																					"/usr/local/pgsql",              // Compilación desde fuentes
+																																																																																																																																																																																					"/usr/local/postgres",
+																																																																																																																																																																																					"/var/lib/pgsql",                // Algunas distros
+																																																																																																																																																																																					"/Applications/Postgres.app/Contents/Versions", // macOS Postgres.app
+																																																																																																																																																																																					"/opt/homebrew/opt/postgresql",  // macOS Homebrew (Apple Silicon)
+																																																																																																																																																																																					"/usr/local/opt/postgresql",     // macOS Homebrew (Intel)
   };
 
   for (const QString &base : unixPaths) {
@@ -621,7 +621,7 @@ QJsonArray HelperDataBase_t::exportUserCategories(uint32_t userId) noexcept {
 }
 
 bool HelperDataBase_t::restoreUserCategories(uint32_t targetUserId, const QJsonArray& categories,
-											 DuplicateAction action, QString* errorOut) noexcept {
+  DuplicateAction action, QString* errorOut) noexcept {
 
   for (const auto& catValue : categories) {
 	const QJsonObject cat = catValue.toObject();
@@ -715,7 +715,7 @@ bool HelperDataBase_t::urlExists(QStringView url, uint32_t categoryid) noexcept 
 
 
 bool HelperDataBase_t::createUser(QStringView user, QStringView password, QStringView user_prof,
-								  QStringView rescue_type, QStringView val1, QStringView val2) noexcept{
+  QStringView rescue_type, QStringView val1, QStringView val2) noexcept{
 
   qry_.prepare(R"(SELECT fn_create_user(?,?,?,?,?,?,?))");
   qry_.addBindValue(user.toString());
@@ -965,7 +965,7 @@ QList<QPair<uint32_t, QString>> HelperDataBase_t::loadList_Category(uint32_t use
   return categoryList;
 }
 
-int HelperDataBase_t::getUser_id(const QString& user, SW::User user_profile) noexcept {
+std::optional<uint32_t> HelperDataBase_t::getUser_id(const QString& user, SW::User user_profile) noexcept {
 
   qry_.prepare(R"(SELECT fn_get_user_id(?, ?))");
   qry_.addBindValue(user);
@@ -973,30 +973,33 @@ int HelperDataBase_t::getUser_id(const QString& user, SW::User user_profile) noe
 
   if(!qry_.exec()){
 	errorMessage_ = qry_.lastError().text();
-	return -1;
+	return std::nullopt;
   }
+  errorMessage_.clear();
 
-  return qry_.first() ? qry_.value(0).toInt() : 0;
+  if(!qry_.first())
+	return std::nullopt;
+
+  return qry_.value(0).toUInt();
 }
 
 
-QStringList HelperDataBase_t::dataCategory(uint32_t category_id) noexcept {
-  QStringList dataCategory{};
+std::optional<HelperDataBase_t::CategoryData> HelperDataBase_t::dataCategory(uint32_t category_id) noexcept {
 
   qry_.prepare(R"(SELECT * FROM fn_get_category_data(?))");
   qry_.addBindValue(category_id);
 
   if(qry_.exec() && qry_.next()){
-	dataCategory.append(qry_.value(0).toString());
-	dataCategory.append(qry_.value(1).toString());
-  } else {
-	errorMessage_ = qry_.lastError().text();
+
+	return CategoryData{qry_.value(0).toString(), qry_.value(1).toString()};
   }
-  return dataCategory;
+  errorMessage_ = qry_.lastError().text();
+
+  return std::nullopt;
 }
 
 
-QString HelperDataBase_t::validateRescueType(uint32_t userId) noexcept{
+std::optional<QString> HelperDataBase_t::validateRescueType(uint32_t userId) noexcept{
   qry_.prepare(R"(SELECT * FROM fn_validate_rescue_type(?))");
   qry_.addBindValue(userId);
 
@@ -1004,10 +1007,10 @@ QString HelperDataBase_t::validateRescueType(uint32_t userId) noexcept{
 	return qry_.value(0).toString();
   }
   errorMessage_ = qry_.lastError().text();
-  return QString();
+  return std::nullopt;
 }
 
-QString HelperDataBase_t::getQuestion(uint32_t userId) noexcept {
+std::optional<QString> HelperDataBase_t::getQuestion(uint32_t userId) noexcept {
 
   qry_.prepare(R"(SELECT fn_get_question(?, ?))");
   qry_.addBindValue(userId);
@@ -1015,10 +1018,13 @@ QString HelperDataBase_t::getQuestion(uint32_t userId) noexcept {
 
   if(!qry_.exec()){
 	errorMessage_ = qry_.lastError().text();
-	return {};
+	return std::nullopt;
+  }
+  if(!qry_.first()){
+	return std::nullopt;
   }
 
-  return qry_.first() ? qry_.value(0).toString() : QString{};
+  return qry_.value(0).toString();
 }
 
 }//namespace SW

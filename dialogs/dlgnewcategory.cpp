@@ -7,15 +7,16 @@
 #include <QPushButton>
 
 
-dlgNewCategory::dlgNewCategory(SW::OpenMode mode, const QStringList &list, QWidget *parent) :
+
+dlgNewCategory::dlgNewCategory(SW::OpenMode mode, const std::optional<categoryData> &list,
+  QWidget *parent) :
   QDialog(parent),
   ui(new Ui::dlgNewCategory),
-  mode_(mode),
-  list_(list){
+  mode_(mode){
 
   ui->setupUi(this);
   setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
-  initForm();
+  initForm(list);
 
   QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &dlgNewCategory::onAcceptOption);
   QObject::connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -43,7 +44,7 @@ QString dlgNewCategory::descriptionToolTip() const noexcept{
   return ui->pteDesc->toPlainText();
 }
 
-void dlgNewCategory::initForm(){
+void dlgNewCategory::initForm(const std::optional<categoryData> &list){
 
   auto cancelButton = ui->buttonBox->button(QDialogButtonBox::Cancel);
   cancelButton->setText("Cancelar");
@@ -51,9 +52,13 @@ void dlgNewCategory::initForm(){
 
   if(mode_ == SW::OpenMode::Edit){
 	setWindowTitle(SW::Helper_t::appName().append(" - Editar datos de la categoría"));
-	ui->txtCategory->setText(list_.value(0));
-	ui->pteDesc->setPlainText(list_.value(1));
 	okButton->setText("Actualizar datos");
+	if(list){
+	  const auto& [name, desc] = list.value();
+	  ui->txtCategory->setText(name);
+	  ui->pteDesc->setPlainText(desc);
+
+	}
 
   }else{
 
@@ -70,8 +75,10 @@ void dlgNewCategory::onAcceptOption(){
   uint32_t userid {0};
 
   (SW::Helper_t::sessionStatus_ == SW::SessionStatus::Session_start) ?
-	userid = helperdb_.getUser_id(SW::Helper_t::current_user_, SW::User::U_user) :
-	userid = helperdb_.getUser_id(SW::Helper_t::current_user_, SW::User::U_public);
+	userid = helperdb_.getUser_id(SW::Helper_t::current_user_, SW::User::U_user).value() :
+	userid = helperdb_.getUser_id(SW::Helper_t::current_user_, SW::User::U_public).value();
+
+  if(!userid) return;
 
   if(mode_ == SW::OpenMode::New){
 	if(validateData()){
