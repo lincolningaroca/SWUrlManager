@@ -265,8 +265,8 @@ int MainForm::warningMessage(QWidget *parent, const QString &title, const QStrin
   msgBox.setIcon(QMessageBox::Warning);
 
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  msgBox.button(QMessageBox::Yes)->setText(QStringLiteral("Borrar categoría"));
-  msgBox.button(QMessageBox::No)->setText(QStringLiteral("Cancelar"));
+  msgBox.button(QMessageBox::Yes)->setText(tr("Borrar categoría"));
+  msgBox.button(QMessageBox::No)->setText(tr("Cancelar"));
 
   return msgBox.exec();
 }
@@ -332,7 +332,7 @@ void MainForm::on_showNewCategoryDialog(){
 
   if(!helperdb_.saveCategoryData(newCategory.category(), newCategory.description(), userId_.value())){
 
-	QMessageBox::critical(this, SW::Helper_t::appName(), QStringLiteral("Error al guardar los datos!\n%1").arg(
+	QMessageBox::critical(this, SW::Helper_t::appName(), tr("Error al guardar los datos!\n%1").arg(
 														   helperdb_.errorMessage()));
 	return;
   }
@@ -449,7 +449,7 @@ void MainForm::on_loadLoginForm(){
 	ui->btnResetPassword->setVisible(false);
 	ui->firstTimeLogInBtn->setVisible(false);
 
-	const auto userDes = QString(" - Sesión inicada como: '%1'").arg(SW::Helper_t::current_user_);
+	const auto userDes = tr(" - Sesión inicada como: '%1'").arg(SW::Helper_t::current_user_);
 	setWindowTitle(QApplication::applicationName().append(userDes));
 
 
@@ -475,7 +475,7 @@ void MainForm::on_loadLoginForm(){
 void MainForm::on_showResetPasswordDialog(){
 
   ResetPasswordDialog resetDialog(this);
-  resetDialog.setWindowTitle(SW::Helper_t::appName()+" - Restablecer clave o password");
+  resetDialog.setWindowTitle(SW::Helper_t::appName() + tr(" - Restablecer clave"));
   resetDialog.exec();
 
 }
@@ -617,19 +617,18 @@ void MainForm::on_deleteCategory(){
 
   const bool hasRows = (ui->tvUrl->model() && ui->tvUrl->model()->rowCount() > 0);
 
-  const QString msg = hasRows
-						? QStringLiteral("<p style='color:#FB4934;'>"
-										 "<cite><strong>Está a punto de eliminar esta categoría y todo su contenido.<br>"
-										 "Recuerde que al aceptar, eliminará de forma permanente estos datos.<br>"
-										 "¿Desea continuar y eliminar los datos?</strong></cite></p>")
-						: QStringLiteral("<p>¿Seguro que desea eliminar esta categoría?</p>");
+  const QString msg = hasRows ? tr("<p style='color:#FB4934;'>"
+								   "Está a punto de eliminar esta categoría y todo su contenido.<br>"
+								   "Recuerde que al aceptar, eliminará de forma permanente estos datos.<br>"
+								   "¿Desea continuar y eliminar los datos?</p>")
+							  : tr("<p>¿Seguro que desea eliminar esta categoría?</p>");
 
-  if (warningMessage(this, "Advertencia", msg) == QMessageBox::No) {
+  if (warningMessage(this, tr("Advertencia"), msg) == QMessageBox::No) {
 	return;
   }
 
   if (deleteAll()) {
-	QMessageBox::information(this, SW::Helper_t::appName(), QStringLiteral("Datos eliminados."));
+	QMessageBox::information(this, SW::Helper_t::appName(), tr("Datos eliminados."));
 
 	midleWidget->clearInputs();
 	ui->btnAdd->setText(openMode.value(SW::OpenMode::New));
@@ -660,7 +659,7 @@ void MainForm::on_addNewUrl(){
 
 	if(helperdb_.urlExists(midleWidget->url(), categoryId)){
 
-	  auto warningMsg = QString("<p>La url: <cite><strong>%1</strong></cite></p> ya esta registrada!!").arg(midleWidget->url());
+	  auto warningMsg = tr("<p>La url: <b>%1</b></p> ya esta registrada!!").arg(midleWidget->url());
 	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 
 	  midleWidget->selectAndFocus();
@@ -715,7 +714,7 @@ void MainForm::on_editCategory(){
 
   if (!categoryData) {
 	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 QStringLiteral("No se pudieron obtener los datos de la categoría.\n%1")
+						 tr("No se pudieron obtener los datos de la categoría.\n%1")
 						   .arg(helperdb_.errorMessage()));
 	return;
   }
@@ -725,7 +724,7 @@ void MainForm::on_editCategory(){
 	return;
   }
   if(helperdb_.updateCategory(editCategory.category(), editCategory.description(), id, userId_.value())){
-	QMessageBox::information(this, SW::Helper_t::appName(), QStringLiteral("Datos actualizados!\n"));
+	QMessageBox::information(this, SW::Helper_t::appName(), tr("Datos actualizados!\n"));
 	ui->cboCategory->clear();
 	loadListCategory(userId_.value());
 
@@ -744,12 +743,12 @@ void MainForm::on_quitUrl(){
   const auto url = ui->tvUrl->model()->index(currentRow, 1).data().toString();
 
   QMessageBox msgBox(this);
-  msgBox.setText(QString("<span>Confirma que desea eliminar esta dirección:<br>"
-						 " <cite style='color:#ff0800;'><strong>%1</strong></cite></span>").arg(url));
+  msgBox.setText(tr("Confirma que desea eliminar esta dirección:<br>"
+						 " <b style='color:#ff0800;'>%1</b>").arg(url));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  msgBox.button(QMessageBox::Yes)->setText("Eliminar");
-  msgBox.button(QMessageBox::No)->setText("Cancelar");
+  msgBox.button(QMessageBox::Yes)->setText(tr("Eliminar"));
+  msgBox.button(QMessageBox::No)->setText(tr("Cancelar"));
 
   if(msgBox.exec() == QMessageBox::Yes){
 	// const auto urlId=urlList_.key(url);
@@ -861,13 +860,13 @@ void MainForm::on_makeBackup(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-	QStringLiteral("--host=%1").arg(config.host),
-	QStringLiteral("--port=%1").arg(config.port),
-	QStringLiteral("--username=%1").arg(config.userName),
-	QStringLiteral("--no-password"),
-	QStringLiteral("--format=custom"),
-	QStringLiteral("--file=%1").arg(filePath),
-	config.dbName
+																																																																																																																																																		QStringLiteral("--host=%1").arg(config.host),
+																																																																																																																																																		QStringLiteral("--port=%1").arg(config.port),
+																																																																																																																																																		QStringLiteral("--username=%1").arg(config.userName),
+																																																																																																																																																		QStringLiteral("--no-password"),
+																																																																																																																																																		QStringLiteral("--format=custom"),
+																																																																																																																																																		QStringLiteral("--file=%1").arg(filePath),
+																																																																																																																																																		config.dbName
   };
 
   const QString pgDumpPath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_dump"));
@@ -935,14 +934,14 @@ void MainForm::on_restoreDatabase(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-	QStringLiteral("--host=%1").arg(config.host),
-	QStringLiteral("--port=%1").arg(config.port),
-	QStringLiteral("--username=%1").arg(config.userName),
-	QStringLiteral("--dbname=%1").arg(config.dbName),
-	QStringLiteral("--no-password"),
-	QStringLiteral("--clean"),
-	QStringLiteral("--if-exists"),
-	pathBackup
+																																																																																																																																																		QStringLiteral("--host=%1").arg(config.host),
+																																																																																																																																																		QStringLiteral("--port=%1").arg(config.port),
+																																																																																																																																																		QStringLiteral("--username=%1").arg(config.userName),
+																																																																																																																																																		QStringLiteral("--dbname=%1").arg(config.dbName),
+																																																																																																																																																		QStringLiteral("--no-password"),
+																																																																																																																																																		QStringLiteral("--clean"),
+																																																																																																																																																		QStringLiteral("--if-exists"),
+																																																																																																																																																		pathBackup
   };
 
   const QString pgRestorePath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_restore"));
@@ -1218,8 +1217,8 @@ void MainForm::on_moveUrl(){
 
 void MainForm::on_firstTimeLoginDialog(){
 
- CreateNewUserDialog createNewUserDialog(this);
- createNewUserDialog.exec();
+  CreateNewUserDialog createNewUserDialog(this);
+  createNewUserDialog.exec();
 
 }
 
@@ -1381,8 +1380,8 @@ void MainForm::updateLblInfo() noexcept{
 
   const auto linkColor = qApp->palette().color(QPalette::Active, QPalette::Link);
   lblInfo_->setText(QStringLiteral("<a href='about dialog' style='color:%1;'>"
-							"<span>SWSystem's - Lincoln Ingaroca</span>"
-							"</a>").arg(linkColor.name()));
+								   "<span>SWSystem's - Lincoln Ingaroca</span>"
+								   "</a>").arg(linkColor.name()));
 }
 
 void MainForm::applyIcons(Qt::ColorScheme scheme) noexcept{

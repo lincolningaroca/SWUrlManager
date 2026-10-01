@@ -15,7 +15,7 @@ Q_LOGGING_CATEGORY(lcCrypto, "sw.crypto")
 namespace SW {
 
 std::optional<QByteArray> CryptoManager::deriveKEK(const QString& password, const QByteArray& salt,
-												   quint32 iterations) noexcept {
+  quint32 iterations) noexcept {
   if (password.isEmpty() || salt.size() != kSaltBytes) return std::nullopt;
 
   const QByteArray pwd = password.toUtf8();
@@ -42,7 +42,7 @@ std::optional<QByteArray> CryptoManager::generateDEK() noexcept {
 
 bool CryptoManager::hasSecuritySettings(QSqlDatabase& db) noexcept {
   QSqlQuery q(db);
-  q.prepare(QStringLiteral("SELECT 1 FROM public.security_settings WHERE id = 1"));
+  q.prepare(R"(SELECT 1 FROM public.security_settings WHERE id = 1)");
   return q.exec() && q.next();
 }
 
@@ -84,7 +84,7 @@ bool CryptoManager::storeDEK(const QByteArray& dek, const QString& masterPasswor
   }
 
   QSqlQuery q(db);
-  q.prepare(QStringLiteral(R"(
+  q.prepare(R"(
 	INSERT INTO public.security_settings (id, kdf_salt, dek_nonce, dek_tag, wrapped_dek, kdf_iterations, schema_version, updated_at)
 	VALUES (1, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
 	ON CONFLICT (id) DO UPDATE SET
@@ -95,7 +95,7 @@ bool CryptoManager::storeDEK(const QByteArray& dek, const QString& masterPasswor
 	  kdf_iterations = EXCLUDED.kdf_iterations,
 	  schema_version = EXCLUDED.schema_version,
 	  updated_at = CURRENT_TIMESTAMP
-  )"));
+  )");
   q.addBindValue(salt);
   q.addBindValue(nonce);
   q.addBindValue(tag);
@@ -113,9 +113,8 @@ bool CryptoManager::storeDEK(const QByteArray& dek, const QString& masterPasswor
 std::optional<QByteArray> CryptoManager::loadDEK(const QString& masterPassword, QSqlDatabase& db) noexcept {
 
   QSqlQuery q(db);
-  q.prepare(QStringLiteral(
-	"SELECT kdf_salt, dek_nonce, dek_tag, wrapped_dek, kdf_iterations "
-	"FROM public.security_settings WHERE id = 1"));
+  q.prepare(R"(SELECT kdf_salt, dek_nonce, dek_tag, wrapped_dek, kdf_iterations
+	FROM public.security_settings WHERE id = 1)");
 
   if (!q.exec() || !q.next()) {
 	qCCritical(lcCrypto) << "No se encontró security_settings:" << q.lastError().text();

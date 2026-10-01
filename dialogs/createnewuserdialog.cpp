@@ -11,7 +11,7 @@ CreateNewUserDialog::CreateNewUserDialog(QWidget *parent)
   , ui(new Ui::CreateNewUserDialog)
 {
   ui->setupUi(this);
-  setWindowTitle(SW::Helper_t::appName().append(" - crear nuevo usuario"));
+  setWindowTitle(SW::Helper_t::appName() + tr(" - crear nuevo usuario"));
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
 
   createUserWidget_ = new CreateUserWidget(this);

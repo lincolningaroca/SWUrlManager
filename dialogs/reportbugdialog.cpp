@@ -37,7 +37,7 @@ ReportBugDialog::ReportBugDialog(QWidget *parent)
 
   setupUi();
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-  setWindowTitle(QStringLiteral("Reportar un error"));
+  setWindowTitle(tr("Reportar un error"));
   setMinimumWidth(580);
   collectSystemInfo();
   adjustSize();
@@ -53,10 +53,9 @@ void ReportBugDialog::setupUi()
 
   // --- Encabezado ---
   auto *header = new QLabel(
-	QStringLiteral("<h3> Reportar un problema o bug</h3>"
-				   "<p>Describe el problema con el mayor detalle posible. "
-				   "El reporte se abrirá como un Issue en GitHub, listo para enviar.</p>"),
-	this);
+	tr("<h3> Reportar un problema o bug</h3>"
+	   "<p>Describe el problema con el mayor detalle posible. "
+	   "El reporte se abrirá como un Issue en GitHub, listo para enviar.</p>"),	this);
   header->setWordWrap(true);
   mainLayout->addWidget(header);
 
@@ -68,43 +67,38 @@ void ReportBugDialog::setupUi()
   formLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
   m_subjectEdit = new QLineEdit(this);
-  m_subjectEdit->setPlaceholderText(QStringLiteral("Ej: La aplicación se cierra al exportar a CSV"));
-  formLayout->addRow(QStringLiteral("*Asunto:"), m_subjectEdit);
+  m_subjectEdit->setPlaceholderText(tr("Ej: La aplicación se cierra al exportar a CSV"));
+  formLayout->addRow(tr("*Asunto:"), m_subjectEdit);
 
   m_severityCombo = new QComboBox(this);
-  m_severityCombo->addItems({
-							 QStringLiteral("Bajo (cosmético / menor)"),
-							 QStringLiteral("Medio (afecta el uso pero hay workaround)"),
-							 QStringLiteral("Alto (funcionalidad rota)"),
-							 QStringLiteral("Crítico (pérdida de datos / crash)")});
+  m_severityCombo->addItems({tr("Bajo (cosmético / menor)"),
+							 tr("Medio (afecta el uso pero hay workaround)"),
+							 tr("Alto (funcionalidad rota)"),
+							 tr("Crítico (pérdida de datos / crash)")});
 
   m_severityCombo->setCurrentIndex(1);
-  formLayout->addRow(QStringLiteral("Severidad:"), m_severityCombo);
+  formLayout->addRow(tr("Severidad:"), m_severityCombo);
 
   m_descriptionEdit = new QTextEdit(this);
-  m_descriptionEdit->setPlaceholderText(
-	QStringLiteral("Describe qué ocurrió, qué esperabas que ocurriera, "
-				   "los pasos para reproducirlo, y cualquier detalle relevante..."));
+  m_descriptionEdit->setPlaceholderText(tr("Describe qué ocurrió, qué esperabas que ocurriera, "
+										   "los pasos para reproducirlo, y cualquier detalle relevante..."));
   m_descriptionEdit->setFixedHeight(160);
-  formLayout->addRow(QStringLiteral("*Descripción:"), m_descriptionEdit);
+  formLayout->addRow(tr("*Descripción:"), m_descriptionEdit);
 
-  auto *attachNote = new QLabel(
-	QStringLiteral("<i> Si desea adjuntar capturas de pantalla, GIFs o videos del problema, "
-				   "puede arrastrarlos directamente dentro del cuadro de texto del Issue "
-				   "una vez que se abra en GitHub.</i>"),
-	this);
+  auto *attachNote = new QLabel(tr("<i> Si desea adjuntar capturas de pantalla, GIFs o videos del problema, "
+								   "puede arrastrarlos directamente dentro del cuadro de texto del Issue "
+								   "una vez que se abra en GitHub.</i>"), this);
   attachNote->setWordWrap(true);
   formLayout->addRow(attachNote);
 
-  tabs->addTab(formPage, QStringLiteral(" Reporte"));
+  tabs->addTab(formPage, tr("Reporte"));
 
   // ==== TAB 2: Info del sistema ====
   auto *infoPage = new QWidget(this);
   auto *infoLayout = new QVBoxLayout(infoPage);
-  auto *infoNote = new QLabel(
-	QStringLiteral("<i>Esta información se incluirá en tu reporte para facilitar el diagnóstico. "
-				   "Puede editarla o borrar cualquier dato que prefieras no compartir antes de enviar.</i>"),
-	infoPage);
+  auto *infoNote = new QLabel(tr("<i>Esta información se incluirá en tu reporte para facilitar el diagnóstico. "
+								 "Puede editarla o borrar cualquier dato que prefieras no compartir antes de enviar.</i>"),
+							  infoPage);
   infoNote->setWordWrap(true);
   infoLayout->addWidget(infoNote);
 
@@ -114,14 +108,14 @@ void ReportBugDialog::setupUi()
   m_systemInfoEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   infoLayout->addWidget(m_systemInfoEdit);
 
-  tabs->addTab(infoPage, QStringLiteral("Info del sistema"));
+  tabs->addTab(infoPage, tr("Info del sistema"));
 
   mainLayout->addWidget(tabs);
 
   // --- Botones de acción ---
   auto *actionLayout = new QHBoxLayout();
-  m_btnReport = new QPushButton(QIcon(":/img/github.png"), QStringLiteral(" Reportar en GitHub"), this);
-  auto *btnClose = new QPushButton(QStringLiteral("Cerrar"), this);
+  m_btnReport = new QPushButton(QIcon(":/img/github.png"), tr("Reportar en GitHub"), this);
+  auto *btnClose = new QPushButton(tr("Cerrar"), this);
 
   actionLayout->addWidget(m_btnReport);
   actionLayout->addStretch();
@@ -143,16 +137,15 @@ void ReportBugDialog::collectSystemInfo()
 	   QStringLiteral(__DATE__ " " __TIME__));
 
   QStringList lines;
-  lines << QStringLiteral("=== Información del sistema ===")
-		<< QStringLiteral("Fecha del reporte : %1")
-			 .arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-		<< QStringLiteral("Aplicación        : %1").arg(QApplication::applicationName())
-		<< QStringLiteral("Versión           : %1").arg(m_appVersion)
-		<< QStringLiteral("Organización      : %1").arg(QApplication::organizationName())
+  lines << tr("=== Información del sistema ===")
+		<< tr("Fecha del reporte : %1").arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+		<< tr("Aplicación        : %1").arg(QApplication::applicationName())
+		<< tr("Versión           : %1").arg(m_appVersion)
+		<< tr("Organización      : %1").arg(QApplication::organizationName())
 		<< QStringLiteral("")
-		<< QStringLiteral("--- Plataforma ---")
+		<< tr("--- Plataforma ---")
 		<< QStringLiteral("SO                : %1").arg(QSysInfo::prettyProductName())
-		<< QStringLiteral("Arquitectura      : %1").arg(QSysInfo::currentCpuArchitecture())
+		<< tr("Arquitectura      : %1").arg(QSysInfo::currentCpuArchitecture())
 		<< QStringLiteral("Kernel            : %1").arg(QSysInfo::kernelType() + " " + QSysInfo::kernelVersion())
 		<< QStringLiteral("")
 		<< QStringLiteral("--- Qt ---")
@@ -162,29 +155,26 @@ void ReportBugDialog::collectSystemInfo()
 			 .arg(QGuiApplication::platformName())
 		<< QStringLiteral("Style             : %1").arg(qApp->style()->objectName())
 		<< QStringLiteral("")
-		<< QStringLiteral("--- Pantalla ---");
+		<< tr("--- Pantalla ---");
 
   const auto screens = QGuiApplication::screens();
   for (int i = 0; i < screens.size(); ++i) {
 	const auto *s = screens.at(i);
 	const auto g = s->geometry();
-	lines << QStringLiteral("  Monitor %1: %2x%3 @ %4% (DPI lógico %5)")
+	lines << tr(" Monitor %1: %2x%3 @ %4% (DPI lógico %5)")
 			   .arg(i).arg(g.width()).arg(g.height())
 			   .arg(int(s->logicalDotsPerInch()))
 			   .arg(s->devicePixelRatio());
   }
 
   lines << ""
-		<< "--- Base de datos ---"
+		<< tr("--- Base de datos ---")
 		<< QStringLiteral("Driver SQL        : %1").arg(QStringLiteral("QPSQL"))
 		<< ""
-		<< "--- Directorios ---"
-		<< QStringLiteral("Config            : %1")
-			 .arg(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
-		<< QStringLiteral("Datos             : %1")
-			 .arg(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
-		<< QStringLiteral("Temp              : %1")
-			 .arg(QDir::tempPath());
+		<< tr("--- Directorios ---")
+		<< QStringLiteral("Config            : %1").arg(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
+		<< tr("Datos             : %1").arg(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+		<< QStringLiteral("Temp              : %1").arg(QDir::tempPath());
 
   m_systemInfo = lines.join('\n');
   m_systemInfoEdit->setPlainText(m_systemInfo);
@@ -193,22 +183,20 @@ void ReportBugDialog::collectSystemInfo()
 QString ReportBugDialog::severityLabel(int idx) const
 {
   switch (idx) {
-	case 0: return QStringLiteral("Bajo");
-	case 1: return QStringLiteral("Medio");
-	case 2: return QStringLiteral("Alto");
-	case 3: return QStringLiteral("Crítico");
-	default: return QStringLiteral("Desconocido");
+	case 0: return tr("Bajo");
+	case 1: return tr("Medio");
+	case 2: return tr("Alto");
+	case 3: return tr("Crítico");
+	default: return tr("Desconocido");
   }
 }
 
 QString ReportBugDialog::buildInfoText() const
 {
   QString out;
-  out += QStringLiteral("ASUNTO: %1\n").arg(m_subjectEdit->text());
-  out += QStringLiteral("SEVERIDAD: %1\n")
-		   .arg(severityLabel(m_severityCombo->currentIndex()));
-  out += QStringLiteral("\n--- DESCRIPCIÓN ---\n%1\n")
-		   .arg(m_descriptionEdit->toPlainText());
+  out += tr("ASUNTO: %1\n").arg(m_subjectEdit->text());
+  out += tr("SEVERIDAD: %1\n").arg(severityLabel(m_severityCombo->currentIndex()));
+  out += tr("\n--- DESCRIPCIÓN ---\n%1\n").arg(m_descriptionEdit->toPlainText());
   out += QStringLiteral("\n%1\n").arg(m_systemInfoEdit->toPlainText());
   return out;
 }
@@ -216,14 +204,12 @@ QString ReportBugDialog::buildInfoText() const
 bool ReportBugDialog::validateFields()
 {
   if (m_subjectEdit->text().trimmed().isEmpty()) {
-	QMessageBox::warning(this, QStringLiteral("Falta información"),
-						 QStringLiteral("Por favor, ingresa un asunto para el reporte."));
+	QMessageBox::warning(this, tr("Falta información"), tr("Por favor, ingresa un asunto para el reporte."));
 	m_subjectEdit->setFocus();
 	return false;
   }
   if (m_descriptionEdit->toPlainText().trimmed().isEmpty()) {
-	QMessageBox::warning(this, QStringLiteral("Falta información"),
-						 QStringLiteral("Por favor, describe el problema."));
+	QMessageBox::warning(this, tr("Falta información"), tr("Por favor, describe el problema."));
 	m_descriptionEdit->setFocus();
 	return false;
   }
@@ -244,9 +230,9 @@ void ReportBugDialog::on_reportOnGitHub()
   bool wasTruncated = false;
   if (bodyForUrl.size() > kMaxUrlBodyLength) {
 	bodyForUrl = bodyForUrl.left(kMaxUrlBodyLength);
-	bodyForUrl += QStringLiteral("\n\n[...] El reporte completo es más largo de lo que permite "
-								 "esta URL — ya se copió completo a tu portapapeles, pégalo aquí "
-								 "reemplazando este texto.");
+	bodyForUrl += tr("\n\n[...] El reporte completo es más largo de lo que permite "
+					 "esta URL — ya se copió completo a tu portapapeles, pégalo aquí "
+					 "reemplazando este texto.");
 	wasTruncated = true;
   }
 
@@ -259,17 +245,17 @@ void ReportBugDialog::on_reportOnGitHub()
   issueUrl.setQuery(q);
 
   if (!QDesktopServices::openUrl(issueUrl)) {
-	QMessageBox::warning(this, QStringLiteral("Error"),
-						 QStringLiteral("No se pudo abrir el navegador.\n"
-										"El reporte ya se copió a tu portapapeles: puedes pegarlo "
-										"manualmente en %1").arg(kGitHubIssueUrl));
+	QMessageBox::warning(this, tr("Error"),
+						 tr("No se pudo abrir el navegador.\n"
+							"El reporte ya se copió a tu portapapeles: puedes pegarlo "
+							"manualmente en %1").arg(kGitHubIssueUrl));
 	return;
   }
 
   if (wasTruncated) {
-	QMessageBox::information(this, QStringLiteral("Un paso más"),
-							 QStringLiteral("Se abrió GitHub en tu navegador.\n\n"
-											"El reporte era muy largo: ya está completo en tu "
-											"portapapeles, pégalo (Ctrl+V) reemplazando el texto truncado."));
+	QMessageBox::information(this, tr("Un paso más"),
+							 tr("Se abrió GitHub en tu navegador.\n\n"
+								"El reporte era muy largo: ya está completo en tu "
+								"portapapeles, pégalo (Ctrl+V) reemplazando el texto truncado."));
   }
 }

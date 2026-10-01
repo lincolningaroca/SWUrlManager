@@ -163,8 +163,8 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
   const QStringList envVars = {
-																																																																																																																																																																																					"PGBIN", "PGHOME", "POSTGRES_HOME", "POSTGRESQL_HOME",
-																																																																																																																																																																																					"PGROOT", "PG_DIR", "POSTGRES_DIR"
+																																																																																																																																																		"PGBIN", "PGHOME", "POSTGRES_HOME", "POSTGRESQL_HOME",
+																																																																																																																																																		"PGROOT", "PG_DIR", "POSTGRES_DIR"
   };
   for (const QString &var : envVars) {
 	QString val = env.value(var);
@@ -204,16 +204,16 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 3. REGISTRO DE WINDOWS - Múltiples hives y claves
   // -------------------------------------------------------------------------
   const QStringList registryPaths = {
-																																																																																																																																																																																					// Instaladores oficiales de EDB (64-bit)
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL\\Installations",
-																																																																																																																																																																																					// Instaladores oficiales de EDB (32-bit en Windows 64-bit)
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL\\Installations",
-																																																																																																																																																																																					// BigSQL / PostgreSQL installer antiguos
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL",
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL",
-																																																																																																																																																																																					// EnterpriseDB antiguo
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\EnterpriseDB",
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\EnterpriseDB",
+	// Instaladores oficiales de EDB (64-bit)
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL\\Installations",
+	// Instaladores oficiales de EDB (32-bit en Windows 64-bit)
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL\\Installations",
+	// BigSQL / PostgreSQL installer antiguos
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\PostgreSQL",
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\PostgreSQL",
+	// EnterpriseDB antiguo
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\EnterpriseDB",
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\EnterpriseDB",
   };
 
   for (const QString &regPath : registryPaths) {
@@ -255,9 +255,9 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
 
   // 3b. Registro de desinstalación (donde Windows guarda TODAS las apps instaladas)
   const QStringList uninstallPaths = {
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-																																																																																																																																																																																					"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-																																																																																																																																																																																					"HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+	"HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+	"HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
   };
   for (const QString &regPath : uninstallPaths) {
 	QSettings reg(regPath, QSettings::NativeFormat);
@@ -312,12 +312,12 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 4. BÚSQUEDA HEURÍSTICA EN DISCO (Windows)
   // -------------------------------------------------------------------------
   const QStringList searchRoots = {
-																																																																																																																																																																																					qEnvironmentVariable("ProgramW6432"),      /*C:\Program Files*/
-																																																																																																																																																																																					qEnvironmentVariable("ProgramFiles(x86)"), /*C:\Program Files (x86)*/
-																																																																																																																																																																																					qEnvironmentVariable("ProgramFiles"),      /*Fallback*/
-																																																																																																																																																																																					  qEnvironmentVariable("SystemDrive") + "/", /*C:\*/
-																																																																																																																																																																																					qEnvironmentVariable("LOCALAPPDATA"),      /*%LOCALAPPDATA%*/
-																																																																																																																																																																																					qEnvironmentVariable("APPDATA"),           /*%APPDATA%*/
+	qEnvironmentVariable("ProgramW6432"),      /*C:\Program Files*/
+	qEnvironmentVariable("ProgramFiles(x86)"), /*C:\Program Files (x86)*/
+	qEnvironmentVariable("ProgramFiles"),      /*Fallback*/
+	  qEnvironmentVariable("SystemDrive") + "/", /*C:\*/
+	qEnvironmentVariable("LOCALAPPDATA"),      /*%LOCALAPPDATA%*/
+	qEnvironmentVariable("APPDATA"),           /*%APPDATA%*/
   };
 
   auto sortVersionsDescending = [](QStringList &versions) {
@@ -391,16 +391,16 @@ QString HelperDataBase_t::getPostgresToolPath(const QString &toolName, bool *fou
   // 5. RUTAS ESTÁNDAR EN LINUX / macOS
   // -------------------------------------------------------------------------
   const QStringList unixPaths = {
-																																																																																																																																																																																					"/usr/lib/postgresql",           // Debian/Ubuntu: /usr/lib/postgresql/16/bin
-																																																																																																																																																																																					"/usr/pgsql",                    // RHEL/CentOS/Fedora: /usr/pgsql-16/bin
-																																																																																																																																																																																					"/opt/PostgreSQL",               // Instalador EDB oficial
-																																																																																																																																																																																					"/opt/postgres",                 // Instalaciones manuales
-																																																																																																																																																																																					"/usr/local/pgsql",              // Compilación desde fuentes
-																																																																																																																																																																																					"/usr/local/postgres",
-																																																																																																																																																																																					"/var/lib/pgsql",                // Algunas distros
-																																																																																																																																																																																					"/Applications/Postgres.app/Contents/Versions", // macOS Postgres.app
-																																																																																																																																																																																					"/opt/homebrew/opt/postgresql",  // macOS Homebrew (Apple Silicon)
-																																																																																																																																																																																					"/usr/local/opt/postgresql",     // macOS Homebrew (Intel)
+	"/usr/lib/postgresql",           // Debian/Ubuntu: /usr/lib/postgresql/16/bin
+	"/usr/pgsql",                    // RHEL/CentOS/Fedora: /usr/pgsql-16/bin
+	"/opt/PostgreSQL",               // Instalador EDB oficial
+	"/opt/postgres",                 // Instalaciones manuales
+	"/usr/local/pgsql",              // Compilación desde fuentes
+	"/usr/local/postgres",
+	"/var/lib/pgsql",                // Algunas distros
+	"/Applications/Postgres.app/Contents/Versions", // macOS Postgres.app
+	"/opt/homebrew/opt/postgresql",  // macOS Homebrew (Apple Silicon)
+	"/usr/local/opt/postgresql",     // macOS Homebrew (Intel)
   };
 
   for (const QString &base : unixPaths) {
@@ -840,13 +840,13 @@ bool HelperDataBase_t::updateData_url(QStringView url, QStringView desc, uint32_
   }
 
   if(!qry_.first()){
-	errorMessage_ = "fn_update_url no retornó valor";
+	errorMessage_ = tr("fn_update_url no retornó valor");
 	return false;
   }
 
   bool result = qry_.value(0).toBool();
   if(!result){
-	errorMessage_ = "No se actualizó ninguna URL (ID o categoría incorrectos)";
+	errorMessage_ = tr("No se actualizó ninguna URL (ID o categoría incorrectos)");
   } else {
 	errorMessage_.clear();
   }

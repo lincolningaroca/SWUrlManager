@@ -38,23 +38,23 @@ LogInDialog::~LogInDialog()
 
 void LogInDialog::setUp_Form() noexcept{
 
-  setWindowTitle(SW::Helper_t::appName().append(" - inicio de sesión"));
+  setWindowTitle(SW::Helper_t::appName() + tr(" - inicio de sesión"));
 
-  ui->txtUser->setPlaceholderText("Usuario");
+  ui->txtUser->setPlaceholderText(tr("Usuario"));
   ui->txtUser->setClearButtonEnabled(true);
 
   ui->txtPassword->setEchoMode(QLineEdit::Password);
-  ui->txtPassword->setPlaceholderText("Clave o password");
+  ui->txtPassword->setPlaceholderText(tr("Clave o password"));
   ui->txtPassword->setClearButtonEnabled(true);
 
   ui->btnOtherOptions->setIcon(QIcon(QStringLiteral(":/img/down.svg")));
   layout()->setSizeConstraint(QLayout::SetFixedSize);
 
-  ui->btnOtherOptions->setToolTip("<p>"
-								  "<span> Crear un nuevo usuario y/o<br>"
-								  "restablecer clave o password!"
-								  "</span>"
-								  "</p>");
+  ui->btnOtherOptions->setToolTip(tr("<p>"
+									 "<span> Crear un nuevo usuario y/o<br>"
+									 "restablecer clave o password!"
+									 "</span>"
+									 "</p>"));
   ui->txtUser->setFocus();
 
 }
@@ -116,7 +116,7 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
   if(checked){
 
 	ui->btnOtherOptions->setIcon(QIcon(":/img/up.svg"));
-	ui->btnOtherOptions->setToolTip("<span>Volver a Inicio de sesión!</span>");
+	ui->btnOtherOptions->setToolTip(tr("<span>Volver a Inicio de sesión!</span>"));
 
 	createUserWidget_->setMaximumHeight(QWIDGETSIZE_MAX);
 	auto targetHeight = createUserWidget_->sizeHint().height();
@@ -137,10 +137,10 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
 
 	ui->btnOtherOptions->setIcon(QIcon(":/img/down.svg"));
 
-	ui->btnOtherOptions->setToolTip("<span>"
-									"Crear un nuevo usuario y/o<br>"
-									"restablecer clave o password!"
-									"</span>");
+	ui->btnOtherOptions->setToolTip(tr("<span>"
+									   "Crear un nuevo usuario y/o<br>"
+									   "restablecer clave o password!"
+									   "</span>"));
 
 	collapseAnimation_->setStartValue(createUserWidget_->height());
 	collapseAnimation_->setEndValue(0);
@@ -166,12 +166,12 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
 void LogInDialog::on_userLogin(){
 
   if(!helperdb_.logIn(ui->txtUser->text().simplified(), ui->txtPassword->text().simplified())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span>"
-																	   "<strong>"
-																	   "Los datos que ingreso son incorrectos\n"
-																	   "vuelva a intentarlo."
-																	   "</strong>"
-																	   "</span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span>"
+														   "<strong>"
+														   "Los datos que ingreso son incorrectos\n"
+														   "vuelva a intentarlo."
+														   "</strong>"
+														   "</span>"));
 	ui->txtUser->selectAll();
 	ui->txtUser->setFocus(Qt::OtherFocusReason);
 

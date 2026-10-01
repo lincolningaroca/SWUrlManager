@@ -1,6 +1,8 @@
 #pragma once
 
+
 #include <QByteArray>
+#include <QCoreApplication>
 #include <QJsonDocument>
 #include <QString>
 #include <optional>
@@ -8,6 +10,10 @@
 namespace SW {
 
 struct BackupCrypto {
+
+  Q_DECLARE_TR_FUNCTIONS(BackupCrypto)
+
+public:
 
   explicit BackupCrypto() = delete;
 

@@ -81,11 +81,11 @@ void CreateUserWidget::setFeatures(QLineEdit *lineEdit, QCheckBox *checkBox, boo
   if(checked){
 	lineEdit->setEchoMode(QLineEdit::Normal);
 	checkBox->setIcon(SW::Helper_t::svgIcon(":/img/open.svg", iconColor));
-	checkBox->setToolTip("Ocultar los caracteres.");
+	checkBox->setToolTip(tr("Ocultar los caracteres."));
   } else {
 	lineEdit->setEchoMode(QLineEdit::Password);
 	checkBox->setIcon(SW::Helper_t::svgIcon(":/img/close.svg", iconColor));
-	checkBox->setToolTip("Mostrar los caracteres.");
+	checkBox->setToolTip(tr("Mostrar los caracteres."));
   }
 
 }
@@ -100,7 +100,7 @@ void CreateUserWidget::setupUiConnections(){
   QObject::connect(ui->btnResetPassword, &QPushButton::clicked, this, [this](){
 
 	ResetPasswordDialog resetPassword{this};
-	resetPassword.setWindowTitle(SW::Helper_t::appName().append(" - Restablecer clave o password"));
+	resetPassword.setWindowTitle(SW::Helper_t::appName() + tr(" - Restablecer clave o password"));
 	resetPassword.exec();
 
   });
@@ -158,32 +158,20 @@ void CreateUserWidget::handleGenPasswordToggle(bool checked){
 void CreateUserWidget::handleCreateUserClicked(){
 
   if(Validate_hasNoEmpty()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span><em>Todos los campos son requeridos!</em></span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Todos los campos son requeridos!"));
 	ui->txtNewUser->setFocus();
 	return;
   }
 
   if(ui->txtNewPassword->text().size() < 8 || ui->txtRePassword->text().size() < 8){
-	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 QStringLiteral("<span>"
-										"<em>"
-										"El password o clave, debe tener 8 caracteres como mínimo."
-										"</em>"
-										"</span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El password o clave, debe tener 8 caracteres como mínimo."));
 	ui->txtRePassword->selectAll();
 	ui->txtRePassword->setFocus();
 	return;
   }
 
   if(!SW::Helper_t::verify_Values(ui->txtNewPassword->text(), ui->txtRePassword->text())){
-	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 QStringLiteral("<span>"
-										"<strong>"
-										"<em>"
-										"El password o clave de confirmación no coincide!"
-										"</em>"
-										"</strong>"
-										"</span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El password o clave de confirmación no coincide!"));
 	ui->txtRePassword->selectAll();
 	ui->txtRePassword->setFocus();
 	return;
@@ -192,21 +180,15 @@ void CreateUserWidget::handleCreateUserClicked(){
   if(!ui->chkGenPassword->isChecked()){
 
 	if(!SW::Helper_t::isPasswordSecure(ui->txtRePassword->text())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(),
-						   QStringLiteral("<span>"
-										  "<em>"
-										  "Debe ingresar un password o clave segura!<br>"
-										  "Nota:<br>"
-										  "Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:"
-										  "<ul>"
-										  "<li>Debe contener al menos un caracter en mayuscula.</li>"
-										  "<li>Debe contener al menos un caracter en minuscula.</li>"
-										  "<li>Debe contener al menos un número.</li>"
-										  "<li>Debe contener al menos un caracter especial por ejemplo: \"#$%&@\" etc...</li>"
-										  "</ul>"
-										  "Ejemplo de calve segura: <strong>\"MiClave@123\"</strong>"
-										  "</em>"
-										  "</span>"));
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><b>Debe ingresar una contraseña segura.</b></p>"
+															 "<p>Requisitos mínimos:"
+															 "<ul>"
+															 "<li>Al menos una letra mayúscula</li>"
+															 "<li>Al menos una letra minúscula</li>"
+															 "<li>Al menos un número</li>"
+															 "<li>Al menos un carácter especial (ej. #$%&@)</li>"
+															 "</ul></p>"
+															 "<p>Ejemplo de clave segura: <b>MiClave@123</b></p>"));
 	  ui->txtRePassword->selectAll();
 	  ui->txtRePassword->setFocus(Qt::OtherFocusReason);
 	  return;
@@ -216,13 +198,13 @@ void CreateUserWidget::handleCreateUserClicked(){
   auto type = ui->cboRestoreType->currentData().value<SW::AuthType>();
   if(type == SW::AuthType::Numeric_pin){
 	if(ui->txtfirstValue->text().size() < 4 || ui->txtConfirmValue->text().size() <4){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span><em>El PIN numérico debe contener 4 digitos!</em></span>"));
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("El PIN numérico debe contener 4 digitos!"));
 	  ui->txtfirstValue->selectAll();
 	  ui->txtfirstValue->setFocus();
 	  return;
 	}
 	if(!SW::Helper_t::verify_Values(ui->txtfirstValue->text(), ui->txtConfirmValue->text())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("<span><strong><em>El número de confirmación no coincide!</em></strong></span>"));
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("El número de confirmación no coincide!"));
 	  ui->txtConfirmValue->selectAll();
 	  ui->txtConfirmValue->setFocus();
 	  return;
@@ -232,9 +214,9 @@ void CreateUserWidget::handleCreateUserClicked(){
 
 
   if(helperdb_.userExists(ui->txtNewUser->text())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span><em>El nombre de usuario: <strong>%1</strong> ya esta registrado.<br>"
-														   "Vuelva a intentarlo con otro nombre porfavor!"
-														   "</em></span>").arg(ui->txtNewUser->text()));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El nombre de usuario <b>%1</b> ya está registrado.<br>"
+														   "Por favor, intente con otro nombre.").arg(
+															ui->txtNewUser->text().simplified()));
 	ui->txtNewUser->selectAll();
 	ui->txtNewUser->setFocus(Qt::OtherFocusReason);
 	return;
@@ -248,7 +230,7 @@ void CreateUserWidget::handleCreateUserClicked(){
 
   if(helperdb_.createUser(user, password, SW::Helper_t::currentUser_.value(SW::User::U_user),
 						   ui->cboRestoreType->currentText(), first_value, confirm_value)){
-	QMessageBox::information(this, SW::Helper_t::appName(), QStringLiteral("<span><em>El nuevo usuario fue creado con éxito!</em></span>"));
+	QMessageBox::information(this, SW::Helper_t::appName(), tr("El nuevo usuario fue creado con éxito!"));
 	clearControls();
 
 	emit userCreated();
@@ -276,30 +258,30 @@ void CreateUserWidget::clearControls() noexcept{
 void CreateUserWidget::setUp_Form() noexcept{
 
   //new user section
-  ui->txtNewPassword->setPlaceholderText("Ingrese clave o password (mínimo 8 caracteres)");
+  ui->txtNewPassword->setPlaceholderText(tr("Ingrese una clave (mínimo 8 caracteres)"));
   ui->txtNewPassword->setClearButtonEnabled(true);
   ui->txtNewPassword->setEchoMode(QLineEdit::Password);
 
-  ui->txtRePassword->setPlaceholderText("Vuelva a ingresar su clave o password (mínimo 8 caracteres)");
+  ui->txtRePassword->setPlaceholderText(tr("Vuelva a ingresar su clave"));
   ui->txtRePassword->setEchoMode(QLineEdit::Password);
   ui->txtRePassword->setClearButtonEnabled(true);
 
-  ui->txtNewUser->setPlaceholderText("Ingrese un nombre de usuario");
+  ui->txtNewUser->setPlaceholderText(tr("Ingrese un nombre de usuario"));
   ui->txtNewUser->setClearButtonEnabled(true);
 
 
-  ui->txtfirstValue->setPlaceholderText("Ingrese una pregunta!");
+  ui->txtfirstValue->setPlaceholderText(tr("Ingrese una pregunta!"));
   ui->txtfirstValue->setClearButtonEnabled(true);
   ui->txtfirstValue->setEchoMode(QLineEdit::Password);
 
 
-  ui->txtConfirmValue->setPlaceholderText("Ingrese su respuesta!");
+  ui->txtConfirmValue->setPlaceholderText(tr("Ingrese su respuesta!"));
   ui->txtConfirmValue->setClearButtonEnabled(true);
   ui->txtConfirmValue->setEchoMode(QLineEdit::Password);
 
   //set the combo box options
-  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), "Pin numérico", QVariant::fromValue(SW::AuthType::Numeric_pin));
-  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), "Pregunta secreta", QVariant::fromValue(SW::AuthType::Secret_Question));
+  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pin numérico"), QVariant::fromValue(SW::AuthType::Numeric_pin));
+  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pregunta secreta"), QVariant::fromValue(SW::AuthType::Secret_Question));
   ui->checkBox->setChecked(true);
   ui->checkBox->setDisabled(true);
 
@@ -339,8 +321,8 @@ void CreateUserWidget::setOptionsToComboBox(int index) noexcept{
   if(type == SW::AuthType::Secret_Question){
 	ui->txtfirstValue->clear();
 	ui->txtConfirmValue->clear();
-	ui->txtfirstValue->setPlaceholderText("Ingrese una pregunta!");
-	ui->txtConfirmValue->setPlaceholderText("Ingrese su respuesta!");
+	ui->txtfirstValue->setPlaceholderText(tr("Ingrese una pregunta!"));
+	ui->txtConfirmValue->setPlaceholderText(tr("Ingrese su respuesta!"));
 	ui->txtfirstValue->setValidator(nullptr);
 	ui->txtConfirmValue->setValidator(nullptr);
 	ui->txtfirstValue->setFocus(Qt::OtherFocusReason);
@@ -348,8 +330,8 @@ void CreateUserWidget::setOptionsToComboBox(int index) noexcept{
   }else{
 	ui->txtfirstValue->clear();
 	ui->txtConfirmValue->clear();
-	ui->txtfirstValue->setPlaceholderText("Ingrese PIN numérico de 4 cifras!");
-	ui->txtConfirmValue->setPlaceholderText("Vuelva a ingresar el número");
+	ui->txtfirstValue->setPlaceholderText(tr("Ingrese PIN numérico de 4 cifras!"));
+	ui->txtConfirmValue->setPlaceholderText(tr("Vuelva a ingresar el número"));
 	auto* validator = new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^\\d{4}$")), this);
 	ui->txtfirstValue->setValidator(validator);
 	ui->txtConfirmValue->setValidator(validator);

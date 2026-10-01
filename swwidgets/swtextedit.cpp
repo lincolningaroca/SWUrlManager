@@ -49,7 +49,7 @@ void SWTextEdit::initToolBar()
   boldAction_->setCheckable(true);
   boldAction_->setShortcut(QKeySequence::Bold);
   boldAction_->setFont(QFont("Times New Roman", 10, QFont::Bold));
-  boldAction_->setToolTip("Negrita (Ctrl+B)");
+  boldAction_->setToolTip(tr("Negrita (Ctrl+B)"));
   QObject::connect(boldAction_, &QAction::triggered, this, &SWTextEdit::on_boldAction);
 
   // --- Cursiva ---
@@ -59,7 +59,7 @@ void SWTextEdit::initToolBar()
   QFont italicFont("Times New Roman", 10);
   italicFont.setItalic(true);
   italicAction_->setFont(italicFont);
-  italicAction_->setToolTip("Cursiva (Ctrl+I)");
+  italicAction_->setToolTip(tr("Cursiva (Ctrl+I)"));
   QObject::connect(italicAction_, &QAction::triggered, this, &SWTextEdit::on_italicAction);
 
   // --- Subrayado ---
@@ -69,7 +69,7 @@ void SWTextEdit::initToolBar()
   QFont underlineFont("Times New Roman", 10);
   underlineFont.setUnderline(true);
   underlineAction_->setFont(underlineFont);
-  underlineAction_->setToolTip("Subrayado (Ctrl+U)");
+  underlineAction_->setToolTip(tr("Subrayado (Ctrl+U)"));
   QObject::connect(underlineAction_, &QAction::triggered, this, &SWTextEdit::on_underlineAction);
 
   toolBar_->addSeparator();
@@ -78,7 +78,7 @@ void SWTextEdit::initToolBar()
   alignLeftAction_ = toolBar_->addAction("");
   alignLeftAction_->setCheckable(true);
   alignLeftAction_->setChecked(true);
-  alignLeftAction_->setToolTip("Alinear izquierda");
+  alignLeftAction_->setToolTip(tr("Alinear izquierda"));
   QObject::connect(alignLeftAction_, &QAction::triggered, this, [this](){
 	editor_->setAlignment(Qt::AlignLeft);
 	alignLeftAction_->setChecked(true);
@@ -88,7 +88,7 @@ void SWTextEdit::initToolBar()
 
   alignCenterAction_ = toolBar_->addAction("");
   alignCenterAction_->setCheckable(true);
-  alignCenterAction_->setToolTip("Centrar");
+  alignCenterAction_->setToolTip(tr("Centrar"));
   QObject::connect(alignCenterAction_, &QAction::triggered, this, [this](){
 	editor_->setAlignment(Qt::AlignCenter);
 	alignLeftAction_->setChecked(false);
@@ -98,7 +98,7 @@ void SWTextEdit::initToolBar()
 
   alignRightAction_ = toolBar_->addAction("");
   alignRightAction_->setCheckable(true);
-  alignRightAction_->setToolTip("Alinear derecha");
+  alignRightAction_->setToolTip(tr("Alinear derecha"));
   QObject::connect(alignRightAction_, &QAction::triggered, this, [this](){
 	editor_->setAlignment(Qt::AlignRight);
 	alignLeftAction_->setChecked(false);
@@ -110,13 +110,13 @@ void SWTextEdit::initToolBar()
 
   // --- Color de texto con icono estándar ---
   colorAction_ = toolBar_->addAction("");
-  colorAction_->setToolTip("Color de texto");
+  colorAction_->setToolTip(tr("Color de texto"));
   QObject::connect(colorAction_, &QAction::triggered, this, &SWTextEdit::on_colorAction);
 
   toolBar_->addSeparator();
   fontFamily_ = new QFontComboBox(toolBar_);
   fontFamily_->setFixedWidth(150);
-  fontFamily_->setToolTip("Tipo de fuente");
+  fontFamily_->setToolTip(tr("Tipo de fuente"));
   toolBar_->addWidget(fontFamily_);
   toolBar_->addSeparator();
 
@@ -132,7 +132,7 @@ void SWTextEdit::initToolBar()
   fontSize_->setRange(6, 72);
   fontSize_->setValue(10);
   fontSize_->setFixedWidth(80);
-  fontSize_->setToolTip("Tamaño de fuente");
+  fontSize_->setToolTip(tr("Tamaño de fuente"));
   toolBar_->addWidget(fontSize_);
   QObject::connect(fontSize_, &QSpinBox::valueChanged, this, &SWTextEdit::on_fontSizeChanged);
 }
@@ -156,7 +156,7 @@ void SWTextEdit::on_underlineAction(){
 
 void SWTextEdit::on_colorAction(){
 
-  const auto color = QColorDialog::getColor(editor_->textColor(), this, "Color de texto");
+  const auto color = QColorDialog::getColor(editor_->textColor(), this, tr("Color de texto"));
   if(color.isValid()){
 	QTextCharFormat fmt;
 	fmt.setForeground(color);

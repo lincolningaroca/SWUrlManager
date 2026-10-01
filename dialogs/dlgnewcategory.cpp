@@ -51,8 +51,8 @@ void dlgNewCategory::initForm(const std::optional<categoryData> &list){
   auto okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
 
   if(mode_ == SW::OpenMode::Edit){
-	setWindowTitle(SW::Helper_t::appName().append(" - Editar datos de la categoría"));
-	okButton->setText("Actualizar datos");
+	setWindowTitle(SW::Helper_t::appName() + tr(" - Editar datos de la categoría"));
+	okButton->setText(tr("Actualizar datos"));
 	if(list){
 	  const auto& [name, desc] = list.value();
 	  ui->txtCategory->setText(name);
@@ -62,8 +62,8 @@ void dlgNewCategory::initForm(const std::optional<categoryData> &list){
 
   }else{
 
-	setWindowTitle(SW::Helper_t::appName().append(" - Nueva categoría"));
-	okButton->setText("Crear categoría");
+	setWindowTitle(SW::Helper_t::appName() + tr(" - Nueva categoría"));
+	okButton->setText(tr("Crear categoría"));
   }
 
 }
@@ -85,7 +85,7 @@ void dlgNewCategory::onAcceptOption(){
 
 	  if(helperdb_.categoryExists(ui->txtCategory->text().toUpper(), userid)){
 		QMessageBox::warning(this, SW::Helper_t::appName(),
-							 QString("<p><cite>La categoría: "
+							 tr("<p><cite>La categoría: "
 									 "<strong style='color:#ff0800;'>\"%1\""
 									 "</strong>, ya esta registrada en la base de datos.<br>"
 									 "pruebe con otro nombre por favor!"
@@ -108,7 +108,7 @@ void dlgNewCategory::onAcceptOption(){
 
 bool dlgNewCategory::validateData()  noexcept{
   if(ui->txtCategory->text().simplified().isEmpty()){
-      QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("Debe ingresar un nombre de categoría!\n"));
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("Debe ingresar un nombre de categoría!\n"));
       ui->txtCategory->setFocus(Qt::OtherFocusReason);
       return false;
     }

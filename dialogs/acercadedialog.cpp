@@ -59,7 +59,7 @@ void AcercaDeDialog::loadInfo_app() const noexcept{
   ui->tbLicencia->setFont(customFont_);
   ui->tbLicencia->setAcceptRichText(true);
   ui->tbLicencia->setOpenExternalLinks(true);
-  ui->tbLicencia->setHtml(QStringLiteral(
+  ui->tbLicencia->setHtml(tr(
 	"<p style='text-align: justify;'>SWUrlManager:<br><br>Es software libre, puede "
 	"redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública "
 	"General de GNU según se encuentra publicada por la <a "
@@ -79,7 +79,7 @@ void AcercaDeDialog::setTextToAbout() const{
 
   ui->tbAcercaDe->setFont(customFont_);
   ui->tbAcercaDe->setOpenExternalLinks(true);
-  ui->tbAcercaDe->setHtml(QStringLiteral(
+  ui->tbAcercaDe->setHtml(tr(
 	"<p>Powered by:"
 	"<ul>"
 	"<li>Lincoln Ingaroca De La Cruz.</li>"
@@ -141,8 +141,8 @@ void AcercaDeDialog::setupUI(){
   loadInfo_app();
 
   // Configurar links
-  ui->lblLicencia->setText(QStringLiteral("<a href='license'>Ver licencia</a>"));
-  ui->lblAcercaQt->setText(QStringLiteral("<a href='qt'>Acerca de Qt</a>"));
+  ui->lblLicencia->setText(tr("<a href='license'>Ver licencia</a>"));
+  ui->lblAcercaQt->setText(tr("<a href='qt'>Acerca de Qt</a>"));
 
 }
 
@@ -161,7 +161,7 @@ void AcercaDeDialog::showLicense(){
   QDialog licenciaDlg(this);
 
   licenciaDlg.setFixedSize(this->size());
-  licenciaDlg.setWindowTitle(SW::Helper_t::appName() + " - Licencia");
+  licenciaDlg.setWindowTitle(SW::Helper_t::appName() + tr(" - Licencia"));
 
   auto* teLicencia = new QTextBrowser(&licenciaDlg);
 

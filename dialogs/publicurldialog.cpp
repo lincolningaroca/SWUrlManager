@@ -101,7 +101,7 @@ void PublicUrlDialog::on_categorySelectedChanged(int index){
 void PublicUrlDialog::on_deleteUrl(){
 
   if(!ui->urlTableView->selectionModel()->hasSelection()){
-	QMessageBox::warning(this, qApp->applicationName(), "Seleccione una fila.");
+	QMessageBox::warning(this, qApp->applicationName(), tr("Seleccione una fila."));
 	return;
   }
 
@@ -110,12 +110,12 @@ void PublicUrlDialog::on_deleteUrl(){
   const auto url = ui->urlTableView->model()->index(currentRow, 1).data().toString();
 
   QMessageBox msgBox(this);
-  msgBox.setText(QString("<span>Confirma que desea eliminar esta dirección:<br>"
+  msgBox.setText(tr("<span>Confirma que desea eliminar esta dirección:<br>"
 						 " <cite style='color:#ff0800;'><strong>%1</strong></cite></span>").arg(url));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  msgBox.button(QMessageBox::Yes)->setText("Eliminar");
-  msgBox.button(QMessageBox::No)->setText("Cancelar");
+  msgBox.button(QMessageBox::Yes)->setText(tr("Eliminar Url"));
+  msgBox.button(QMessageBox::No)->setText(tr("Cancelar"));
 
   if(msgBox.exec() == QMessageBox::Yes){
 	const auto urlId=ui->urlTableView->model()->index(currentRow, 0).data().toInt();
@@ -134,7 +134,7 @@ void PublicUrlDialog::on_showMaintenanceDialog(SW::OpenMode mode){
   if(mode == SW::OpenMode::Edit){
 
 	if(!ui->urlTableView->selectionModel()->hasSelection()){
-	  QMessageBox::warning(this, qApp->applicationName(), "Seleccione una fila.");
+	  QMessageBox::warning(this, qApp->applicationName(), tr("Seleccione una fila."));
 	  return;
 	}
 
@@ -148,7 +148,7 @@ void PublicUrlDialog::on_showMaintenanceDialog(SW::OpenMode mode){
 	query.addBindValue(helperdb_.encryptionKey());
 
 	if(!query.exec() || !query.next()){
-	  QMessageBox::critical(this, qApp->applicationName(), "Error al leer los datos.");
+	  QMessageBox::critical(this, qApp->applicationName(), tr("Error al leer los datos."));
 	  return;
 	}
 
@@ -178,8 +178,8 @@ void PublicUrlDialog::on_loadDataTableView(){
 
   model->setQuery(std::move(qry));
 
-  model->setHeaderData(1, Qt::Horizontal, "Dirección URL");
-  model->setHeaderData(2, Qt::Horizontal, "Descripción");
+  model->setHeaderData(1, Qt::Horizontal, tr("Dirección URL"));
+  model->setHeaderData(2, Qt::Horizontal, tr("Descripción"));
 
 }
 
@@ -251,10 +251,10 @@ void PublicUrlDialog::readSettings(){
 
 void PublicUrlDialog::setupContextMenu(){
 
-  newUrl_ = new QAction("Agregar nueva url", this);
-  editUrl_ = new QAction("Editar datos de la url", this);
-  deleteUrl_ = new QAction("Eliminar url", this);
-  openUrl_ = new QAction("Abrir url en el navegador", this);
+  newUrl_ = new QAction(tr("Agregar nueva Url"), this);
+  editUrl_ = new QAction(tr("Editar datos de la Url"), this);
+  deleteUrl_ = new QAction(tr("Eliminar Url"), this);
+  openUrl_ = new QAction(tr("Abrir en el navegador"), this);
 
 
   connect(newUrl_, &QAction::triggered, this, [this](){on_showMaintenanceDialog(SW::OpenMode::New);});
@@ -285,7 +285,7 @@ void PublicUrlDialog::initialTableSetup(){
 void PublicUrlDialog::on_openUrl(){
 
   if(!ui->urlTableView->selectionModel()->hasSelection()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("Seleccione una fila!\n"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Seleccione una fila!\n"));
 	return;
   }
 
@@ -294,7 +294,7 @@ void PublicUrlDialog::on_openUrl(){
   const auto url_ = ui->urlTableView->model()->index(row_, 1).data().toString();
 
   if(!QDesktopServices::openUrl(QUrl(url_))){
-	QMessageBox::critical(this, SW::Helper_t::appName(), QStringLiteral("Error al abrir la dirección url.\n"));
+	QMessageBox::critical(this, SW::Helper_t::appName(), tr("Error al abrir la dirección url.\n"));
 	return;
   }
 

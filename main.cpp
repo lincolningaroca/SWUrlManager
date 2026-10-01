@@ -38,14 +38,14 @@ bool unlockOrSetupEncryption(QSqlDatabase& db, QByteArray& outDek) {
 	bool ok = false;
 	const QString masterPwd = QInputDialog::getText(
 	  nullptr, qApp->applicationName(),
-	  QStringLiteral("Ingrese la contraseña maestra para habilitar esta instalación."),
+	  QObject::tr("Ingrese la contraseña maestra para habilitar esta instalación."),
 	  QLineEdit::Password, QString(), &ok);
 
 	if (!ok || masterPwd.isEmpty()) return false;
 
 	auto dek = SW::CryptoManager::loadDEK(masterPwd, db);
 	if (!dek) {
-	  QMessageBox::critical(nullptr, qApp->applicationName(), "Contraseña incorrecta.");
+	  QMessageBox::critical(nullptr, qApp->applicationName(), QObject::tr("Contraseña incorrecta."));
 	  return false;
 	}
 	outDek = *dek;
@@ -60,29 +60,29 @@ bool unlockOrSetupEncryption(QSqlDatabase& db, QByteArray& outDek) {
 	while (true) {
 	  masterPwd = QInputDialog::getText(
 		nullptr, qApp->applicationName(),
-		QStringLiteral("Defina una contraseña maestra para proteger los datos.\n"
-					   "Guárdela en un lugar seguro: sin ella no hay forma de recuperar la información."),
+		QObject::tr("Defina una contraseña maestra para proteger los datos.\n"
+		   "Guárdela en un lugar seguro: sin ella no hay forma de recuperar la información."),
 		QLineEdit::Password, QString(), &ok);
 
 	  if (!ok || masterPwd.isEmpty()) return false;
 
 	  if (!SW::Helper_t::isPasswordSecure(masterPwd)) {
 		QMessageBox::warning(nullptr, qApp->applicationName(),
-							 QStringLiteral("La contraseña debe tener al menos 8 caracteres, una mayúscula, "
-											"un número y un carácter especial."));
+							 QObject::tr("La contraseña debe tener al menos 8 caracteres, una mayúscula, "
+								"un número y un carácter especial."));
 		continue;
 	  }
 
 	  confirmPwd = QInputDialog::getText(
 		nullptr, qApp->applicationName(),
-		QStringLiteral("Confirme la contraseña maestra."),
+		QObject::tr("Confirme la contraseña maestra."),
 		QLineEdit::Password, QString(), &ok);
 
 	  if (!ok) return false;
 
 	  if (masterPwd != confirmPwd) {
 		QMessageBox::warning(nullptr, qApp->applicationName(),
-							 QStringLiteral("Las contraseñas no coinciden. Intente nuevamente."));
+							 QObject::tr("Las contraseñas no coinciden. Intente nuevamente."));
 		continue;
 	  }
 
@@ -91,7 +91,7 @@ bool unlockOrSetupEncryption(QSqlDatabase& db, QByteArray& outDek) {
 
 	auto dek = SW::CryptoManager::generateDEK();
 	if (!dek || !SW::CryptoManager::storeDEK(*dek, masterPwd, db)) {
-	  QMessageBox::critical(nullptr, qApp->applicationName(), "No se pudo inicializar el cifrado.");
+	  QMessageBox::critical(nullptr, qApp->applicationName(), QObject::tr("No se pudo inicializar el cifrado."));
 	  return false;
 	}
 	outDek = *dek;
@@ -113,11 +113,10 @@ bool verifyPostgreSQLRequirement() {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Critical);
 	msgBox.setWindowTitle(qApp->applicationName());
-	msgBox.setText(QStringLiteral("<b>PostgreSQL no está instalado en el sistema.</b>"));
-	msgBox.setInformativeText(
-	  QStringLiteral("Esta aplicación requiere el motor de base de datos PostgreSQL (versión %1 o superior) para funcionar.\n\n"
-					 "¿Desea abrir el sitio oficial de PostgreSQL para descargarlo?")
-		.arg(MIN_POSTGRESQL_VERSION));
+	msgBox.setText(QObject::tr("<b>PostgreSQL no está instalado en el sistema.</b>"));
+	msgBox.setInformativeText(QObject::tr("Esta aplicación requiere el motor de base de datos PostgreSQL (versión %1 o superior) para funcionar.\n\n"
+								 "¿Desea abrir el sitio oficial de PostgreSQL para descargarlo?")
+								.arg(MIN_POSTGRESQL_VERSION));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	msgBox.setDefaultButton(QMessageBox::Yes);
 
@@ -134,12 +133,11 @@ bool verifyPostgreSQLRequirement() {
 	msgBox.setIcon(QMessageBox::Warning);
 	msgBox.setWindowTitle(qApp->applicationName());
 	msgBox.setText(QStringLiteral("<b>Versión de PostgreSQL incompatible.</b>"));
-	msgBox.setInformativeText(
-	  QStringLiteral("Se detectó PostgreSQL versión %1 en su equipo.\n"
-					 "Esta aplicación requiere como mínimo la versión %2.\n\n"
-					 "Por favor, actualice su instalación de PostgreSQL desde el sitio oficial.")
-		.arg(pgStatus.majorVersion)
-		.arg(MIN_POSTGRESQL_VERSION));
+	msgBox.setInformativeText(QObject::tr("Se detectó PostgreSQL versión %1 en su equipo.\n"
+								 "Esta aplicación requiere como mínimo la versión %2.\n\n"
+								 "Por favor, actualice su instalación de PostgreSQL desde el sitio oficial.")
+								.arg(pgStatus.majorVersion)
+								.arg(MIN_POSTGRESQL_VERSION));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	msgBox.setDefaultButton(QMessageBox::Yes);
 
@@ -248,7 +246,7 @@ bool initializeDefaultData(){
   QFile file(":/database/seed.sql");
   if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 	QMessageBox::critical(nullptr, qApp->applicationName(),
-						  "Error al cargar el script de inicialización:\n" + file.errorString());
+						  QObject::tr("Error al cargar el script de inicialización:\n") + file.errorString());
 	return false;
   }
 
@@ -262,7 +260,7 @@ bool initializeDefaultData(){
 
   if(!qry.exec(sqlScript)){
 	QMessageBox::critical(nullptr, qApp->applicationName(),
-						  "Error al ejecutar el script de inicialización:\n" + qry.lastError().text());
+						  QObject::tr("Error al ejecutar el script de inicialización:\n") + qry.lastError().text());
 	return false;
   }
 
@@ -298,11 +296,9 @@ void showBootstrapPasswordDialog(const QString& password) {
 
   auto* layout = new QVBoxLayout(&pwdDialog);
 
-  auto* infoLabel = new QLabel(
-	QStringLiteral("<b>La cuenta de administrador todavía usa la contraseña temporal.</b><br><br>"
-				   "Usuario: <code>admin</code><br><br>"
-				   "Contraseña temporal (cópiela e inicie sesión para cambiarla):"),
-	&pwdDialog);
+  auto* infoLabel = new QLabel(QObject::tr("<b>La cuenta de administrador todavía usa la contraseña temporal.</b><br><br>"
+								  "Usuario: <code>admin</code><br><br>"
+								  "Contraseña temporal (cópiela e inicie sesión para cambiarla):"), &pwdDialog);
   infoLabel->setTextFormat(Qt::RichText);
   infoLabel->setWordWrap(true);
 
@@ -310,15 +306,14 @@ void showBootstrapPasswordDialog(const QString& password) {
   pwdEdit->setReadOnly(true);
   pwdEdit->selectAll();
 
-  auto* copyButton = new QPushButton(QStringLiteral("Copiar contraseña"), &pwdDialog);
+  auto* copyButton = new QPushButton(QObject::tr("Copiar contraseña"), &pwdDialog);
   copyButton->setDefault(true);
 
-  auto* warningLabel = new QLabel(
-	QStringLiteral("<i>Este mensaje seguirá apareciendo al abrir la app hasta que inicie sesión "
-				   "como admin y establezca una contraseña definitiva.</i>"), &pwdDialog);
+  auto* warningLabel = new QLabel(QObject::tr("<i>Este mensaje seguirá apareciendo al abrir la app hasta que inicie sesión "
+									 "como admin y establezca una contraseña definitiva.</i>"), &pwdDialog);
   warningLabel->setWordWrap(true);
 
-  auto* closeButton = new QPushButton(QStringLiteral("Entendido, cerrar"), &pwdDialog);
+  auto* closeButton = new QPushButton(QObject::tr("Entendido, cerrar"), &pwdDialog);
 
   layout->addWidget(infoLabel);
   layout->addWidget(pwdEdit);
@@ -328,7 +323,7 @@ void showBootstrapPasswordDialog(const QString& password) {
 
   QObject::connect(copyButton, &QPushButton::clicked, &pwdDialog, [pwdEdit, copyButton](){
 	QApplication::clipboard()->setText(pwdEdit->text());
-	copyButton->setText(QStringLiteral("¡Copiada!"));
+	copyButton->setText(QObject::tr("¡Copiada!"));
   });
 
   QObject::connect(closeButton, &QPushButton::clicked, &pwdDialog, &QDialog::accept);
@@ -403,7 +398,8 @@ int main(int argc, char *argv[])
   }
 
   if(!SingleIntsanceManager::initServer(serverName, &a)){
-	QMessageBox::critical(nullptr, qApp->applicationName(), "No se pudo iniciar el control de instancia única.");
+	QMessageBox::critical(nullptr, qApp->applicationName(),
+						  QObject::tr("No se pudo iniciar el control de instancia única."));
 	return -1;
   }
 
@@ -424,7 +420,7 @@ int main(int argc, char *argv[])
 
   if (!SW::HelperDataBase_t::ensureDatabaseAndSchemaReady(config)) {
 	QMessageBox::critical(nullptr, SW::Helper_t::appName(),
-						  QStringLiteral("No se pudo preparar la base de datos para la aplicación. El programa se cerrará."));
+						  QObject::tr("No se pudo preparar la base de datos para la aplicación. El programa se cerrará."));
 	return -1;
   }
 
@@ -442,7 +438,7 @@ int main(int argc, char *argv[])
 
   if(!bootstrapAdminIfNeeded()){
 	QMessageBox::critical(nullptr, qApp->applicationName(),
-						  QStringLiteral("No se pudo crear la cuenta de administrador inicial."));
+						  QObject::tr("No se pudo crear la cuenta de administrador inicial."));
 	return -1;
   }
 

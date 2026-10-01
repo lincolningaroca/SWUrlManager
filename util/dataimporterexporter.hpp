@@ -1,6 +1,8 @@
 #pragma once
 
 #include "helperdatabase/helperdb.hpp"
+
+#include <QCoreApplication>
 #include <QList>
 #include <QString>
 
@@ -18,6 +20,10 @@ public:
 	Tsv,
 	Txt
   };
+
+  Q_DECLARE_TR_FUNCTIONS(DataImporterExporter)
+
+public:
 
   explicit DataImporterExporter() = default;
 

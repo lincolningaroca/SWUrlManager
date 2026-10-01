@@ -2,6 +2,7 @@
 
 #include "util/helper.hpp"
 
+#include <QCoreApplication>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QSqlDatabase>
@@ -15,6 +16,9 @@ namespace SW {
 struct HelperDataBase_t{
 
   using CategoryData = std::pair<QString, QString>;
+
+  Q_DECLARE_TR_FUNCTIONS(HelperDataBase_t)
+public:
 
   explicit HelperDataBase_t();
   explicit HelperDataBase_t(QSqlDatabase db) noexcept;

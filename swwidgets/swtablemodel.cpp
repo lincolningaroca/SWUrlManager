@@ -12,6 +12,9 @@ QVariant SWTableModel::data(const QModelIndex& index, int role) const {
   if((role == Qt::DisplayRole || role == Qt::ToolTipRole) && (index.column() == 1 || index.column() == 2)){
 	QTextDocument doc;
 	doc.setHtml(QSqlQueryModel::data(index, Qt::DisplayRole).toString());
+	if(doc.toPlainText().isEmpty()){
+	  return tr("Sin descripción disponible.");
+	}
 	return doc.toPlainText();
   }
 

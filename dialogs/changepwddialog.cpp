@@ -29,10 +29,10 @@ ChangePwdDialog::~ChangePwdDialog()
 void ChangePwdDialog::initDialog(){
 
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-  setWindowTitle("Actualizar cantraseña");
+  setWindowTitle(tr("Actualizar cantraseña"));
 
-  ui->lblUser->setText(QString("<strong>Estas a punto de cambiar o actualizar la clave de acceso para el usuario: <cite>\"%1\"</cite></strong>").arg(user_));
-  ui->lblMessage->setText(QStringLiteral("<p><strong>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
+  ui->lblUser->setText(tr("<strong>Estas a punto de cambiar o actualizar la clave de acceso para el usuario: <cite>\"%1\"</cite></strong>").arg(user_));
+  ui->lblMessage->setText(tr("<p><strong>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
 										 "<br>y una longitud mínina de 8 caracteres</strong></p>"));
 
   ui->txtNewPassword->setEchoMode(QLineEdit::Password);
@@ -43,8 +43,8 @@ void ChangePwdDialog::initDialog(){
 
   ui->btnGenPassword->setDisabled(true);
 
-  ui->bBox->button(QDialogButtonBox::Ok)->setText("Cambiar clave");
-  ui->bBox->button(QDialogButtonBox::Cancel)->setText("Cancelar");
+  ui->bBox->button(QDialogButtonBox::Ok)->setText(tr("Cambiar clave"));
+  ui->bBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancelar"));
 
   QObject::connect(ui->chkGenPassword, &QCheckBox::toggled, this, [this](bool state){
 
@@ -85,7 +85,7 @@ void ChangePwdDialog::on_acceptRole(){
 
   if(ui->txtNewPassword->text().isEmpty() || ui->txtRePassword->text().isEmpty()){
 
-	QMessageBox::warning(this, qApp->applicationName(), "Todos los campos son requeridos.");
+	QMessageBox::warning(this, qApp->applicationName(), tr("Todos los campos son requeridos."));
 	setFocusToWidget();
 	return;
 
@@ -93,7 +93,7 @@ void ChangePwdDialog::on_acceptRole(){
 
   if(ui->txtNewPassword->text().length() < 8 || ui->txtRePassword->text().length() < 8){
 
-	QMessageBox::warning(this, qApp->applicationName(), "La clave o contraseña debe tener como mínimo 8 caracteres.");
+	QMessageBox::warning(this, qApp->applicationName(), tr("La clave o contraseña debe tener como mínimo 8 caracteres."));
 	setFocusToWidget();
 	return;
 
@@ -101,7 +101,7 @@ void ChangePwdDialog::on_acceptRole(){
 
   if(ui->txtNewPassword->text().compare(ui->txtRePassword->text()) != 0){
 
-	QMessageBox::warning(this, qApp->applicationName(), "Las contraseñas no coinciden.");
+	QMessageBox::warning(this, qApp->applicationName(), tr("Las contraseñas no coinciden."));
 	setFocusToWidget();
 	return;
   }
@@ -136,7 +136,7 @@ void ChangePwdDialog::on_acceptRole(){
   if(helperDb.resetPassword(ui->txtNewPassword->text().simplified(), userId.value())){
 
 	QMessageBox::information(this, qApp->applicationName(),
-							 QString("<strong>Se cambio la clave o contraseña para el usuario: <cite>\"%1\"</cite>"
+							 tr("<strong>Se cambio la clave o contraseña para el usuario: <cite>\"%1\"</cite>"
 									 "<br>la próxima vez que inicie sesión, lo hará con su nueva clave.</strong>").arg(user_));
 	accept();
 

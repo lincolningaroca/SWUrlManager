@@ -34,13 +34,13 @@ bool BackupCrypto::encryptToFile(const QJsonDocument& doc, const QString& filePa
   QByteArray salt(kSaltBytes, 0), nonce(kNonceBytes, 0);
   if (RAND_bytes(reinterpret_cast<unsigned char*>(salt.data()), kSaltBytes) != 1 ||
 	  RAND_bytes(reinterpret_cast<unsigned char*>(nonce.data()), kNonceBytes) != 1) {
-	if (errorOut) *errorOut = QStringLiteral("No se pudo generar material aleatorio para el cifrado.");
+	if (errorOut) *errorOut = tr("No se pudo generar material aleatorio para el cifrado.");
 	return false;
   }
 
   auto keyOpt = deriveKey(password, salt);
   if (!keyOpt) {
-	if (errorOut) *errorOut = QStringLiteral("No se pudo derivar la clave de cifrado.");
+	if (errorOut) *errorOut = tr("No se pudo derivar la clave de cifrado.");
 	return false;
   }
   const QByteArray& key = *keyOpt;
@@ -50,7 +50,7 @@ bool BackupCrypto::encryptToFile(const QJsonDocument& doc, const QString& filePa
   QByteArray tag(kTagBytes, 0);
 
   EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-  if (!ctx) { if (errorOut) *errorOut = QStringLiteral("Fallo interno de OpenSSL."); return false; }
+  if (!ctx) { if (errorOut) *errorOut = tr("Fallo interno de OpenSSL."); return false; }
 
   bool ok = true;
   int outLen = 0;
@@ -66,13 +66,13 @@ bool BackupCrypto::encryptToFile(const QJsonDocument& doc, const QString& filePa
   EVP_CIPHER_CTX_free(ctx);
 
   if (!ok) {
-	if (errorOut) *errorOut = QStringLiteral("Error al cifrar los datos del backup.");
+	if (errorOut) *errorOut = tr("Error al cifrar los datos del backup.");
 	return false;
   }
 
   QFile file(filePath);
   if (!file.open(QIODevice::WriteOnly)) {
-	if (errorOut) *errorOut = QStringLiteral("No se pudo crear el archivo: %1").arg(file.errorString());
+	if (errorOut) *errorOut = tr("No se pudo crear el archivo: %1").arg(file.errorString());
 	return false;
   }
 
@@ -92,7 +92,7 @@ std::optional<QJsonDocument> BackupCrypto::decryptFromFile(const QString& filePa
 
   QFile file(filePath);
   if (!file.open(QIODevice::ReadOnly)) {
-	if (errorOut) *errorOut = QStringLiteral("No se pudo abrir el archivo: %1").arg(file.errorString());
+	if (errorOut) *errorOut = tr("No se pudo abrir el archivo: %1").arg(file.errorString());
 	return std::nullopt;
   }
 
@@ -101,14 +101,14 @@ std::optional<QJsonDocument> BackupCrypto::decryptFromFile(const QString& filePa
 
   const int headerSize = static_cast<int>(kMagic.size()) + 1 + kSaltBytes + kNonceBytes + kTagBytes;
   if (raw.size() <= headerSize || !raw.startsWith(kMagic)) {
-	if (errorOut) *errorOut = QStringLiteral("El archivo no es un backup válido.");
+	if (errorOut) *errorOut = tr("El archivo no es un backup válido.");
 	return std::nullopt;
   }
 
   int pos = static_cast<int>(kMagic.size());
   const quint8 version = static_cast<quint8>(raw[pos]); pos += 1;
   if (version != kSchemaVersion) {
-	if (errorOut) *errorOut = QStringLiteral("Versión de backup no soportada.");
+	if (errorOut) *errorOut = tr("Versión de backup no soportada.");
 	return std::nullopt;
   }
 
@@ -119,14 +119,14 @@ std::optional<QJsonDocument> BackupCrypto::decryptFromFile(const QString& filePa
 
   auto keyOpt = deriveKey(password, salt);
   if (!keyOpt) {
-	if (errorOut) *errorOut = QStringLiteral("No se pudo derivar la clave de descifrado.");
+	if (errorOut) *errorOut = tr("No se pudo derivar la clave de descifrado.");
 	return std::nullopt;
   }
   const QByteArray& key = *keyOpt;
 
   QByteArray plain(cipherText.size(), 0);
   EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-  if (!ctx) { if (errorOut) *errorOut = QStringLiteral("Fallo interno de OpenSSL."); return std::nullopt; }
+  if (!ctx) { if (errorOut) *errorOut = tr("Fallo interno de OpenSSL."); return std::nullopt; }
 
   EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr,
 					 reinterpret_cast<const unsigned char*>(key.constData()),
@@ -141,14 +141,14 @@ std::optional<QJsonDocument> BackupCrypto::decryptFromFile(const QString& filePa
   EVP_CIPHER_CTX_free(ctx);
 
   if (valid != 1) {
-	if (errorOut) *errorOut = QStringLiteral("Contraseña incorrecta o archivo dañado.");
+	if (errorOut) *errorOut = tr("Contraseña incorrecta o archivo dañado.");
 	return std::nullopt;
   }
 
   QJsonParseError parseError;
   const auto doc = QJsonDocument::fromJson(plain, &parseError);
   if (parseError.error != QJsonParseError::NoError) {
-	if (errorOut) *errorOut = QStringLiteral("El contenido del backup está corrupto.");
+	if (errorOut) *errorOut = tr("El contenido del backup está corrupto.");
 	return std::nullopt;
   }
 

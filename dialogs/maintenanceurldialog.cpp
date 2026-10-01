@@ -88,16 +88,16 @@ void MaintenanceUrlDialog::initForm(){
 
   if(mode_ == SW::OpenMode::New){
 
-	setWindowTitle("Agregar nueva url");
-	ui->aceptpushButton->setText("Guardar datos");
+	setWindowTitle(tr("Agregar nueva url"));
+	ui->aceptpushButton->setText(tr("Guardar datos"));
   }else{
 
-	setWindowTitle("Editar datos url");
+	setWindowTitle(tr("Editar datos url"));
 	id = dataUrl_.value(0).toInt();
 
 	midleWidget->setUrl(dataUrl_.value(1).toString());
 	midleWidget->setDescription(dataUrl_.value(2).toString());
-	ui->aceptpushButton->setText("Guardar cambios");
+	ui->aceptpushButton->setText(tr("Guardar cambios"));
   }
 
 }
@@ -114,7 +114,7 @@ void MaintenanceUrlDialog::on_acceptPushButton(){
 
   if(helperdb_.urlExists(midleWidget->url(), currentCategoryId_)){
 
-	auto warningMsg = QString("<p>La url: <cite><strong>%1</strong></cite></p> ya esta registrada!!").arg(midleWidget->url());
+	auto warningMsg = tr("<p>La url: <cite><strong>%1</strong></cite></p> ya esta registrada!!").arg(midleWidget->url());
 	QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 
 	midleWidget->selectAndFocus();

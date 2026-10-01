@@ -17,7 +17,7 @@ ConfigDialog::ConfigDialog(Qt::ColorScheme currentScheme, bool isFusionActive, Q
 
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-  setWindowTitle(QStringLiteral("Configuración"));
+  setWindowTitle(tr("Configuración"));
 
   ui->txtPassword->setEchoMode(QLineEdit::Password);
   ui->chkFusionStyle->setChecked(selectedStyle_);
@@ -97,9 +97,9 @@ void ConfigDialog::on_btnTestDB_clicked() {
 
   // Mostrar la notificación exactamente una vez
   if (success) {
-	QMessageBox::information(this, windowTitle(), QStringLiteral("¡Conexión a la base de datos exitosa!"));
+	QMessageBox::information(this, windowTitle(), tr("¡Conexión a la base de datos exitosa!"));
   } else {
-	QMessageBox::critical(this, windowTitle(), QStringLiteral("Error al conectar a la base de datos:\n") + errorMsg);
+	QMessageBox::critical(this, windowTitle(), tr("Error al conectar a la base de datos:\n") + errorMsg);
   }
 }
 
@@ -115,7 +115,7 @@ void ConfigDialog::initDialog() noexcept{
 
   applyAllStyles();
 
-  auto *itemApariencia = new QListWidgetItem(QIcon(":/img/palette.png"), "  Apariencia");
+  auto *itemApariencia = new QListWidgetItem(QIcon(":/img/palette.png"), tr("Apariencia"));
   itemApariencia->setSizeHint(QSize(130, 40));
   ui->listMenu->addItem(itemApariencia);
 
@@ -129,7 +129,7 @@ void ConfigDialog::initDialog() noexcept{
   ui->btnDark->setIcon(QIcon(":/img/dark.png"));
   ui->btnDark->setIconSize(QSize(32, 32));
 
-  auto *itemStyleApp = new QListWidgetItem(QIcon(":/img/style-fusion.png"), "Estilo de la aplicación");
+  auto *itemStyleApp = new QListWidgetItem(QIcon(":/img/style-fusion.png"), tr("Estilo de la aplicación"));
   itemStyleApp->setSizeHint(QSize(130, 40));
   ui->listMenu->addItem(itemStyleApp);
 
@@ -137,7 +137,7 @@ void ConfigDialog::initDialog() noexcept{
 	256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation));
   ui->lblImagen->setAlignment(Qt::AlignCenter);
 
-  auto *itemDbConexion = new QListWidgetItem(QIcon(":/img/dbConfig.png"), "Base de datos");
+  auto *itemDbConexion = new QListWidgetItem(QIcon(":/img/dbConfig.png"), tr("Base de datos"));
   itemDbConexion->setSizeHint(QSize(130, 40));
   ui->listMenu->addItem(itemDbConexion);
 }

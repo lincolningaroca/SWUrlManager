@@ -20,7 +20,7 @@ QList<SW::UrlImportData> DataImporterExporter::importFromFile(const QString &fil
   QFileInfo fi(filePath);
 
   if (!fi.exists()) {
-	if (errorOut) *errorOut = "El archivo especificado no existe.";
+	if (errorOut) *errorOut = tr("El archivo especificado no existe.");
 	return {};
   }
 
@@ -39,7 +39,7 @@ QList<SW::UrlImportData> DataImporterExporter::importFromXlsx(const QString &fil
   QXlsx::Document xlsx(filePath);
 
   if (!xlsx.load()) {
-	if (errorOut) *errorOut = "No se pudo cargar el archivo Excel (.xlsx).";
+	if (errorOut) *errorOut = tr("No se pudo cargar el archivo Excel (.xlsx).");
 	return list;
   }
 
@@ -76,7 +76,7 @@ QList<SW::UrlImportData> DataImporterExporter::importFromTextFormat(const QStrin
   QFile file(filePath);
 
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-	if (errorOut) *errorOut = "Error: No se pudo abrir el archivo para lectura.";
+	if (errorOut) *errorOut = tr("Error: No se pudo abrir el archivo para lectura.");
 	return list;
   }
 
@@ -145,7 +145,7 @@ bool DataImporterExporter::exportToTextFormat(QTableView *tableView, const QStri
 
   QFile file(filePath);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-	if (errorOut) *errorOut = QString("Error al crear el archivo: %1").arg(file.errorString());
+	if (errorOut) *errorOut = tr("Error al crear el archivo: %1").arg(file.errorString());
 	return false;
   }
 
@@ -252,7 +252,7 @@ bool DataImporterExporter::exportToXlsx(QTableView *tableView, const QString &fi
   const bool saved = xlsxDocument.saveAs(filePath);
 
   if (!saved && errorOut) {
-	*errorOut = QStringLiteral("No se pudo guardar el archivo Excel en la ruta indicada.");
+	*errorOut = tr("No se pudo guardar el archivo Excel en la ruta indicada.");
   }
   return saved;
 }
@@ -262,13 +262,13 @@ bool DataImporterExporter::exportTableView(QTableView *tableView, const QString 
   if (errorOut) errorOut->clear();
 
   if (!tableView) {
-	if (errorOut) *errorOut = "Error: El TableView es nulo.";
+	if (errorOut) *errorOut = tr("Error: El TableView es nulo.");
 	return false;
   }
 
   auto *model = tableView->model();
   if (!model) {
-	if (errorOut) *errorOut = "Error: La tabla no tiene un modelo de datos asignado.";
+	if (errorOut) *errorOut = tr("Error: La tabla no tiene un modelo de datos asignado.");
 	return false;
   }
 
