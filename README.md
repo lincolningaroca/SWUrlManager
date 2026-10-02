@@ -1,25 +1,26 @@
 # SWUrlManager 🚀
 
-[![Estado](https://img.shields.io/badge/Estado-Alpha%202%20--%20Beta%201-blue)](#)
+[![Estado](https://img.shields.io/badge/Estado-Beta%201-blue)](#)
 [![Lenguaje](https://img.shields.io/badge/Lenguaje-C%2B%2B17-00599C)](#)
 [![Framework](https://img.shields.io/badge/Framework-Qt-41CD52)](#)
 [![Database](https://img.shields.io/badge/Base%20de%20Datos-PostgreSQL-4169E1)](#)
 
-**SWUrlManager** es una aplicación de escritorio desarrollada en **C++ (Qt)** integrada con **PostgreSQL**, enfocada en la gestión segura de usuarios, control de acceso y almacenamiento cifrado de datos.
+**SWUrlManager** es una aplicación de escritorio desarrollada en **C++ (Qt)** integrada con **PostgreSQL**, enfocada en la gestión segura de usuarios, control de acceso y almacenamiento cifrado de direcciones Url.
 
 ---
 
 ## 📌 Estado Actual del Proyecto
 
-La **migración de la base de datos a PostgreSQL está completa** — la aplicación ya no depende de SQLite en ningún punto. La app corre como una instalación local e independiente por usuario, sin depender de un servidor central compartido entre varias máquinas.
+La migración de la base de datos a PostgreSQL está completa, y la aplicación corre como una instalación local e independiente por usuario, sin depender de un servidor central compartido entre varias máquinas.
 
 ### 🛠️ Características Implementadas
 
 **Gestión Segura de Usuarios**
 - Autenticación con hash seguro de contraseñas y verificación en el servidor.
+- Creación de nuevas cuentas, con método de recuperación a elección (PIN numérico o pregunta secreta) y generación opcional de contraseña segura.
+- Restablecimiento de contraseña mediante el método de recuperación elegido.
 - Roles diferenciados **Administrador** / **Usuario**, con permisos de edición configurables por cuenta y estado de cuenta activa/inactiva.
 - Cuenta de administrador generada automáticamente en la primera instalación, con una contraseña temporal única por instalación (mostrada una sola vez, con opción de copiarla), y cambio de contraseña obligatorio en el primer inicio de sesión.
-- Mecanismo de rescate de clave con los datos protegidos mediante cifrado.
 
 **Cifrado de datos**
 - Los datos sensibles se protegen con una clave de cifrado propia de cada instalación, generada de forma aleatoria y nunca embebida en el ejecutable.
@@ -34,12 +35,13 @@ La **migración de la base de datos a PostgreSQL está completa** — la aplicac
 - Carga paginada de la tabla de URLs para categorías con gran volumen de registros.
 
 **Copias de Seguridad**
-- Backup y restauración completa de la base de datos, disponible solo para el rol Administrador.
+- Backup y restauración completa de la base de datos, disponible solo para el rol Administrador, portable entre instalaciones distintas.
 - Backup y restauración de datos por usuario individual, protegido con una contraseña propia del archivo, portable entre distintas instalaciones y máquinas — incluye la opción de sumar las URLs públicas al respaldo.
 
 **Interfaz**
 - Soporte de tema claro/oscuro con detección del esquema del sistema operativo.
-- Widget central (`MidleWidget`) reutilizado entre formularios para evitar duplicación de UI.
+- Cambio de idioma (Español / English), aplicado al reiniciar la aplicación.
+- Widget central reutilizado entre formularios para evitar duplicación de UI.
 - Reporte de problemas integrado: genera un Issue prellenado en el repositorio de GitHub del proyecto, incluyendo información del sistema para facilitar el diagnóstico.
 
 ---
@@ -47,21 +49,21 @@ La **migración de la base de datos a PostgreSQL está completa** — la aplicac
 ## 🚧 En Desarrollo Activo
 
 - **Mejoras de estabilidad general:** revisión y corrección de casos borde en la app (manejo de errores en operaciones de base de datos, robustez ante fallos de conexión).
-- **Módulo de administración de usuarios:** interfaz dedicada para que el administrador gestione cuentas, permisos y estado de otros usuarios.
 
 ---
 
 ## 🗺️ Hoja de Ruta (Roadmap)
 
-### 📦 Beta 1 (Próximo Lanzamiento)
+### 📦 Próximo lanzamiento
 - [ ] Empaquetado portable de la aplicación (`windeployqt` + dependencias necesarias).
 - [ ] Pruebas de estabilidad de conexión a la base de datos.
 - [ ] Corrección de errores y refinamiento de la interfaz de usuario en Qt.
 
-### 🔮 Futuras Versiones (v1.1 / v2.0)
+### 🔮 Futuras Versiones
 - [ ] Sistema de auditoría de inicio/cierre de sesión.
-- [ ] Módulo de reportes.
+- [ ] Panel de administración para gestionar permisos y estado de usuarios existentes.
 - [ ] Capa adicional de cifrado del archivo de backup completo en tránsito.
+- [ ] Cambio de idioma en caliente, sin necesidad de reiniciar la aplicación.
 
 ---
 

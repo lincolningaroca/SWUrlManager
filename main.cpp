@@ -17,7 +17,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSettings>
-#include <QSettings>   // ===== NUEVO: Incluido para leer preferencias =====
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QTranslator> // ===== NUEVO: Incluido para traducción =====[cite: 12]
