@@ -17,12 +17,12 @@ ConfigDialog::ConfigDialog(Qt::ColorScheme currentScheme, bool isFusionActive, Q
 
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-  setWindowTitle(tr("Configuración"));
 
   ui->txtPassword->setEchoMode(QLineEdit::Password);
   ui->chkFusionStyle->setChecked(selectedStyle_);
 
   initDialog();
+  setupLanguageCombo();
   setCurrentTheme(selectedScheme_);
   setDbConfig(SW::Helper_t::loadDbConfig());
   restoreLastSelection();
@@ -117,6 +117,7 @@ void ConfigDialog::initDialog() noexcept{
 
   auto *itemApariencia = new QListWidgetItem(QIcon(":/img/palette.png"), tr("Apariencia"));
   itemApariencia->setSizeHint(QSize(130, 40));
+  itemApariencia->setData(Qt::UserRole, static_cast<int>(ConfigSection::Appearance));
   ui->listMenu->addItem(itemApariencia);
 
   // Iconos de los botones de tema
@@ -131,6 +132,7 @@ void ConfigDialog::initDialog() noexcept{
 
   auto *itemStyleApp = new QListWidgetItem(QIcon(":/img/style-fusion.png"), tr("Estilo de la aplicación"));
   itemStyleApp->setSizeHint(QSize(130, 40));
+  itemStyleApp->setData(Qt::UserRole, static_cast<int>(ConfigSection::AppStyle));
   ui->listMenu->addItem(itemStyleApp);
 
   ui->lblImagen->setPixmap(QPixmap(":/img/style-fusion.png").scaled(
@@ -139,7 +141,38 @@ void ConfigDialog::initDialog() noexcept{
 
   auto *itemDbConexion = new QListWidgetItem(QIcon(":/img/dbConfig.png"), tr("Base de datos"));
   itemDbConexion->setSizeHint(QSize(130, 40));
+  itemDbConexion->setData(Qt::UserRole, static_cast<int>(ConfigSection::DataBase));
   ui->listMenu->addItem(itemDbConexion);
+
+  auto *itemGenerales = new QListWidgetItem(QIcon(":/img/generalOption.png"), tr("Generales"));
+  itemGenerales->setSizeHint(QSize(130, 40));
+  itemGenerales->setData(Qt::UserRole, static_cast<int>(ConfigSection::General));
+  ui->listMenu->addItem(itemGenerales);
+
+  //llenar el combobox con las opciones de idioma
+  ui->languageLabel->setText(tr("Idioma"));
+
+}
+
+void ConfigDialog::setupLanguageCombo() noexcept {
+  ui->languageComboBox->clear();
+  ui->languageComboBox->addItem(tr("Español"), QStringLiteral("es"));
+  ui->languageComboBox->addItem(tr("English"), QStringLiteral("en"));
+
+  ui->languageLabel->setText(tr("Idioma"));
+
+  // Leer idioma de la configuración guardada
+  // QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
+  // currentLang_ = settings.value(QStringLiteral("language"), QStringLiteral("es")).toString();
+  currentLang_ = SW::Helper_t::currentLanguage();
+
+  // Seleccionar el ítem correspondiente en el ComboBox
+  int index = ui->languageComboBox->findData(currentLang_);
+  if (index != -1) {
+	ui->languageComboBox->setCurrentIndex(index);
+  } else {
+	ui->languageComboBox->setCurrentIndex(0); // Por defecto Español
+  }
 }
 
 void ConfigDialog::applyAllStyles() noexcept {
@@ -241,7 +274,7 @@ void ConfigDialog::setupUiConnections(){
 
   QObject::connect(ui->chkFusionStyle, &QCheckBox::toggled, this, [this](bool checked){
 	selectedStyle_ = checked;
-	// emit styleChanged(checked); // Si deseas previsualización en tiempo real
+
   });
 
   // Cuando MainForm aplica el tema (via Apply), refrescamos los botones del diálogo
@@ -270,6 +303,14 @@ void ConfigDialog::applyThemeSelection() noexcept{
 
 }
 
+void ConfigDialog::applyLanguageSelection() {
+
+  // QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
+  const QString selectedLanguage = ui->languageComboBox->currentData().toString();
+  // settings.setValue(QStringLiteral("language"), selectedLanguage);
+  SW::Helper_t::setLanguage(selectedLanguage);
+}
+
 
 void ConfigDialog::saveLastSelection(){
 
@@ -277,23 +318,27 @@ void ConfigDialog::saveLastSelection(){
 
   auto *currentItem = ui->listMenu->currentItem();
 
-  if(currentItem)
-	settings.setValue("configDialogLastSelection", currentItem->text());
-
+  if(currentItem){
+	int sectionId = currentItem->data(Qt::UserRole).toInt();
+	settings.setValue("configDialogLastSelection", sectionId);
+  }
 }
 
 void ConfigDialog::restoreLastSelection(){
 
   QSettings settings(qApp->organizationName(), qApp->applicationName());
-  auto lastText = settings.value("configDialogLastSelection", "").toString();
-  if(!lastText.isEmpty()){
 
-	QList<QListWidgetItem *> items = ui->listMenu->findItems(lastText, Qt::MatchExactly);
+  // Si no existe valor guardado, seleccionamos General por defecto (0)
+  const auto defaultSection = static_cast<int>(ConfigSection::General);
+  const auto savedSection = settings.value(QStringLiteral("configDialogLastSelection"), defaultSection).toInt();
 
-	if(!items.isEmpty()){
-
-	  ui->listMenu->setCurrentItem(items.first());
-	  ui->listMenu->scrollToItem(items.first());
+  // Buscar en la lista el ítem que coincida con el valor del enum en Qt::UserRole
+  for (int i = 0; i < ui->listMenu->count(); ++i) {
+	QListWidgetItem *item = ui->listMenu->item(i);
+	if (item && item->data(Qt::UserRole).toInt() == savedSection) {
+	  ui->listMenu->setCurrentItem(item);
+	  ui->listMenu->scrollToItem(item);
+	  break;
 	}
   }
 
@@ -324,6 +369,8 @@ void ConfigDialog::on_btnOk_clicked(){
 
   applyThemeSelection();
   emit styleChanged(selectedStyle_);
+
+  applyLanguageSelection();
   SW::Helper_t::saveDbConfig(getDbConfig());
   saveLastSelection();
   accept();
@@ -334,6 +381,8 @@ void ConfigDialog::on_btnApply_clicked(){
 
   applyThemeSelection();
   emit styleChanged(selectedStyle_);
+
+  applyLanguageSelection();
   SW::Helper_t::saveDbConfig(getDbConfig());
   // No cierra el diálogo
 
@@ -343,6 +392,15 @@ void ConfigDialog::on_btnCancel_clicked(){
 
   emit themeChanged(originalScheme_);
   emit styleChanged(originalStyle_);
+
+  // Restaurar el combo box al idioma que estaba guardado en QSettings
+  int index = ui->languageComboBox->findData(currentLang_);
+  if (index != -1) {
+	ui->languageComboBox->setCurrentIndex(index);
+  }
+
+  SW::Helper_t::setLanguage(currentLang_);
+
   saveLastSelection();
   reject();
 
@@ -362,11 +420,17 @@ void ConfigDialog::closeEvent(QCloseEvent *event){
   saveLastSelection();
   emit themeChanged(originalScheme_);
   emit styleChanged(originalStyle_);
+
   event->accept();
 
 }
 
 void ConfigDialog::changeEvent(QEvent *event){
+  // ===== NUEVO: Re-traducir la interfaz cuando cambia el idioma =====
+  if (event->type() == QEvent::LanguageChange) {
+	ui->retranslateUi(this);
+  }
+
   if (event->type() == QEvent::PaletteChange ||
 	  event->type() == QEvent::ApplicationPaletteChange) {
 	// Actualizar todos los estilos cuando cambie el color de énfasis del sistema

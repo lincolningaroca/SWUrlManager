@@ -85,6 +85,16 @@ QColor Helper_t::currentIconColor(Qt::ColorScheme scheme) noexcept {
   return isDark ? QColor(220, 220, 220) : QColor(30, 30, 30);
 }
 
+QString Helper_t::currentLanguage() noexcept {
+  QSettings settings(qApp->organizationName(), qApp->applicationName());
+  return settings.value(QStringLiteral("language"), QLocale::system().name().left(2)).toString();
+}
+
+void Helper_t::setLanguage(const QString& langCode) noexcept {
+  QSettings settings(qApp->organizationName(), qApp->applicationName());
+  settings.setValue(QStringLiteral("language"), langCode);
+}
+
 QColor Helper_t::currentIconColor() noexcept {
   // Sin parámetro → siempre por paleta (para forms sin esquema explícito)
   const QColor windowColor = qApp->palette().color(QPalette::Window);

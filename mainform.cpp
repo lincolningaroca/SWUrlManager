@@ -37,6 +37,7 @@
 #include <QStyleHints>
 #include <QTextEdit>
 #include <QTimer>
+#include <QTranslator>
 
 
 MainForm::MainForm(QWidget *parent)
@@ -367,7 +368,7 @@ void MainForm::verifyUserState(){
   const auto userName = (sessionStatus == SW::SessionStatus::Session_start)
 						  ? SW::Helper_t::current_user_ : u_public;
 
-  lblState_->setText(QString("<strong style=\"color:%1;\">User: %2</strong>").arg(getEnfasisColor().name(), userName));
+  lblState_->setText(QString("<b style=\"color:%1;\">User: %2</b>").arg(getEnfasisColor().name(), userName));
 
 }
 
@@ -744,7 +745,7 @@ void MainForm::on_quitUrl(){
 
   QMessageBox msgBox(this);
   msgBox.setText(tr("Confirma que desea eliminar esta dirección:<br>"
-						 " <b style='color:#ff0800;'>%1</b>").arg(url));
+					" <b style='color:#ff0800;'>%1</b>").arg(url));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
   msgBox.button(QMessageBox::Yes)->setText(tr("Eliminar"));
@@ -1150,11 +1151,11 @@ void MainForm::on_showAllDescription(){
 
   QMessageBox msgDescription(this);
 
-  msgDescription.setWindowTitle(qApp->applicationName()+" - Descripción completa de la URL");
+  msgDescription.setWindowTitle(qApp->applicationName() + tr(" - Descripción completa de la URL"));
   msgDescription.setIcon(QMessageBox::Information);
   msgDescription.setText(desc);
   msgDescription.setDetailedText(url);
-  msgDescription.addButton(QStringLiteral("Cerrar descripción"), QMessageBox::AcceptRole);
+  msgDescription.addButton(tr("Cerrar descripción"), QMessageBox::AcceptRole);
 
   msgDescription.exec();
 
@@ -1163,7 +1164,7 @@ void MainForm::on_showAllDescription(){
 void MainForm::on_showPublicUrlDialog(){
 
   PublicUrlDialog publicDialog(currentScheme_, this);
-  publicDialog.setWindowTitle("Url públicas");
+  publicDialog.setWindowTitle(tr("Url públicas"));
 
   publicDialog.setShowGrid(ui->tvUrl->showGrid());
 
@@ -1185,18 +1186,17 @@ void MainForm::on_moveUrl(){
   });
 
   CategoryDialog cDialog(data_, this);
-  cDialog.setWindowTitle(QStringLiteral("Mover url a otra categoría"));
+  cDialog.setWindowTitle(tr("Mover url a otra categoría"));
 
   if(cDialog.exec() == QDialog::Accepted){
 
 	auto categoryid = cDialog.getCategoryId();
 	if(helperdb_.urlExists(url_, categoryid)){
 
-	  auto warningMsg = QString("<p>"
-								"La url: <cite>"
-								"<strong>%1</strong>"
-								"</cite>"
-								"</p> ya esta registrada, en la categoría a la que desea mover!!").arg(url_);
+	  auto warningMsg = tr("<p>"
+						   "La url:"
+						   "<b>%1</b>"
+						   "ya esta registrada, en la categoría a la que desea mover!!</p>").arg(url_);
 
 	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 	  return;
@@ -1204,7 +1204,7 @@ void MainForm::on_moveUrl(){
 	}
 
 	if(!helperdb_.moveUrlToOtherCategory(categoryid, urlid)){
-	  QMessageBox::critical(this, SW::Helper_t::appName(), QStringLiteral("Error al intentar actualizar.\n"));
+	  QMessageBox::critical(this, SW::Helper_t::appName(), tr("Error al intentar actualizar.\n"));
 	  return;
 	}
 
@@ -1222,30 +1222,47 @@ void MainForm::on_firstTimeLoginDialog(){
 
 }
 
-void MainForm::on_showSettingsDialog(){
+void MainForm::on_showSettingsDialog() {
 
   bool isFusionActive = (qApp->style()->objectName().compare(QStringLiteral("fusion"), Qt::CaseInsensitive) == 0);
 
-  ConfigDialog settings(currentScheme_, isFusionActive, this);
-  settings.setWindowTitle(SW::Helper_t::appName()+" - Configuración");
+  // Obtener el idioma actual antes de abrir el diálogo
+  // QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
+  // QString initialLang = settings.value(QStringLiteral("language"), QStringLiteral("es")).toString();
+  const auto initialLang = SW::Helper_t::currentLanguage();
 
-  // Apply: aplica y guarda sin cerrar el diálogo
-  QObject::connect(&settings, &ConfigDialog::themeChanged, this, [this](Qt::ColorScheme scheme){
+  ConfigDialog configDlg(currentScheme_, isFusionActive, this);
+  configDlg.setWindowTitle(SW::Helper_t::appName() + QStringLiteral(" - Configuración"));
+
+  // Aplicar cambios de tema (Scheme) en tiempo real
+  QObject::connect(&configDlg, &ConfigDialog::themeChanged, this, [this](Qt::ColorScheme scheme){
 	currentScheme_ = scheme;
 	applyPreferredTheme(currentScheme_);
-
   });
 
-  QObject::connect(&settings, &ConfigDialog::styleChanged, this, &MainForm::on_styleChanged );
+  // Aplicar cambios de estilo (Fusion / Sistema) en tiempo real si está implementado
+  QObject::connect(&configDlg, &ConfigDialog::styleChanged, this, &MainForm::on_styleChanged);
 
-  // Aceptar: aplica solo si no se había aplicado ya con Apply
-  if(settings.exec() == QDialog::Accepted){
-	if(currentScheme_ != settings.selectedScheme()){
-	  currentScheme_ = settings.selectedScheme();
-	  applyPreferredTheme(currentScheme_);
+  // Mostrar el diálogo modal
+  if (configDlg.exec() == QDialog::Accepted) {
 
+	// Verificar si el usuario cambió el idioma
+	// QString newLang = settings.value(QStringLiteral("language"), QStringLiteral("es")).toString();
+	const auto newLang = SW::Helper_t::currentLanguage();
+
+	if (initialLang != newLang) {
+	  QMessageBox::information(
+		this,
+		tr("Cambio de Idioma"),
+		tr("Para aplicar el nuevo idioma a toda la aplicación es necesario reiniciar.\nEl programa se reiniciará ahora.")
+		);
+
+	  // Reiniciar la aplicación pasando los mismos argumentos
+	  auto args = qApp->arguments();
+	  args.removeFirst();
+	  QProcess::startDetached(qApp->applicationFilePath(), args);
+	  qApp->quit();
 	}
-	writeSettings();
   }
 
 }
@@ -1257,8 +1274,6 @@ void MainForm::on_showChangePasswordDialog(){
   chnDialog.exec();
 
 }
-
-
 
 void MainForm::setUpShowMenuAction(){
 
@@ -1434,8 +1449,9 @@ void MainForm::initFrm() noexcept{
   ui->tvUrl->viewport()->setAcceptDrops(true);
   ui->tvUrl->viewport()->installEventFilter(this);
 
-  ui->btnNewCategory->setToolTip(QStringLiteral("Nueva Categoría!"));
-  ui->btnEditCategory->setToolTip(QStringLiteral("Editar datos de categoría!"));
+  ui->btnNewCategory->setToolTip(tr("Nueva Categoría!"));
+  ui->btnEditCategory->setToolTip(tr("Editar datos de categoría!"));
+  ui->btnDeleteCategory->setToolTip(tr("Eliminar categoría!"));
   //btnAdd disabled
   ui->btnAdd->setText(openMode.value(SW::OpenMode::New));
   ui->btnAdd->setDisabled(true);
@@ -1460,7 +1476,7 @@ void MainForm::initFrm() noexcept{
 
   ui->btnResetPassword->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
 
-  ui->firstTimeLogInBtn->setToolTip("Crear nuevo usuario");
+  ui->firstTimeLogInBtn->setToolTip(tr("Crear nuevo usuario"));
 
 
 }
@@ -1491,8 +1507,8 @@ void MainForm::setUpTableHeaders() const noexcept{
 
   ui->tvUrl->hideColumn(0);
 
-  ui->tvUrl->model()->setHeaderData(1,Qt::Horizontal, "Dirección URL");
-  ui->tvUrl->model()->setHeaderData(2,Qt::Horizontal, "Descripción");
+  ui->tvUrl->model()->setHeaderData(1,Qt::Horizontal, tr("Dirección URL"));
+  ui->tvUrl->model()->setHeaderData(2,Qt::Horizontal, tr("Descripción"));
   ui->tvUrl->setSelectionMode(QAbstractItemView::SingleSelection);
   ui->tvUrl->setItemDelegate(new SWItemDelegate(ui->tvUrl));
   ui->tvUrl->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
@@ -1529,16 +1545,16 @@ void MainForm::canStartSession() noexcept{
 
 void MainForm::setUptvUrlContextMenu() noexcept{
 
-  openUrl_ = new QAction(QStringLiteral("Abrir url en el navegador"), this);
+  openUrl_ = new QAction(tr("Abrir en el navegador"), this);
 
-  editUrl_ = new QAction(QStringLiteral("Editar url"), this);
-  quitUrl_ = new QAction(QStringLiteral("Quitar url"), this);
-  showDescDetail_ = new QAction(QStringLiteral("Ver descripción de URL completa"), this);
-  moveUrl_ = new QAction(QStringLiteral("Mover url, a otra categoría"), this);
+  editUrl_ = new QAction(tr("Editar url"), this);
+  quitUrl_ = new QAction(tr("Quitar url"), this);
+  showDescDetail_ = new QAction(tr("Ver descripción completa"), this);
+  moveUrl_ = new QAction(tr("Mover url, a otra categoría"), this);
 
   // --- SUBMENÚ DE EXPORTACIÓN ---
 
-  exportMenu_ = new QMenu(QStringLiteral("Exportar datos"), this);
+  exportMenu_ = new QMenu(tr("Exportar datos"), this);
   // exportMenu_->setIcon(exportIcon);
 
   const auto exportToXlsxIcon = QIcon(QStringLiteral(":/img/xslx.png"));
@@ -1568,8 +1584,8 @@ void MainForm::setUptvUrlContextMenu() noexcept{
 void MainForm::setUpMainContextMenu() noexcept{
 
   const auto importFromFileIcon = QIcon(QStringLiteral(":/img/import.png"));
-  importFromFile_ = new QAction( importFromFileIcon,"Importar datos desde archivo", this);
-  showPublicUrl_ = new QAction(QStringLiteral("Ver url's públicas"), this);
+  importFromFile_ = new QAction( importFromFileIcon, tr("Importar datos desde archivo"), this);
+  showPublicUrl_ = new QAction(tr("Ver url's públicas"), this);
   checkStatusContextMenu();
   has_data();
 
@@ -1632,7 +1648,7 @@ void MainForm::openUrl() noexcept{
   auto currentRow = ui->tvUrl->currentIndex().row();
   const auto url = ui->tvUrl->model()->index(currentRow, 1).data().toString();
   if(!SW::Helper_t::open_Url(QUrl(url))){
-	QMessageBox::critical(this, SW::Helper_t::appName(), QStringLiteral("Fallo al intentar abrir dirección url!\n"));
+	QMessageBox::critical(this, SW::Helper_t::appName(), tr("Fallo al intentar abrir dirección url!\n"));
 	return;
   }
 
@@ -1728,15 +1744,13 @@ void MainForm::setCboCategoryToolTip() noexcept{
 
   const auto categoryData = helperdb_.dataCategory(id);
   if (!categoryData || categoryData->second.trimmed().isEmpty()) {
-	ui->cboCategory->setToolTip(QStringLiteral(
-	  "<p><cite><strong>Descripción de la categoría:</strong><br><br>"
-	  "Esta categoría no cuenta con una descripción!</cite></p>"));
+	ui->cboCategory->setToolTip(tr("<p>Descripción de la categoría:<br>"
+								   "Esta categoría no cuenta con una descripción!</p>"));
 	return;
   }
 
-  ui->cboCategory->setToolTip(QString(
-								"<p><cite><strong>Descripción de la categoría:</strong>"
-								"<br><br>%1</cite></p>").arg(categoryData->second));
+  ui->cboCategory->setToolTip(tr("<p>Descripción de la categoría:<br>"
+								 "%1</p>").arg(categoryData->second));
 
 
 }
@@ -1769,7 +1783,7 @@ bool MainForm::hasValidUserTableData(int userId) const noexcept {
 bool MainForm::validateSelectedRow() noexcept{
 
   if(!ui->tvUrl->selectionModel()->hasSelection()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), QStringLiteral("Seleccione una fila!\n"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Seleccione una fila!\n"));
 	return false;
   }
   return true;
@@ -1859,7 +1873,7 @@ void MainForm::writeSettings() const noexcept{
 void MainForm::on_showAboutDialog(){
 
   AcercaDeDialog acercaDe(currentScheme_, this);
-  acercaDe.setWindowTitle(SW::Helper_t::appName()+" - Acerca de");
+  acercaDe.setWindowTitle(SW::Helper_t::appName() + tr(" - Acerca de"));
   acercaDe.exec();
 
 }
@@ -1868,18 +1882,18 @@ void MainForm::closeEvent(QCloseEvent *event){
 
   if (importThread_ && importThread_->isRunning()) {
 	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 QStringLiteral("Hay una importación en curso. Espere a que finalice antes de cerrar la aplicación."));
+						 tr("Hay una importación en curso. Espere a que finalice antes de cerrar la aplicación."));
 	event->ignore();
 	return;
   }
 
   if(SW::Helper_t::sessionStatus_ != SW::SessionStatus::Session_closed){
 	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 QStringLiteral("<cite>Hay una sesión activa en este momento.<br>"
-										"Necesita cerrar sesión primero antes de salir, "
-										"haciendo click en el boton:<br>"
-										"<cite><strong style='background:#FFFF00;color:#FF5500;'>Cerrar sesión</strong></cite><br>"
-										"O presionando la combinación de teclas Ctrl+Q.</cite>"));
+						 tr("Hay una sesión activa en este momento.<br>"
+							"Necesita cerrar sesión primero antes de salir, "
+							"haciendo click en el boton:<br>"
+							"Cerrar sesión de la barra de herramientas."
+							"O presionando la combinación de teclas Ctrl+Q."));
 	event->ignore();
 	return;
   }
@@ -1912,8 +1926,7 @@ void MainForm::processImportFile(const QString& filePath) {
 	  this,
 	  tr("Formato no soportado"),
 	  tr("El archivo seleccionado no tiene una extensión válida para la importación.\n\n"
-		 "Formatos soportados: .xlsx, .csv, .tsv, .txt")
-	  );
+		 "Formatos soportados: .xlsx, .csv, .tsv, .txt"));
 	return;
   }
 

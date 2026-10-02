@@ -468,12 +468,18 @@
   </action>
   <action name="showHideAction">
    <property name="text">
-    <string>Login tool bar</string>
+    <string>Barra de herraminetas sesiones</string>
+   </property>
+   <property name="toolTip">
+    <string>Barra de herraminetas sesiones.</string>
    </property>
   </action>
   <action name="showHideDatabaseAction">
    <property name="text">
-    <string>Database tool bar</string>
+    <string>Barra de herramientas base de datos</string>
+   </property>
+   <property name="toolTip">
+    <string>Barra de herramientas base de datos.</string>
    </property>
   </action>
   <action name="btnSettings">
@@ -484,13 +490,19 @@
    <property name="text">
     <string>Settings</string>
    </property>
+   <property name="toolTip">
+    <string>Preferencias</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionPreferencias">
    <property name="text">
-    <string>Preferencias tool bar</string>
+    <string>Barra de herramientas preferencias</string>
+   </property>
+   <property name="toolTip">
+    <string>Barra de herramientas preferencias.</string>
    </property>
   </action>
   <action name="actionPreference">
@@ -530,7 +542,10 @@
   </action>
   <action name="showGridAction">
    <property name="text">
-    <string>Ver separadores de tabla</string>
+    <string>Separadores de tabla</string>
+   </property>
+   <property name="toolTip">
+    <string>Separadores de tabla.</string>
    </property>
   </action>
   <action name="excelExportAction">

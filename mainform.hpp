@@ -43,8 +43,8 @@ private:
   QString defaultStyleName_{};
 
   QHash<SW::OpenMode, QString> openMode{
-	{SW::OpenMode::New, "Agregar"},
-	{SW::OpenMode::Edit, "Actualizar"}
+	{SW::OpenMode::New, tr("Agregar")},
+	{SW::OpenMode::Edit, tr("Actualizar")}
   };
   //metodos privados de la aplicacion
 private:

@@ -13,11 +13,14 @@
 #include <QLineEdit>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QLocale>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSettings>
+#include <QSettings>   // ===== NUEVO: Incluido para leer preferencias =====
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QTranslator> // ===== NUEVO: Incluido para traducción =====[cite: 12]
 #include <QUrl>
 #include <QVBoxLayout>
 
@@ -385,7 +388,11 @@ int main(int argc, char *argv[])
   a.setApplicationVersion(QStringLiteral("1.0"));
   a.setOrganizationName(QStringLiteral("SWSystem's"));
 
-
+  auto *appTranslator = new QTranslator(&a);
+  if (appTranslator->load(QStringLiteral(":/i18n/app_") + SW::Helper_t::currentLanguage())) {
+	a.installTranslator(appTranslator);
+  }
+  // =========================================================================
   // Instalar el interceptor de Logs de Qt
   // qInstallMessageHandler(SW::customLogHandler);
 

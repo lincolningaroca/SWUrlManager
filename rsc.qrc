@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>font/FiraCode-Regular.ttf</file>
-        <file>licencia/licencia.txt</file>
-        <file>licencia/gnu-gpl-v3-license.html</file>
         <file>img/category-delete.svg</file>
         <file>img/category-edit.svg</file>
         <file>img/category-new.svg</file>
@@ -53,5 +51,10 @@
         <file>img/userbackup.svg</file>
         <file>img/userrestore.svg</file>
         <file>img/github.png</file>
+        <file>i18n/app_en.ts</file>
+        <file>i18n/app_es.ts</file>
+        <file>img/generalOption.png</file>
+        <file>licencia/gnu-gpl-v3-license-en.html</file>
+        <file>licencia/gnu-gpl-v3-license-es.html</file>
     </qresource>
 </RCC>

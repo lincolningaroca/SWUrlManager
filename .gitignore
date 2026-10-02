@@ -15,5 +15,8 @@ db/xdatabase.db
 tools/*
 CMakeLists.txt.user.c4fca1e
 CMakeLists.txt.user.bf1d6e7
+# Ignorar archivos compilados de traducción
+*.qm
+i18n/*.qm
 build/
 
