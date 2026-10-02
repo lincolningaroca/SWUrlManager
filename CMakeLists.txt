@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(SWUrlManager LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Network Svg)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Network Svg LinguistTools)
 
 qt_standard_project_setup()
 
@@ -48,6 +48,20 @@ qt_add_executable(${PROJECT_NAME}
     swwidgets/createuserwidget.hpp swwidgets/createuserwidget.cpp swwidgets/createuserwidget.ui
     dialogs/createnewuserdialog.hpp dialogs/createnewuserdialog.cpp dialogs/createnewuserdialog.ui
 
+)
+
+# --- Configuración de Internacionalización (i18n) ---
+# Define los archivos de traducción para cada idioma que quieras soportar
+set(TS_FILES
+    i18n/app_en.ts
+    i18n/app_es.ts
+)
+
+# Agrega las traducciones al target ejecutable.
+# Esto generará los archivos .qm y los embeberá automáticamente como recursos de Qt (:/i18n/app_*.qm)
+qt_add_translations(${PROJECT_NAME}
+    TS_FILES ${TS_FILES}
+    RESOURCE_PREFIX "/i18n"
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -18,9 +18,8 @@ AcercaDeDialog::AcercaDeDialog(Qt::ColorScheme colorMode, QWidget *parent)
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setupUI();
 
-  const auto scheme = (colorMode_ == Qt::ColorScheme::Unknown)
-						? SW::Helper_t::detectSystemColorScheme()
-						: colorMode_;
+  const auto scheme = (colorMode_ == Qt::ColorScheme::Unknown) ? SW::Helper_t::detectSystemColorScheme()
+															   : colorMode_;
 
   setImage(scheme);
   setupCustomFont();  
@@ -114,11 +113,8 @@ void AcercaDeDialog::setImage(Qt::ColorScheme colorMode) {
   const bool isDark = (colorMode == Qt::ColorScheme::Dark);
   const QColor logoColor = isDark ? QColor(220, 220, 220) : QColor(30, 30, 30);
 
-  const QPixmap logoPix = SW::Helper_t::svgIcon(
-							":/img/logoSWSystems.svg",
-							logoColor,
-							QSize(400, 400)  // ajusta al tamaño del label
-							).pixmap(QSize(400, 400));
+  const QPixmap logoPix = SW::Helper_t::svgIcon(":/img/logoSWSystems.svg", logoColor,
+												QSize(400, 400)).pixmap(QSize(400, 400));
 
   ui->lblLogo->setPixmap(logoPix);
   ui->lblLogo->setAlignment(Qt::AlignCenter);
@@ -159,8 +155,7 @@ void AcercaDeDialog::setupUiConnections(){
 void AcercaDeDialog::showLicense(){
 
   QDialog licenciaDlg(this);
-
-  licenciaDlg.setFixedSize(this->size());
+  licenciaDlg.setFixedSize(800, 600);
   licenciaDlg.setWindowTitle(SW::Helper_t::appName() + tr(" - Licencia"));
 
   auto* teLicencia = new QTextBrowser(&licenciaDlg);
@@ -170,21 +165,31 @@ void AcercaDeDialog::showLicense(){
   teLicencia->setOpenExternalLinks(true);
   teLicencia->setReadOnly(true);
 
-  QFile fileName(QStringLiteral(":/licencia/gnu-gpl-v3-license.html"));
-  if (!fileName.open(QFile::ReadOnly | QFile::Text)) {
+  auto* mainLayout = new QVBoxLayout(&licenciaDlg);
+  mainLayout->addWidget(teLicencia);
+  mainLayout->setContentsMargins(10,10,10,10);
+
+  // 1. Obtener el código del idioma actual (ej. "es", "en")
+  const auto lang = SW::Helper_t::currentLanguage();
+
+  // 2. Construir la ruta del archivo específica para ese idioma
+  auto licensePath = QStringLiteral(":/licencia/gnu-gpl-v3-license-%1.html").arg(lang);
+  QFile file(licensePath);
+
+  // 3. Mecanismo de respaldo (Fallback): Si no existe el archivo en el idioma seleccionado, usar español por defecto
+  if (!file.exists()) {
+	licensePath = QStringLiteral(":/licencia/gnu-gpl-v3-license-es.html");
+	file.setFileName(licensePath);
+  }
+
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
 	QMessageBox::warning(this, SW::Helper_t::appName(),
-						 tr("Error al abrir el archivo de licencia:\n%1")
-						   .arg(fileName.errorString()));
+						 tr("Error al abrir el archivo de licencia:\n%1").arg(file.errorString()));
 	return;
   }
 
-  teLicencia->setHtml(fileName.readAll());
-  fileName.close();
-
-  auto* mainLayout = new QVBoxLayout(&licenciaDlg);
-  mainLayout->addWidget(teLicencia);
-  mainLayout->setContentsMargins(5,5,5,5);
-
+  teLicencia->setHtml(QString::fromUtf8(file.readAll()));
+  file.close();
   licenciaDlg.exec();
 
 }

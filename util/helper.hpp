@@ -30,6 +30,9 @@ struct Helper_t{
   static QColor currentIconColor(Qt::ColorScheme scheme) noexcept;
   static QColor currentIconColor() noexcept; // sobrecarga sin parámetro
 
+  [[nodiscard]] static QString currentLanguage() noexcept;
+  static void setLanguage(const QString& langCode) noexcept;
+
   /**
    * @brief Verifica si PostgreSQL está instalado en el sistema cliente y obtiene su versión.
    */
