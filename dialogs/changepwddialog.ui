@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>467</width>
-    <height>248</height>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,7 +56,7 @@
          <string>Mostrar la contraseña</string>
         </property>
         <property name="icon">
-         <iconset resource="rsc.qrc">
+         <iconset>
           <normaloff>:/img/close.png</normaloff>:/img/close.png</iconset>
         </property>
        </widget>
@@ -102,17 +102,8 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QDialogButtonBox" name="bBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
- <resources>
-  <include location="rsc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

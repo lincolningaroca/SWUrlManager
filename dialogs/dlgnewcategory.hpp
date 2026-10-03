@@ -33,9 +33,12 @@ private:
   void initForm(const std::optional<categoryData>& list);
 
 private slots:
-  void onAcceptOption();
 
   bool validateData() noexcept;
 
+
+  // QDialog interface
+public slots:
+  virtual void accept() override;
 };
 

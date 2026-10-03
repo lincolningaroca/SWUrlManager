@@ -39,32 +39,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="62"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="61"/>
         <source>&lt;p style=&apos;text-align: justify;&apos;&gt;SWUrlManager:&lt;br&gt;&lt;br&gt;Es software libre, puede redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General de GNU según se encuentra publicada por la &lt;a href=&quot;https://www.fsf.org&quot;&gt;Free Software Foundation&lt;/a&gt;, bien de la versión 3 de dicha Licencia o bien (según su elección) de cualquier versión posterior.&lt;br&gt;&lt;br&gt;Este programa se distribuye con la esperanza de que sea útil, pero &lt;strong&gt;SIN NINGUNA GARANTÍA&lt;/strong&gt;, incluso sin la garantía &lt;strong&gt;MERCANTIL&lt;/strong&gt; implícita ni la de garantizar la &lt;strong&gt;ADECUACIÓN A UN PROPÓSITO PARTICULAR.&lt;/strong&gt; Véase la &lt;a href=&quot;https://www.gnu.org/licenses/&quot;&gt;Licencia Pública General&lt;/a&gt; de GNU para más detalles.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="82"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="81"/>
         <source>&lt;p&gt;Powered by:&lt;ul&gt;&lt;li&gt;Lincoln Ingaroca De La Cruz.&lt;/li&gt;&lt;li&gt;SWSystem&apos;s.&lt;/li&gt;&lt;/ul&gt;Contacto:&lt;ul&gt;&lt;li&gt;lincolningaroca@gmail.com&lt;/li&gt;&lt;/ul&gt;Lincoln Ingaroca:&lt;ul&gt;&lt;li&gt;Analista de sistemas informáticos.&lt;/li&gt;&lt;li&gt;Software development.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;Bibliotecas:&lt;p&gt;SWUrlManager incluye código fuente de los siguientes proyectos:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;https://www.openssl.org/&quot;&gt;OpenSSL.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://www.qt.io//&quot;&gt;QtFrameWork and QtWidgets.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://www.sqlite.org/index.html&quot;&gt;SQLite.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://github.com/QtExcel/QXlsx&quot;&gt;QXlsx library.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://www.postgresql.org/&quot;&gt;PostgreSQL.&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;Repositorio del programa:&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;https://github.com/lincolningaroca/SWUrlManager&quot;&gt;SWUrlManager&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="144"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="140"/>
         <source>&lt;a href=&apos;license&apos;&gt;Ver licencia&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="145"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="141"/>
         <source>&lt;a href=&apos;qt&apos;&gt;Acerca de Qt&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="164"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="159"/>
         <source> - Licencia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/acercadedialog.cpp" line="176"/>
+        <location filename="../dialogs/acercadedialog.cpp" line="187"/>
         <source>Error al abrir el archivo de licencia:
 %1</source>
         <translation type="unfinished"></translation>
@@ -142,12 +142,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/categorydialog.ui" line="54"/>
+        <location filename="../dialogs/categorydialog.cpp" line="16"/>
         <source>Cambiar de categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/categorydialog.ui" line="61"/>
+        <location filename="../dialogs/categorydialog.cpp" line="17"/>
         <source>Cancelar</source>
         <translation type="unfinished"></translation>
     </message>
@@ -186,18 +186,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="32"/>
+        <location filename="../dialogs/changepwddialog.cpp" line="31"/>
         <source>Actualizar cantraseña</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="34"/>
-        <source>&lt;strong&gt;Estas a punto de cambiar o actualizar la clave de acceso para el usuario: &lt;cite&gt;&quot;%1&quot;&lt;/cite&gt;&lt;/strong&gt;</source>
+        <location filename="../dialogs/changepwddialog.cpp" line="33"/>
+        <source>&lt;p&gt;Estas a punto de cambiar o actualizar la clave de acceso para el usuario: &lt;b&gt;&quot;%1&quot;&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="35"/>
-        <source>&lt;p&gt;&lt;strong&gt;La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial&lt;br&gt;y una longitud mínina de 8 caracteres&lt;/strong&gt;&lt;/p&gt;</source>
+        <location filename="../dialogs/changepwddialog.cpp" line="34"/>
+        <source>&lt;p&gt;&lt;b&gt;La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial&lt;br&gt;y una longitud mínina de 8 caracteres&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -211,28 +211,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="88"/>
+        <location filename="../dialogs/changepwddialog.cpp" line="104"/>
         <source>Todos los campos son requeridos.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="96"/>
+        <location filename="../dialogs/changepwddialog.cpp" line="112"/>
         <source>La clave o contraseña debe tener como mínimo 8 caracteres.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="104"/>
+        <location filename="../dialogs/changepwddialog.cpp" line="120"/>
         <source>Las contraseñas no coinciden.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="111"/>
-        <source>&lt;span&gt;&lt;em&gt;Debe ingresar un password o clave segura!&lt;br&gt;Nota:&lt;br&gt;Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:&lt;ul&gt;&lt;li&gt;Debe contener al menos un caracter en mayuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter en minuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un número.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter especial por ejemplo: &quot;#$%&amp;@&quot; etc...&lt;/li&gt;&lt;/ul&gt;Ejemplo de calve segura: &lt;strong&gt;&quot;MiClave@123&quot;&lt;/strong&gt;&lt;/em&gt;&lt;/span&gt;</source>
+        <location filename="../dialogs/changepwddialog.cpp" line="127"/>
+        <source>&lt;p&gt;Debe ingresar un password o clave segura!&lt;br&gt;Nota:&lt;br&gt;Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:&lt;ul&gt;&lt;li&gt;Debe contener al menos un caracter en mayuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter en minuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un número.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter especial por ejemplo: &quot;#$%&amp;@&quot; etc...&lt;/li&gt;&lt;/ul&gt;Ejemplo de calve segura: &lt;b&gt;&quot;MiClave@123&quot;&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/changepwddialog.cpp" line="139"/>
-        <source>&lt;strong&gt;Se cambio la clave o contraseña para el usuario: &lt;cite&gt;&quot;%1&quot;&lt;/cite&gt;&lt;br&gt;la próxima vez que inicie sesión, lo hará con su nueva clave.&lt;/strong&gt;</source>
+        <location filename="../dialogs/changepwddialog.cpp" line="150"/>
+        <source>&lt;p&gt;Se cambio la clave o contraseña para el usuario: &lt;b&gt;&quot;%1&quot;&lt;/b&gt;&lt;br&gt;la próxima vez que inicie sesión, lo hará con su nueva clave.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -356,6 +356,7 @@
     </message>
     <message>
         <location filename="../dialogs/configdialog.cpp" line="153"/>
+        <location filename="../dialogs/configdialog.cpp" line="162"/>
         <source>Idioma</source>
         <translation type="unfinished"></translation>
     </message>
@@ -471,73 +472,73 @@
     </message>
     <message>
         <location filename="../swwidgets/createuserwidget.cpp" line="183"/>
-        <source>&lt;p&gt;&lt;b&gt;Debe ingresar una contraseña segura.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Requisitos mínimos:&lt;ul&gt;&lt;li&gt;Al menos una letra mayúscula&lt;/li&gt;&lt;li&gt;Al menos una letra minúscula&lt;/li&gt;&lt;li&gt;Al menos un número&lt;/li&gt;&lt;li&gt;Al menos un carácter especial (ej. #$%&amp;@)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;Ejemplo de clave segura: &lt;b&gt;MiClave@123&lt;/b&gt;&lt;/p&gt;</source>
+        <source>&lt;p&gt;&lt;b&gt;Debe ingresar una contraseña segura.&lt;/b&gt;Requisitos mínimos:&lt;ul&gt;&lt;li&gt;Al menos una letra mayúscula&lt;/li&gt;&lt;li&gt;Al menos una letra minúscula&lt;/li&gt;&lt;li&gt;Al menos un número&lt;/li&gt;&lt;li&gt;Al menos un carácter especial (ej. #$%&amp;@)&lt;/li&gt;&lt;/ul&gt;Ejemplo de clave segura: &lt;b&gt;MiClave@123&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="201"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="200"/>
         <source>El PIN numérico debe contener 4 digitos!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="207"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="206"/>
         <source>El número de confirmación no coincide!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="217"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="216"/>
         <source>El nombre de usuario &lt;b&gt;%1&lt;/b&gt; ya está registrado.&lt;br&gt;Por favor, intente con otro nombre.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="233"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="232"/>
         <source>El nuevo usuario fue creado con éxito!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="261"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="260"/>
         <source>Ingrese una clave (mínimo 8 caracteres)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="265"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="264"/>
         <source>Vuelva a ingresar su clave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="269"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="268"/>
         <source>Ingrese un nombre de usuario</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="273"/>
-        <location filename="../swwidgets/createuserwidget.cpp" line="324"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="272"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="323"/>
         <source>Ingrese una pregunta!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="278"/>
-        <location filename="../swwidgets/createuserwidget.cpp" line="325"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="277"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="324"/>
         <source>Ingrese su respuesta!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="283"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="282"/>
         <source>Pin numérico</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="284"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="283"/>
         <source>Pregunta secreta</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="333"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="332"/>
         <source>Ingrese PIN numérico de 4 cifras!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../swwidgets/createuserwidget.cpp" line="334"/>
+        <location filename="../swwidgets/createuserwidget.cpp" line="333"/>
         <source>Vuelva a ingresar el número</source>
         <translation type="unfinished"></translation>
     </message>
@@ -637,23 +638,22 @@
     </message>
     <message>
         <location filename="../dialogs/logindialog.cpp" line="53"/>
-        <source>&lt;p&gt;&lt;span&gt; Crear un nuevo usuario y/o&lt;br&gt;restablecer clave o password!&lt;/span&gt;&lt;/p&gt;</source>
+        <source>&lt;p&gt; Crear un nuevo usuario y/o&lt;br&gt;restablecer clave o password!&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/logindialog.cpp" line="119"/>
-        <source>&lt;span&gt;Volver a Inicio de sesión!&lt;/span&gt;</source>
+        <location filename="../dialogs/logindialog.cpp" line="116"/>
+        <source>Volver a Inicio de sesión!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/logindialog.cpp" line="140"/>
-        <source>&lt;span&gt;Crear un nuevo usuario y/o&lt;br&gt;restablecer clave o password!&lt;/span&gt;</source>
+        <location filename="../dialogs/logindialog.cpp" line="137"/>
+        <source>&lt;p&gt;Crear un nuevo usuario y/o&lt;br&gt;Restablecer clave o password!&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/logindialog.cpp" line="169"/>
-        <source>&lt;span&gt;&lt;strong&gt;Los datos que ingreso son incorrectos
-vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
+        <location filename="../dialogs/logindialog.cpp" line="164"/>
+        <source>&lt;p&gt;Los datos que ingreso son incorrectos.&lt;br&gt;vuelva a intentarlo.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -699,7 +699,7 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
     </message>
     <message>
         <location filename="../mainform.ui" line="185"/>
-        <location filename="../mainform.cpp" line="1546"/>
+        <location filename="../mainform.cpp" line="1538"/>
         <source>Abrir en el navegador</source>
         <translation type="unfinished"></translation>
     </message>
@@ -708,8 +708,9 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
         <location filename="../mainform.cpp" line="270"/>
         <location filename="../mainform.cpp" line="544"/>
         <location filename="../mainform.cpp" line="566"/>
-        <location filename="../mainform.cpp" line="752"/>
-        <location filename="../mainform.cpp" line="1105"/>
+        <location filename="../mainform.cpp" line="751"/>
+        <location filename="../mainform.cpp" line="918"/>
+        <location filename="../mainform.cpp" line="1097"/>
         <source>Cancelar</source>
         <translation type="unfinished"></translation>
     </message>
@@ -991,7 +992,7 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
     </message>
     <message>
         <location filename="../mainform.cpp" line="512"/>
-        <location filename="../mainform.cpp" line="1555"/>
+        <location filename="../mainform.cpp" line="1547"/>
         <source>Exportar datos</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1024,13 +1025,13 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
     </message>
     <message>
         <location filename="../mainform.cpp" line="542"/>
-        <location filename="../mainform.cpp" line="1103"/>
+        <location filename="../mainform.cpp" line="1095"/>
         <source>Reemplazar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainform.cpp" line="543"/>
-        <location filename="../mainform.cpp" line="1104"/>
+        <location filename="../mainform.cpp" line="1096"/>
         <source>Omitir</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1064,32 +1065,17 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="621"/>
-        <source>&lt;p style=&apos;color:#FB4934;&apos;&gt;Está a punto de eliminar esta categoría y todo su contenido.&lt;br&gt;Recuerde que al aceptar, eliminará de forma permanente estos datos.&lt;br&gt;¿Desea continuar y eliminar los datos?&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainform.cpp" line="625"/>
-        <source>&lt;p&gt;¿Seguro que desea eliminar esta categoría?&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainform.cpp" line="627"/>
+        <location filename="../mainform.cpp" line="626"/>
         <source>Advertencia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="632"/>
+        <location filename="../mainform.cpp" line="631"/>
         <source>Datos eliminados.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="663"/>
-        <source>&lt;p&gt;La url: &lt;b&gt;%1&lt;/b&gt;&lt;/p&gt; ya esta registrada!!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainform.cpp" line="696"/>
+        <location filename="../mainform.cpp" line="695"/>
         <source>Fallo la ejecución de la sentencia!
 %1</source>
         <translation type="unfinished"></translation>
@@ -1107,287 +1093,373 @@ vuelva a intentarlo.&lt;/strong&gt;&lt;/span&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="747"/>
-        <source>Confirma que desea eliminar esta dirección:&lt;br&gt; &lt;b style=&apos;color:#ff0800;&apos;&gt;%1&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainform.cpp" line="751"/>
+        <location filename="../mainform.cpp" line="750"/>
         <source>Eliminar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="847"/>
+        <location filename="../mainform.cpp" line="846"/>
         <source>Solo un administrador puede crear una copia de seguridad completa.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="904"/>
+        <location filename="../mainform.cpp" line="903"/>
         <source>Solo un administrador puede restaurar la base de datos completa.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="986"/>
+        <location filename="../mainform.cpp" line="978"/>
         <source>Debe iniciar sesión para crear una copia de seguridad de sus datos.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="992"/>
+        <location filename="../mainform.cpp" line="984"/>
         <source>Copia de seguridad de mis datos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="995"/>
+        <location filename="../mainform.cpp" line="987"/>
         <source>Incluir también las URLs públicas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="996"/>
+        <location filename="../mainform.cpp" line="988"/>
         <source>Contraseña para proteger este backup:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1015"/>
+        <location filename="../mainform.cpp" line="1007"/>
         <source>Debe ingresar una contraseña para el backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1027"/>
+        <location filename="../mainform.cpp" line="1019"/>
         <source>Guardar copia de seguridad personal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1046"/>
+        <location filename="../mainform.cpp" line="1038"/>
         <source>No se pudo crear el backup:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1051"/>
+        <location filename="../mainform.cpp" line="896"/>
+        <location filename="../mainform.cpp" line="1043"/>
         <source>Copia de seguridad creada en:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1058"/>
+        <location filename="../mainform.cpp" line="621"/>
+        <source>&lt;p&gt;Está a punto de eliminar esta categoría y todo su contenido.&lt;br&gt;Recuerde que al aceptar, eliminará de forma permanente estos datos.&lt;br&gt;¿Desea continuar y eliminar los datos?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="624"/>
+        <source>¿Seguro que desea eliminar esta categoría?&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="662"/>
+        <source>&lt;p&gt;La url: &lt;b&gt;%1&lt;/b&gt; ya esta registrada!!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="747"/>
+        <source>Confirma que desea eliminar esta dirección:&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="851"/>
+        <source>Crear una copia de seguridad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="853"/>
+        <source>Archivos de copia de seguridad (*.backup)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="883"/>
+        <source>Error al crear la copia de seguridad:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="890"/>
+        <source>Error en pg_dump:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="912"/>
+        <source>&lt;p&gt;Al restaurar la base de datos, se perderán todos los datos actuales&lt;br/&gt;y serán reemplazados por los datos de la copia de seguridad.&lt;br/&gt;Consejo:&lt;br&gt;&lt;b&gt;Antes de restaurar, considere crear un backup de la base de datos actual.&lt;/b&gt;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="917"/>
+        <source>Restaurar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="922"/>
+        <source>Abrir archivo de respaldo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="924"/>
+        <source>Archivo backup (*.backup)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="952"/>
+        <source>Error al restaurar:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="958"/>
+        <source>Error en pg_restore:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="964"/>
+        <source>Base de datos restaurada correctamente.&lt;br&gt;La aplicación se reiniciará automáticamente.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="1021"/>
+        <location filename="../mainform.cpp" line="1057"/>
+        <source>Archivos de backup (*.swbak)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="1050"/>
         <source>Debe iniciar sesión para restaurar datos personales.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1063"/>
+        <location filename="../mainform.cpp" line="1055"/>
         <source>Abrir copia de seguridad personal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1076"/>
+        <location filename="../mainform.cpp" line="1068"/>
         <source>Ingrese la contraseña de este backup:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1093"/>
+        <location filename="../mainform.cpp" line="1085"/>
         <source>No se pudo restaurar el backup:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1101"/>
+        <location filename="../mainform.cpp" line="1093"/>
         <source>Restaurar datos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1102"/>
+        <location filename="../mainform.cpp" line="1094"/>
         <source>¿Cómo desea manejar las URLs que ya existan en su cuenta?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1123"/>
+        <location filename="../mainform.cpp" line="1115"/>
         <source>Ocurrió un error al restaurar los datos:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1133"/>
+        <location filename="../mainform.cpp" line="1125"/>
         <source>Datos restaurados correctamente.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1154"/>
+        <location filename="../mainform.cpp" line="1146"/>
         <source> - Descripción completa de la URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1158"/>
+        <location filename="../mainform.cpp" line="1150"/>
         <source>Cerrar descripción</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1167"/>
+        <location filename="../mainform.cpp" line="1159"/>
         <source>Url públicas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1189"/>
+        <location filename="../mainform.cpp" line="1181"/>
         <source>Mover url a otra categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1196"/>
-        <source>&lt;p&gt;La url:&lt;b&gt;%1&lt;/b&gt;ya esta registrada, en la categoría a la que desea mover!!&lt;/p&gt;</source>
+        <location filename="../mainform.cpp" line="1188"/>
+        <source>&lt;p&gt;La url:&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;Ya esta registrada, en la categoría a la que desea mover!!&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1207"/>
+        <location filename="../mainform.cpp" line="1197"/>
         <source>Error al intentar actualizar.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1255"/>
+        <location filename="../mainform.cpp" line="1225"/>
+        <source> - Configuración</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainform.cpp" line="1246"/>
         <source>Cambio de Idioma</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1256"/>
+        <location filename="../mainform.cpp" line="1247"/>
         <source>Para aplicar el nuevo idioma a toda la aplicación es necesario reiniciar.
 El programa se reiniciará ahora.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1450"/>
+        <location filename="../mainform.cpp" line="1442"/>
         <source>Nueva Categoría!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1451"/>
+        <location filename="../mainform.cpp" line="1443"/>
         <source>Editar datos de categoría!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1452"/>
+        <location filename="../mainform.cpp" line="1444"/>
         <source>Eliminar categoría!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1477"/>
+        <location filename="../mainform.cpp" line="1469"/>
         <source>Crear nuevo usuario</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1508"/>
+        <location filename="../mainform.cpp" line="1500"/>
         <source>Dirección URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1509"/>
+        <location filename="../mainform.cpp" line="1501"/>
         <source>Descripción</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1548"/>
+        <location filename="../mainform.cpp" line="1540"/>
         <source>Editar url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1549"/>
+        <location filename="../mainform.cpp" line="1541"/>
         <source>Quitar url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1550"/>
+        <location filename="../mainform.cpp" line="1542"/>
         <source>Ver descripción completa</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1551"/>
+        <location filename="../mainform.cpp" line="1543"/>
         <source>Mover url, a otra categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1559"/>
+        <location filename="../mainform.cpp" line="1551"/>
         <source>Como Libro de Excel (.xlsx)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1561"/>
+        <location filename="../mainform.cpp" line="1553"/>
         <source>Como Texto separado por comas (.csv)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1563"/>
+        <location filename="../mainform.cpp" line="1555"/>
         <source>Como Valores separados por tabulaciones (.tsv)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1565"/>
+        <location filename="../mainform.cpp" line="1557"/>
         <source>Como Texto plano (.txt)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1585"/>
+        <location filename="../mainform.cpp" line="1577"/>
         <source>Importar datos desde archivo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1586"/>
+        <location filename="../mainform.cpp" line="1578"/>
         <source>Ver url&apos;s públicas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1649"/>
+        <location filename="../mainform.cpp" line="1641"/>
         <source>Fallo al intentar abrir dirección url!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1745"/>
+        <location filename="../mainform.cpp" line="1737"/>
         <source>&lt;p&gt;Descripción de la categoría:&lt;br&gt;Esta categoría no cuenta con una descripción!&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1750"/>
+        <location filename="../mainform.cpp" line="1742"/>
         <source>&lt;p&gt;Descripción de la categoría:&lt;br&gt;%1&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1784"/>
+        <location filename="../mainform.cpp" line="1776"/>
         <source>Seleccione una fila!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1874"/>
+        <location filename="../mainform.cpp" line="1866"/>
         <source> - Acerca de</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1883"/>
+        <location filename="../mainform.cpp" line="1875"/>
         <source>Hay una importación en curso. Espere a que finalice antes de cerrar la aplicación.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1890"/>
+        <location filename="../mainform.cpp" line="1882"/>
         <source>Hay una sesión activa en este momento.&lt;br&gt;Necesita cerrar sesión primero antes de salir, haciendo click en el boton:&lt;br&gt;Cerrar sesión de la barra de herramientas.O presionando la combinación de teclas Ctrl+Q.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1925"/>
+        <location filename="../mainform.cpp" line="1917"/>
         <source>Formato no soportado</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1926"/>
+        <location filename="../mainform.cpp" line="1918"/>
         <source>El archivo seleccionado no tiene una extensión válida para la importación.
 
 Formatos soportados: .xlsx, .csv, .tsv, .txt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1939"/>
+        <location filename="../mainform.cpp" line="1929"/>
         <source>Importar URLs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainform.cpp" line="1941"/>
+        <location filename="../mainform.cpp" line="1931"/>
         <source>Archivos de Excel y Texto (*.xlsx *.csv *.tsv *.txt);;Excel (*.xlsx);;Archivos de texto (*.csv *.tsv *.txt)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1436,7 +1508,7 @@ Formatos soportados: .xlsx, .csv, .tsv, .txt</source>
     </message>
     <message>
         <location filename="../dialogs/maintenanceurldialog.cpp" line="117"/>
-        <source>&lt;p&gt;La url: &lt;cite&gt;&lt;strong&gt;%1&lt;/strong&gt;&lt;/cite&gt;&lt;/p&gt; ya esta registrada!!</source>
+        <source>&lt;p&gt;La url: &lt;b&gt;%1&lt;/b&gt;, ya esta registrada!!&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1464,7 +1536,7 @@ Formatos soportados: .xlsx, .csv, .tsv, .txt</source>
     </message>
     <message>
         <location filename="../swwidgets/midlewidget.cpp" line="90"/>
-        <source>&lt;p&gt;La dirección &lt;b&gt;&quot;%1&quot;&lt;/b&gt; no es válida.&lt;/p&gt;&lt;p&gt;Una dirección URL válida debe tener una de las siguientes formas:&lt;ul&gt;&lt;li&gt;(http://www.)url.dominio&lt;/li&gt;&lt;li&gt;(https://www.)url.dominio&lt;/li&gt;&lt;li&gt;(ftp://)url.dominio&lt;/li&gt;&lt;li&gt;(ftp://www.)url.dominio&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Nota:&lt;/b&gt; Los prefijos &lt;i&gt;http://&lt;/i&gt;, &lt;i&gt;https://&lt;/i&gt;, &lt;i&gt;ftp://&lt;/i&gt; y &lt;i&gt;www.&lt;/i&gt; son opcionales.&lt;br&gt;Lo mínimo esperado es una dirección con el formato: &lt;b&gt;url.dominio&lt;/b&gt;&lt;/p&gt;</source>
+        <source>&lt;p&gt;La dirección &lt;b&gt;&quot;%1&quot;&lt;/b&gt; no es válida.Una dirección URL válida debe tener una de las siguientes formas:&lt;ul&gt;&lt;li&gt;(http://www.)url.dominio&lt;/li&gt;&lt;li&gt;(https://www.)url.dominio&lt;/li&gt;&lt;li&gt;(ftp://)url.dominio&lt;/li&gt;&lt;li&gt;(ftp://www.)url.dominio&lt;/li&gt;&lt;/ul&gt;Nota:Los prefijos &lt;b&gt;http://&lt;/b&gt;, &lt;b&gt;https://&lt;/b&gt;, &lt;b&gt;ftp://&lt;/b&gt; y &lt;b&gt;www.&lt;/b&gt; son opcionales.&lt;br&gt;Lo mínimo esperado es una dirección con el formato: &lt;b&gt;url.dominio&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1522,7 +1594,7 @@ Formatos soportados: .xlsx, .csv, .tsv, .txt</source>
     </message>
     <message>
         <location filename="../dialogs/publicurldialog.cpp" line="113"/>
-        <source>&lt;span&gt;Confirma que desea eliminar esta dirección:&lt;br&gt; &lt;cite style=&apos;color:#ff0800;&apos;&gt;&lt;strong&gt;%1&lt;/strong&gt;&lt;/cite&gt;&lt;/span&gt;</source>
+        <source>&lt;p&gt;Confirma que desea eliminar esta dirección:&lt;br&gt;&lt;b style=&apos;color:#ff0800;&apos;&gt;%1&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1577,55 +1649,55 @@ Formatos soportados: .xlsx, .csv, .tsv, .txt</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="44"/>
+        <location filename="../main.cpp" line="43"/>
         <source>Ingrese la contraseña maestra para habilitar esta instalación.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="51"/>
+        <location filename="../main.cpp" line="50"/>
         <source>Contraseña incorrecta.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="65"/>
         <source>Defina una contraseña maestra para proteger los datos.
 Guárdela en un lugar seguro: sin ella no hay forma de recuperar la información.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="74"/>
+        <location filename="../main.cpp" line="73"/>
         <source>La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="81"/>
+        <location filename="../main.cpp" line="80"/>
         <source>Confirme la contraseña maestra.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="88"/>
+        <location filename="../main.cpp" line="87"/>
         <source>Las contraseñas no coinciden. Intente nuevamente.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="97"/>
+        <location filename="../main.cpp" line="96"/>
         <source>No se pudo inicializar el cifrado.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="119"/>
+        <location filename="../main.cpp" line="118"/>
         <source>&lt;b&gt;PostgreSQL no está instalado en el sistema.&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="120"/>
+        <location filename="../main.cpp" line="119"/>
         <source>Esta aplicación requiere el motor de base de datos PostgreSQL (versión %1 o superior) para funcionar.
 
 ¿Desea abrir el sitio oficial de PostgreSQL para descargarlo?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="139"/>
+        <location filename="../main.cpp" line="138"/>
         <source>Se detectó PostgreSQL versión %1 en su equipo.
 Esta aplicación requiere como mínimo la versión %2.
 
@@ -1633,54 +1705,54 @@ Por favor, actualice su instalación de PostgreSQL desde el sitio oficial.</sour
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="252"/>
+        <location filename="../main.cpp" line="251"/>
         <source>Error al cargar el script de inicialización:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="266"/>
+        <location filename="../main.cpp" line="265"/>
         <source>Error al ejecutar el script de inicialización:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="302"/>
+        <location filename="../main.cpp" line="301"/>
         <source>&lt;b&gt;La cuenta de administrador todavía usa la contraseña temporal.&lt;/b&gt;&lt;br&gt;&lt;br&gt;Usuario: &lt;code&gt;admin&lt;/code&gt;&lt;br&gt;&lt;br&gt;Contraseña temporal (cópiela e inicie sesión para cambiarla):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="312"/>
+        <location filename="../main.cpp" line="311"/>
         <source>Copiar contraseña</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="315"/>
+        <location filename="../main.cpp" line="314"/>
         <source>&lt;i&gt;Este mensaje seguirá apareciendo al abrir la app hasta que inicie sesión como admin y establezca una contraseña definitiva.&lt;/i&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="319"/>
+        <location filename="../main.cpp" line="318"/>
         <source>Entendido, cerrar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="329"/>
+        <location filename="../main.cpp" line="328"/>
         <source>¡Copiada!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="415"/>
+        <location filename="../main.cpp" line="408"/>
         <source>No se pudo iniciar el control de instancia única.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="436"/>
+        <location filename="../main.cpp" line="429"/>
         <source>No se pudo preparar la base de datos para la aplicación. El programa se cerrará.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="454"/>
+        <location filename="../main.cpp" line="447"/>
         <source>No se pudo crear la cuenta de administrador inicial.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2046,63 +2118,63 @@ El reporte era muy largo: ya está completo en tu portapapeles, pégalo (Ctrl+V)
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="60"/>
-        <source>&lt;p&gt;Al restaurar su password o clave, se le solicitará, los datos que ingresó,&lt;br&gt;al momento de registrar su usuario, segun sea el caso, que haya elegido&lt;br&gt;un &lt;strong&gt;&lt;i&gt;PIN numérico&lt;/i&gt;&lt;/strong&gt; o una &lt;strong&gt;&lt;i&gt;pregunta secreta&lt;/i&gt;&lt;/strong&gt;, para la restauración de su clave.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Al restaurar su password o clave, se le solicitará, los datos que ingresó,&lt;br&gt;al momento de registrar su usuario, segun sea el caso, que haya elegido.&lt;br&gt;Un &lt;b&gt;PIN numérico&lt;/b&gt; o una &lt;b&gt;pregunta secreta&lt;/b&gt;, para la restauración de su clave.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="115"/>
-        <source>&lt;p&gt;Nombre de usuario incorrecto.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/resetpassworddialog.cpp" line="127"/>
-        <source>&lt;p&gt;Error al obtener el método de recuperación del usuario.&lt;br&gt;%1&lt;/p&gt;</source>
+        <source>Nombre de usuario incorrecto.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="137"/>
-        <source>&lt;p&gt;No se pudo cargar la pregunta secreta de seguridad.&lt;/p&gt;</source>
+        <source>No se pudo cargar la pregunta secreta de seguridad.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="155"/>
-        <source>&lt;p&gt;&lt;cite&gt;Su respuesta es incorrecta.&lt;/cite&gt;&lt;/p&gt;</source>
+        <source>Su respuesta es incorrecta.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="170"/>
-        <source>&lt;span&gt;&lt;em&gt;El PIN numérico debe contener 4 digitos!&lt;/em&gt;&lt;/span&gt;</source>
+        <source>El PIN numérico debe contener 4 digitos!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="176"/>
-        <source>&lt;p&gt;&lt;em&gt;El número que ingreso es incorrecto.&lt;/em&gt;&lt;/p&gt;</source>
+        <source>El número que ingreso es incorrecto.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="206"/>
         <location filename="../dialogs/resetpassworddialog.cpp" line="211"/>
-        <source>&lt;span&gt;&lt;em&gt;Este campo es requerido.&lt;/em&gt;&lt;/span&gt;</source>
+        <source>Este campo es requerido.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="216"/>
-        <source>&lt;span&gt;&lt;strong&gt;&lt;em&gt;La clave o password de confirmación no coincide.&lt;/em&gt;&lt;/strong&gt;&lt;/span&gt;</source>
+        <source>La clave o password de confirmación no coincide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../dialogs/resetpassworddialog.cpp" line="222"/>
-        <source>&lt;span&gt;&lt;em&gt;El password o clave, debe tener 8 caracteres como mínimo.&lt;/em&gt;&lt;/span&gt;</source>
+        <source>El password o clave, debe tener 8 caracteres como mínimo.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/resetpassworddialog.cpp" line="232"/>
-        <source>&lt;span&gt;&lt;em&gt;Debe ingresar un password o clave segura!&lt;br&gt;Nota:&lt;br&gt;Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:&lt;ul&gt;&lt;li&gt;Debe contener al menos un caracter en mayuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter en minuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un número.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter especial por ejemplo: &quot;#$%&amp;@&quot; etc...&lt;/li&gt;&lt;/ul&gt;Ejemplo de calve segura: &lt;strong&gt;&quot;MiClave@123&quot;&lt;/strong&gt;&lt;/em&gt;&lt;/span&gt;</source>
+        <location filename="../dialogs/resetpassworddialog.cpp" line="228"/>
+        <source>&lt;p&gt;Debe ingresar un password o clave segura!&lt;br&gt;Nota:&lt;br&gt;Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:&lt;ul&gt;&lt;li&gt;Debe contener al menos un caracter en mayuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter en minuscula.&lt;/li&gt;&lt;li&gt;Debe contener al menos un número.&lt;/li&gt;&lt;li&gt;Debe contener al menos un caracter especial por ejemplo: &quot;#$%&amp;@&quot; etc...&lt;/li&gt;&lt;/ul&gt;Ejemplo de calve segura: &lt;b&gt;&quot;MiClave@123&quot;&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/resetpassworddialog.cpp" line="251"/>
-        <source>&lt;span&gt;&lt;em&gt;Su clave o password de acceso fue cambiado con éxito!&lt;/em&gt;&lt;/strong&gt;&lt;/span&gt;</source>
+        <location filename="../dialogs/resetpassworddialog.cpp" line="243"/>
+        <source>Su clave o password de acceso fue cambiado con éxito!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/resetpassworddialog.cpp" line="127"/>
+        <source>&lt;p&gt;Error al obtener el método de recuperación del usuario.&lt;br&gt;%1&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2133,17 +2205,17 @@ El reporte era muy largo: ya está completo en tu portapapeles, pégalo (Ctrl+V)
     </message>
     <message>
         <location filename="../swwidgets/swtextedit.cpp" line="81"/>
-        <source>Alinear izquierda</source>
+        <source>Alinear a la izquierda</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../swwidgets/swtextedit.cpp" line="101"/>
+        <source>Alinear a la derecha</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../swwidgets/swtextedit.cpp" line="91"/>
         <source>Centrar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../swwidgets/swtextedit.cpp" line="101"/>
-        <source>Alinear derecha</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2181,32 +2253,37 @@ El reporte era muy largo: ya está completo en tu portapapeles, pégalo (Ctrl+V)
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="54"/>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="51"/>
         <source> - Editar datos de la categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="55"/>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="52"/>
         <source>Actualizar datos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="65"/>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="63"/>
         <source> - Nueva categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="66"/>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="97"/>
+        <source>&lt;p&gt;La categoría:&lt;br&gt;&lt;b&gt;&quot;%1&quot;&lt;/b&gt;, ya esta registrada en la base de datos.&lt;br&gt;Pruebe con otro nombre por favor!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="45"/>
         <source>Crear categoría</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="88"/>
-        <source>&lt;p&gt;&lt;cite&gt;La categoría: &lt;strong style=&apos;color:#ff0800;&apos;&gt;&quot;%1&quot;&lt;/strong&gt;, ya esta registrada en la base de datos.&lt;br&gt;pruebe con otro nombre por favor!&lt;/cite&gt;&lt;/p&gt;</source>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="46"/>
+        <source>Cancelar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/dlgnewcategory.cpp" line="111"/>
+        <location filename="../dialogs/dlgnewcategory.cpp" line="73"/>
         <source>Debe ingresar un nombre de categoría!
 </source>
         <translation type="unfinished"></translation>

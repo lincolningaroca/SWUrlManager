@@ -78,7 +78,7 @@ void SWTextEdit::initToolBar()
   alignLeftAction_ = toolBar_->addAction("");
   alignLeftAction_->setCheckable(true);
   alignLeftAction_->setChecked(true);
-  alignLeftAction_->setToolTip(tr("Alinear izquierda"));
+  alignLeftAction_->setToolTip(tr("Alinear a la izquierda"));
   QObject::connect(alignLeftAction_, &QAction::triggered, this, [this](){
 	editor_->setAlignment(Qt::AlignLeft);
 	alignLeftAction_->setChecked(true);
@@ -98,7 +98,7 @@ void SWTextEdit::initToolBar()
 
   alignRightAction_ = toolBar_->addAction("");
   alignRightAction_->setCheckable(true);
-  alignRightAction_->setToolTip(tr("Alinear derecha"));
+  alignRightAction_->setToolTip(tr("Alinear a la derecha"));
   QObject::connect(alignRightAction_, &QAction::triggered, this, [this](){
 	editor_->setAlignment(Qt::AlignRight);
 	alignLeftAction_->setChecked(false);

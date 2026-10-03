@@ -180,15 +180,14 @@ void CreateUserWidget::handleCreateUserClicked(){
   if(!ui->chkGenPassword->isChecked()){
 
 	if(!SW::Helper_t::isPasswordSecure(ui->txtRePassword->text())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><b>Debe ingresar una contraseña segura.</b></p>"
-															 "<p>Requisitos mínimos:"
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><b>Debe ingresar una contraseña segura.</b>"
+															 "Requisitos mínimos:"
 															 "<ul>"
 															 "<li>Al menos una letra mayúscula</li>"
 															 "<li>Al menos una letra minúscula</li>"
 															 "<li>Al menos un número</li>"
 															 "<li>Al menos un carácter especial (ej. #$%&@)</li>"
-															 "</ul></p>"
-															 "<p>Ejemplo de clave segura: <b>MiClave@123</b></p>"));
+															 "</ul>Ejemplo de clave segura: <b>MiClave@123</b></p>"));
 	  ui->txtRePassword->selectAll();
 	  ui->txtRePassword->setFocus(Qt::OtherFocusReason);
 	  return;

@@ -1,6 +1,9 @@
 #include "categorydialog.hpp"
 #include "ui_categorydialog.h"
 
+#include <QDialogButtonBox>
+#include <QPushButton>
+
 CategoryDialog::CategoryDialog(const QList<QPair<uint32_t, QString>> &categoryList, QWidget *parent) :
   QDialog(parent), ui(new Ui::CategoryDialog){
   ui->setupUi(this);
@@ -9,10 +12,15 @@ CategoryDialog::CategoryDialog(const QList<QPair<uint32_t, QString>> &categoryLi
 
   loadCategoryComboBox(categoryList);
 
-  ui->cancelPushButton->setDefault(true);
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
+  buttonBox->addButton(tr("Cambiar de categoría"), QDialogButtonBox::AcceptRole);
+  auto *cancelButton = buttonBox->addButton(tr("Cancelar"), QDialogButtonBox::RejectRole);
+  cancelButton->setDefault(true);
 
-  QObject::connect(ui->cancelPushButton, &QPushButton::clicked, this, [this](){ reject();});
-  QObject::connect(ui->aceptPushButton, &QPushButton::clicked, this, [this](){ accept();});
+  this->layout()->addWidget(buttonBox);  
+
+  QObject::connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryDialog::accept);
+  QObject::connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryDialog::reject);
 }
 
 CategoryDialog::~CategoryDialog(){

@@ -58,8 +58,8 @@ void ResetPasswordDialog::setInit_Form() noexcept{
 
 
   auto msg = tr("<p>Al restaurar su password o clave, se le solicitará, los datos que ingresó,<br>"
-				"al momento de registrar su usuario, segun sea el caso, que haya elegido<br>"
-				"un <strong><i>PIN numérico</i></strong> o una <strong><i>pregunta secreta</i></strong>, para la restauración de su clave.</p>");
+				"al momento de registrar su usuario, segun sea el caso, que haya elegido.<br>"
+				"Un <b>PIN numérico</b> o una <b>pregunta secreta</b>, para la restauración de su clave.</p>");
   ui->lblDesc->setText(msg);
 
   auto icon = QPixmap(":/img/contrasena.png").scaled(
@@ -112,7 +112,7 @@ void ResetPasswordDialog::onbtnValidarUsuario(){
   }
 
   if(!helper.userExists(ui->txtUser->text().simplified())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p>Nombre de usuario incorrecto.</p>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Nombre de usuario incorrecto."));
 	ui->txtUser->selectAll();
 	ui->txtUser->setFocus(Qt::OtherFocusReason);
 	return;
@@ -134,7 +134,7 @@ void ResetPasswordDialog::onbtnValidarUsuario(){
 	if (const auto question = helper.getQuestion(userId_.value())) {
 	  ui->txtPregunta->setPlainText(question.value());
 	} else {
-	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p>No se pudo cargar la pregunta secreta de seguridad.</p>"));
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("No se pudo cargar la pregunta secreta de seguridad."));
 	  return;
 	}
 	ui->btnRespuesta->setDefault(true);
@@ -152,7 +152,7 @@ void ResetPasswordDialog::onbtnValidarUsuario(){
 void ResetPasswordDialog::onbtnRespuesta(){
 
   if(!helper.validateAnswer(ui->txtRespuesta->text(), userId_.value())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><cite>Su respuesta es incorrecta.</cite></p>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Su respuesta es incorrecta."));
 	ui->txtRespuesta->selectAll();
 	ui->txtRespuesta->setFocus(Qt::OtherFocusReason);
 	return;
@@ -167,13 +167,13 @@ void ResetPasswordDialog::onbtnRespuesta(){
 void ResetPasswordDialog::onbtnClaveNumerica(){
 
   if(ui->txtPIN->text().size() < 4){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span><em>El PIN numérico debe contener 4 digitos!</em></span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El PIN numérico debe contener 4 digitos!"));
 	ui->txtPIN->selectAll();
 	ui->txtPIN->setFocus(Qt::OtherFocusReason);
 	return;
   }
   if(!helper.validateAnswer(ui->txtPIN->text(), userId_.value())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><em>El número que ingreso es incorrecto.</em></p>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El número que ingreso es incorrecto."));
 	ui->txtPIN->selectAll();
 	ui->txtPIN->setFocus(Qt::OtherFocusReason);
 	return;
@@ -203,35 +203,29 @@ void ResetPasswordDialog::onbtnAtras(){
 void ResetPasswordDialog::onbtnReset(){
 
   if(ui->txtNewPassword->text().isEmpty()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span><em>Este campo es requerido.</em></span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Este campo es requerido."));
 	ui->txtNewPassword->setFocus(Qt::OtherFocusReason);
 	return;
   }
   if(ui->txtRePassword->text().isEmpty()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span><em>Este campo es requerido.</em></span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Este campo es requerido."));
 	ui->txtRePassword->setFocus(Qt::OtherFocusReason);
 	return;
   }
   if(ui->txtRePassword->text().simplified() != ui->txtNewPassword->text().simplified()){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span><strong><em>La clave o password de confirmación no coincide.</em></strong></span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("La clave o password de confirmación no coincide."));
 	ui->txtRePassword->selectAll();
 	ui->txtRePassword->setFocus(Qt::OtherFocusReason);
 	return;
   }
   if(ui->txtNewPassword->text().size() < 8 || ui->txtRePassword->text().size() < 8){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span>"
-														   "<em>"
-														   "El password o clave, debe tener 8 caracteres como mínimo."
-														   "</em>"
-														   "</span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El password o clave, debe tener 8 caracteres como mínimo."));
 	ui->txtRePassword->selectAll();
 	ui->txtRePassword->setFocus();
 	return;
   }
   if(!SW::Helper_t::isPasswordSecure(ui->txtRePassword->text().simplified())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span>"
-														   "<em>"
-														   "Debe ingresar un password o clave segura!<br>"
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p>Debe ingresar un password o clave segura!<br>"
 														   "Nota:<br>"
 														   "Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:"
 														   "<ul>"
@@ -240,15 +234,13 @@ void ResetPasswordDialog::onbtnReset(){
 														   "<li>Debe contener al menos un número.</li>"
 														   "<li>Debe contener al menos un caracter especial por ejemplo: \"#$%&@\" etc...</li>"
 														   "</ul>"
-														   "Ejemplo de calve segura: <strong>\"MiClave@123\"</strong>"
-														   "</em>"
-														   "</span>"));
+														   "Ejemplo de calve segura: <b>\"MiClave@123\"</b></p>"));
 	ui->txtRePassword->selectAll();
 	ui->txtRePassword->setFocus();
 	return;
   }
   if(helper.resetPassword(ui->txtRePassword->text(), userId_.value())){
-	QMessageBox::information(this, SW::Helper_t::appName(), tr("<span><em>Su clave o password de acceso fue cambiado con éxito!</em></strong></span>"));
+	QMessageBox::information(this, SW::Helper_t::appName(), tr("Su clave o password de acceso fue cambiado con éxito!"));
 
 	accept();
   }

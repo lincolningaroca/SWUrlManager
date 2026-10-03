@@ -4,8 +4,9 @@
 #include "helperdatabase/helperdb.hpp"
 #include "util/helper.hpp"
 
+#include <QDialogButtonBox>
 #include <QMessageBox>
-
+#include <QPushButton>
 
 ChangePwdDialog::ChangePwdDialog(const QString &user, QWidget *parent)
   : QDialog(parent), ui(new Ui::ChangePwdDialog),
@@ -15,8 +16,6 @@ ChangePwdDialog::ChangePwdDialog(const QString &user, QWidget *parent)
 
   initDialog();
 
-  QObject::connect(ui->bBox, &QDialogButtonBox::accepted, this, on_acceptRole);
-  QObject::connect(ui->bBox, &QDialogButtonBox::rejected, this, &ChangePwdDialog::reject);
   QObject::connect(ui->btnGenPassword, &QPushButton::clicked, this, &ChangePwdDialog::on_setPassword);
 
 }
@@ -31,9 +30,9 @@ void ChangePwdDialog::initDialog(){
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle(tr("Actualizar cantraseña"));
 
-  ui->lblUser->setText(tr("<strong>Estas a punto de cambiar o actualizar la clave de acceso para el usuario: <cite>\"%1\"</cite></strong>").arg(user_));
-  ui->lblMessage->setText(tr("<p><strong>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
-										 "<br>y una longitud mínina de 8 caracteres</strong></p>"));
+  ui->lblUser->setText(tr("<p>Estas a punto de cambiar o actualizar la clave de acceso para el usuario: <b>\"%1\"</b></p>").arg(user_));
+  ui->lblMessage->setText(tr("<p><b>La clave o contraseña, debe tener al menos una Mayuscula, un número y un caracter especial"
+							 "<br>y una longitud mínina de 8 caracteres</b></p>"));
 
   ui->txtNewPassword->setEchoMode(QLineEdit::Password);
   ui->txtRePassword->setEchoMode(QLineEdit::Password);
@@ -43,8 +42,16 @@ void ChangePwdDialog::initDialog(){
 
   ui->btnGenPassword->setDisabled(true);
 
-  ui->bBox->button(QDialogButtonBox::Ok)->setText(tr("Cambiar clave"));
-  ui->bBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancelar"));
+  auto *buttonBox = new QDialogButtonBox(this);
+  buttonBox->addButton(tr("Cambiar clave"), QDialogButtonBox::AcceptRole);
+  auto *cancelButton = buttonBox->addButton(tr("Cancelar"), QDialogButtonBox::RejectRole);
+  cancelButton->setDefault(true);
+
+  this->layout()->addWidget(buttonBox);
+
+  QObject::connect(buttonBox, &QDialogButtonBox::accepted, this, &ChangePwdDialog::accept);
+  QObject::connect(buttonBox, &QDialogButtonBox::rejected, this, &ChangePwdDialog::reject);
+
 
   QObject::connect(ui->chkGenPassword, &QCheckBox::toggled, this, [this](bool state){
 
@@ -81,7 +88,16 @@ void ChangePwdDialog::setFocusToWidget(){
 
 }
 
-void ChangePwdDialog::on_acceptRole(){
+void ChangePwdDialog::on_setPassword(){
+
+  const auto password{SW::Helper_t::generateSecurePassword()};
+  ui->txtNewPassword->setText(password);
+  ui->txtRePassword->setText(password);
+
+}
+
+
+void ChangePwdDialog::accept(){
 
   if(ui->txtNewPassword->text().isEmpty() || ui->txtRePassword->text().isEmpty()){
 
@@ -108,9 +124,7 @@ void ChangePwdDialog::on_acceptRole(){
 
   if(!SW::Helper_t::isPasswordSecure(ui->txtNewPassword->text())){
 
-	QMessageBox::warning(this, qApp->applicationName(), tr("<span>"
-														   "<em>"
-														   "Debe ingresar un password o clave segura!<br>"
+	QMessageBox::warning(this, qApp->applicationName(), tr("<p>Debe ingresar un password o clave segura!<br>"
 														   "Nota:<br>"
 														   "Para que un password o clave se considere seguro(a), debe cumplir con lo siguiente:"
 														   "<ul>"
@@ -119,9 +133,7 @@ void ChangePwdDialog::on_acceptRole(){
 														   "<li>Debe contener al menos un número.</li>"
 														   "<li>Debe contener al menos un caracter especial por ejemplo: \"#$%&@\" etc...</li>"
 														   "</ul>"
-														   "Ejemplo de calve segura: <strong>\"MiClave@123\"</strong>"
-														   "</em>"
-														   "</span>"));
+														   "Ejemplo de calve segura: <b>\"MiClave@123\"</b></p>"));
 	setFocusToWidget();
 	return;
 
@@ -129,25 +141,15 @@ void ChangePwdDialog::on_acceptRole(){
 
   SW::HelperDataBase_t helperDb{};
 
-  // const auto user = user_.simplified();
   const auto userId = helperDb.getUser_id(user_.simplified(), SW::User::U_user);
   if(!userId) return;
 
   if(helperDb.resetPassword(ui->txtNewPassword->text().simplified(), userId.value())){
 
 	QMessageBox::information(this, qApp->applicationName(),
-							 tr("<strong>Se cambio la clave o contraseña para el usuario: <cite>\"%1\"</cite>"
-									 "<br>la próxima vez que inicie sesión, lo hará con su nueva clave.</strong>").arg(user_));
-	accept();
+							 tr("<p>Se cambio la clave o contraseña para el usuario: <b>\"%1\"</b>"
+								"<br>la próxima vez que inicie sesión, lo hará con su nueva clave.</p>").arg(user_));
+	QDialog::accept();
 
   }
-
-}
-
-void ChangePwdDialog::on_setPassword(){
-
-  const auto password{SW::Helper_t::generateSecurePassword()};
-  ui->txtNewPassword->setText(password);
-  ui->txtRePassword->setText(password);
-
 }

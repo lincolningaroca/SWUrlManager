@@ -1,14 +1,18 @@
 #include "cryptomanager.hpp"
 #include "util/helper.hpp"
 
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSettings>
-#include <QLoggingCategory>
 #include <QCoreApplication>
+#include <QLoggingCategory>
+#include <QSettings>
+#include <QSqlError>
+#include <QSqlQuery>
+
+extern "C"{
 
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+}
+
 
 Q_LOGGING_CATEGORY(lcCrypto, "sw.crypto")
 

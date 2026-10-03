@@ -110,8 +110,8 @@ void PublicUrlDialog::on_deleteUrl(){
   const auto url = ui->urlTableView->model()->index(currentRow, 1).data().toString();
 
   QMessageBox msgBox(this);
-  msgBox.setText(tr("<span>Confirma que desea eliminar esta dirección:<br>"
-						 " <cite style='color:#ff0800;'><strong>%1</strong></cite></span>").arg(url));
+  msgBox.setText(tr("<p>Confirma que desea eliminar esta dirección:<br>"
+					"<b style='color:#ff0800;'>%1</b></p>").arg(url));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
   msgBox.button(QMessageBox::Yes)->setText(tr("Eliminar Url"));

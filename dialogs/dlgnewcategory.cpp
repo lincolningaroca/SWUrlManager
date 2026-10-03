@@ -3,10 +3,9 @@
 
 #include "helperdatabase/helperdb.hpp"
 
+#include <QDialogButtonBox>
 #include <QMessageBox>
 #include <QPushButton>
-
-
 
 dlgNewCategory::dlgNewCategory(SW::OpenMode mode, const std::optional<categoryData> &list,
   QWidget *parent) :
@@ -17,10 +16,6 @@ dlgNewCategory::dlgNewCategory(SW::OpenMode mode, const std::optional<categoryDa
   ui->setupUi(this);
   setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
   initForm(list);
-
-  QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &dlgNewCategory::onAcceptOption);
-  QObject::connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-
 
 }
 
@@ -46,13 +41,16 @@ QString dlgNewCategory::descriptionToolTip() const noexcept{
 
 void dlgNewCategory::initForm(const std::optional<categoryData> &list){
 
-  auto cancelButton = ui->buttonBox->button(QDialogButtonBox::Cancel);
-  cancelButton->setText("Cancelar");
-  auto okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
+  auto *buttonBox = new QDialogButtonBox(this);
+  auto *okButton = buttonBox->addButton(tr("Crear categoría"), QDialogButtonBox::AcceptRole);
+  auto *cancelButton = buttonBox->addButton(tr("Cancelar"), QDialogButtonBox::RejectRole);
+  cancelButton->setDefault(true);
+  this->layout()->addWidget(buttonBox);
 
   if(mode_ == SW::OpenMode::Edit){
 	setWindowTitle(SW::Helper_t::appName() + tr(" - Editar datos de la categoría"));
 	okButton->setText(tr("Actualizar datos"));
+
 	if(list){
 	  const auto& [name, desc] = list.value();
 	  ui->txtCategory->setText(name);
@@ -63,12 +61,23 @@ void dlgNewCategory::initForm(const std::optional<categoryData> &list){
   }else{
 
 	setWindowTitle(SW::Helper_t::appName() + tr(" - Nueva categoría"));
-	okButton->setText(tr("Crear categoría"));
+
   }
+  QObject::connect(buttonBox, &QDialogButtonBox::accepted, this, &dlgNewCategory::accept);
+  QObject::connect(buttonBox, &QDialogButtonBox::rejected, this, &dlgNewCategory::reject);
 
 }
 
-void dlgNewCategory::onAcceptOption(){
+bool dlgNewCategory::validateData()  noexcept{
+  if(ui->txtCategory->text().simplified().isEmpty()){
+	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("Debe ingresar un nombre de categoría!\n"));
+      ui->txtCategory->setFocus(Qt::OtherFocusReason);
+      return false;
+    }
+  return true;
+}
+
+void dlgNewCategory::accept(){
 
   SW::HelperDataBase_t helperdb_{};
 
@@ -85,34 +94,20 @@ void dlgNewCategory::onAcceptOption(){
 
 	  if(helperdb_.categoryExists(ui->txtCategory->text().toUpper(), userid)){
 		QMessageBox::warning(this, SW::Helper_t::appName(),
-							 tr("<p><cite>La categoría: "
-									 "<strong style='color:#ff0800;'>\"%1\""
-									 "</strong>, ya esta registrada en la base de datos.<br>"
-									 "pruebe con otro nombre por favor!"
-									 "</cite>"
-									 "</p>").arg(ui->txtCategory->text().toUpper()));
+							 tr("<p>La categoría:<br>"
+								"<b>\"%1\"</b>"
+								", ya esta registrada en la base de datos.<br>"
+								"Pruebe con otro nombre por favor!"
+								"</p>").arg(ui->txtCategory->text().toUpper()));
 		ui->txtCategory->selectAll();
 		ui->txtCategory->setFocus(Qt::OtherFocusReason);
 		return;
 	  }
-	  accept();
+	  QDialog::accept();
 
 	}
   }else{
 	if(validateData())
-	  accept();
+	  QDialog::accept();
   }
-
 }
-
-
-bool dlgNewCategory::validateData()  noexcept{
-  if(ui->txtCategory->text().simplified().isEmpty()){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("Debe ingresar un nombre de categoría!\n"));
-      ui->txtCategory->setFocus(Qt::OtherFocusReason);
-      return false;
-    }
-  return true;
-}
-
-

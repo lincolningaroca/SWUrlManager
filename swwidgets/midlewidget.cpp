@@ -87,18 +87,25 @@ void MidleWidget::setPlacesHolders(){
 
 QString MidleWidget::errorMessage(){
 
-  const auto invalidUrlMsg = tr(
-							   "<p>La dirección <b>\"%1\"</b> no es válida.</p>"
-							   "<p>Una dirección URL válida debe tener una de las siguientes formas:"
+  QString invalidUrlMsg{};
+
+  if(ui->txtUrl->text().trimmed().isEmpty()){
+	invalidUrlMsg = tr("Debe ingresar una dirección Url.");
+
+  }else{
+
+  invalidUrlMsg = tr("<p>La dirección <b>\"%1\"</b> no es válida."
+							   "Una dirección URL válida debe tener una de las siguientes formas:"
 							   "<ul>"
 							   "<li>(http://www.)url.dominio</li>"
 							   "<li>(https://www.)url.dominio</li>"
 							   "<li>(ftp://)url.dominio</li>"
 							   "<li>(ftp://www.)url.dominio</li>"
-							   "</ul></p>"
-							   "<p><b>Nota:</b> Los prefijos <i>http://</i>, <i>https://</i>, <i>ftp://</i> y <i>www.</i> son opcionales.<br>"
+							   "</ul>"
+							   "Nota:Los prefijos <b>http://</b>, <b>https://</b>, <b>ftp://</b> y <b>www.</b> son opcionales.<br>"
 							   "Lo mínimo esperado es una dirección con el formato: <b>url.dominio</b></p>").arg(ui->txtUrl->text().trimmed());
-  return invalidUrlMsg;
+  }
+	return invalidUrlMsg;
 
 }
 

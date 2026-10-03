@@ -618,11 +618,10 @@ void MainForm::on_deleteCategory(){
 
   const bool hasRows = (ui->tvUrl->model() && ui->tvUrl->model()->rowCount() > 0);
 
-  const QString msg = hasRows ? tr("<p style='color:#FB4934;'>"
-								   "Está a punto de eliminar esta categoría y todo su contenido.<br>"
+  const QString msg = hasRows ? tr("<p>Está a punto de eliminar esta categoría y todo su contenido.<br>"
 								   "Recuerde que al aceptar, eliminará de forma permanente estos datos.<br>"
-								   "¿Desea continuar y eliminar los datos?</p>")
-							  : tr("<p>¿Seguro que desea eliminar esta categoría?</p>");
+								   "¿Desea continuar y eliminar los datos?")
+							  : tr("¿Seguro que desea eliminar esta categoría?</p>");
 
   if (warningMessage(this, tr("Advertencia"), msg) == QMessageBox::No) {
 	return;
@@ -660,7 +659,7 @@ void MainForm::on_addNewUrl(){
 
 	if(helperdb_.urlExists(midleWidget->url(), categoryId)){
 
-	  auto warningMsg = tr("<p>La url: <b>%1</b></p> ya esta registrada!!").arg(midleWidget->url());
+	  auto warningMsg = tr("<p>La url: <b>%1</b> ya esta registrada!!</p>").arg(midleWidget->url());
 	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 
 	  midleWidget->selectAndFocus();
@@ -693,7 +692,8 @@ void MainForm::on_addNewUrl(){
 	const auto categoryId = currentCategoryId();
 
 	if(!helperdb_.updateData_url(midleWidget->url(), midleWidget->description(), id, categoryId)){
-	  QMessageBox::critical(this, SW::Helper_t::appName(), tr("Fallo la ejecución de la sentencia!\n%1"));
+	  QMessageBox::critical(this, SW::Helper_t::appName(), tr("Fallo la ejecución de la sentencia!\n%1")
+															 .arg(helperdb_.errorMessage()));
 	  return;
 
 	}
@@ -744,8 +744,7 @@ void MainForm::on_quitUrl(){
   const auto url = ui->tvUrl->model()->index(currentRow, 1).data().toString();
 
   QMessageBox msgBox(this);
-  msgBox.setText(tr("Confirma que desea eliminar esta dirección:<br>"
-					" <b style='color:#ff0800;'>%1</b>").arg(url));
+  msgBox.setText(tr("Confirma que desea eliminar esta dirección:<br><b>%1</b>").arg(url));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
   msgBox.button(QMessageBox::Yes)->setText(tr("Eliminar"));
@@ -849,9 +848,9 @@ void MainForm::on_makeBackup(){
   }
   const auto filePath = QFileDialog::getSaveFileName(
 	this,
-	QStringLiteral("Crear una copia de seguridad"),
+	tr("Crear una copia de seguridad"),
 	SW::Helper_t::getLastOpenedDirectory(),
-	QStringLiteral("Archivos de copia de seguridad (*.backup)"));
+	tr("Archivos de copia de seguridad (*.backup)"));
 
   if(filePath.isEmpty()) return;
 
@@ -861,13 +860,13 @@ void MainForm::on_makeBackup(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-																																																																																																																																																		QStringLiteral("--host=%1").arg(config.host),
-																																																																																																																																																		QStringLiteral("--port=%1").arg(config.port),
-																																																																																																																																																		QStringLiteral("--username=%1").arg(config.userName),
-																																																																																																																																																		QStringLiteral("--no-password"),
-																																																																																																																																																		QStringLiteral("--format=custom"),
-																																																																																																																																																		QStringLiteral("--file=%1").arg(filePath),
-																																																																																																																																																		config.dbName
+	QStringLiteral("--host=%1").arg(config.host),
+	QStringLiteral("--port=%1").arg(config.port),
+	QStringLiteral("--username=%1").arg(config.userName),
+	QStringLiteral("--no-password"),
+	QStringLiteral("--format=custom"),
+	QStringLiteral("--file=%1").arg(filePath),
+	config.dbName
   };
 
   const QString pgDumpPath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_dump"));
@@ -881,20 +880,20 @@ void MainForm::on_makeBackup(){
 
   if(!process.waitForFinished(30000)){
 	QMessageBox::critical(this, SW::Helper_t::appName(),
-						  QStringLiteral("Error al crear la copia de seguridad:\n%1")
+						  tr("Error al crear la copia de seguridad:\n%1")
 							.arg(process.errorString()));
 	return;
   }
 
   if(process.exitCode() != 0){
 	QMessageBox::critical(this, SW::Helper_t::appName(),
-						  QStringLiteral("Error en pg_dump:\n%1")
+						  tr("Error en pg_dump:\n%1")
 							.arg(QString::fromUtf8(process.readAllStandardError())));
 	return;
   }
 
   QMessageBox::information(this, SW::Helper_t::appName(),
-						   QStringLiteral("Copia de seguridad creada en:\n%1").arg(filePath));
+						   tr("Copia de seguridad creada en:\n%1").arg(filePath));
 }
 
 void MainForm::on_restoreDatabase(){
@@ -910,24 +909,19 @@ void MainForm::on_restoreDatabase(){
 	QMessageBox msg(this);
 	msg.setWindowTitle(SW::Helper_t::appName());
 	msg.setIcon(QMessageBox::Warning);
-	msg.setText(QStringLiteral(
-	  "<span>"
-	  "Al restaurar la base de datos se perderán todos los datos actuales<br/>"
-	  "y serán reemplazados por los datos de la copia de seguridad.<br/><br/>"
-	  "<strong>Consejo:</strong>"
-	  "<ul><li>Antes de restaurar, considere crear un backup de la base de datos actual.</li></ul>"
-	  "</span>"));
+	msg.setText(tr("<p>Al restaurar la base de datos, se perderán todos los datos actuales<br/>"
+				   "y serán reemplazados por los datos de la copia de seguridad.<br/>"
+				   "Consejo:<br>"
+				   "<b>Antes de restaurar, considere crear un backup de la base de datos actual.</b></p>"));
 	msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-	msg.button(QMessageBox::Yes)->setText("Restaurar");
-	msg.button(QMessageBox::No)->setText("Cancelar");
+	msg.button(QMessageBox::Yes)->setText(tr("Restaurar"));
+	msg.button(QMessageBox::No)->setText(tr("Cancelar"));
 	if(msg.exec() == QMessageBox::No) return;
   }
 
-  const auto pathBackup = QFileDialog::getOpenFileName(
-	this,
-	QStringLiteral("Abrir archivo de respaldo"),
-	SW::Helper_t::getLastOpenedDirectory(),
-	QStringLiteral("Archivo backup (*.backup)"));
+  const auto pathBackup = QFileDialog::getOpenFileName(this, tr("Abrir archivo de respaldo"),
+													   SW::Helper_t::getLastOpenedDirectory(),
+													   tr("Archivo backup (*.backup)"));
 
   if(pathBackup.isEmpty()) return;
 
@@ -935,14 +929,14 @@ void MainForm::on_restoreDatabase(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-																																																																																																																																																		QStringLiteral("--host=%1").arg(config.host),
-																																																																																																																																																		QStringLiteral("--port=%1").arg(config.port),
-																																																																																																																																																		QStringLiteral("--username=%1").arg(config.userName),
-																																																																																																																																																		QStringLiteral("--dbname=%1").arg(config.dbName),
-																																																																																																																																																		QStringLiteral("--no-password"),
-																																																																																																																																																		QStringLiteral("--clean"),
-																																																																																																																																																		QStringLiteral("--if-exists"),
-																																																																																																																																																		pathBackup
+	QStringLiteral("--host=%1").arg(config.host),
+	QStringLiteral("--port=%1").arg(config.port),
+	QStringLiteral("--username=%1").arg(config.userName),
+	QStringLiteral("--dbname=%1").arg(config.dbName),
+	QStringLiteral("--no-password"),
+	QStringLiteral("--clean"),
+	QStringLiteral("--if-exists"),
+	pathBackup
   };
 
   const QString pgRestorePath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_restore"));
@@ -955,22 +949,20 @@ void MainForm::on_restoreDatabase(){
 
   if(!process.waitForFinished(60000)){
 	QMessageBox::critical(this, SW::Helper_t::appName(),
-						  QStringLiteral("Error al restaurar:\n%1").arg(process.errorString()));
+						  tr("Error al restaurar:\n%1").arg(process.errorString()));
 	return;
   }
 
   if(process.exitCode() != 0){
 	QMessageBox::critical(this, SW::Helper_t::appName(),
-						  QStringLiteral("Error en pg_restore:\n%1")
+						  tr("Error en pg_restore:\n%1")
 							.arg(QString::fromUtf8(process.readAllStandardError())));
 	return;
   }
 
   QMessageBox::information(this, SW::Helper_t::appName(),
-						   QStringLiteral(
-							 "Base de datos restaurada correctamente.<br/><br/>"
-							 "<strong>La aplicación se reiniciará automáticamente.</strong>"
-							 ));
+						   tr("Base de datos restaurada correctamente.<br>"
+							 "La aplicación se reiniciará automáticamente."));
 
   // Relanzar la app y cerrar la instancia actual
   SW::CryptoManager::clearCachedLocalDEK();
@@ -1026,7 +1018,7 @@ void MainForm::on_makeUserBackup(){
   const auto filePath = QFileDialog::getSaveFileName(
 	this, tr("Guardar copia de seguridad personal"),
 	SW::Helper_t::getLastOpenedDirectory(),
-	QStringLiteral("Archivos de backup (*.swbak)"));
+	tr("Archivos de backup (*.swbak)"));
 
   if (filePath.isEmpty()) return;
 
@@ -1062,7 +1054,7 @@ void MainForm::on_restoreUserBackup(){
   const auto filePath = QFileDialog::getOpenFileName(
 	this, tr("Abrir copia de seguridad personal"),
 	SW::Helper_t::getLastOpenedDirectory(),
-	QStringLiteral("Archivos de backup (*.swbak)"));
+	tr("Archivos de backup (*.swbak)"));
 
   if (filePath.isEmpty()) return;
 
@@ -1193,10 +1185,8 @@ void MainForm::on_moveUrl(){
 	auto categoryid = cDialog.getCategoryId();
 	if(helperdb_.urlExists(url_, categoryid)){
 
-	  auto warningMsg = tr("<p>"
-						   "La url:"
-						   "<b>%1</b>"
-						   "ya esta registrada, en la categoría a la que desea mover!!</p>").arg(url_);
+	  auto warningMsg = tr("<p>La url:<b>%1</b><br>"
+						   "Ya esta registrada, en la categoría a la que desea mover!!</p>").arg(url_);
 
 	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 	  return;
@@ -1232,7 +1222,7 @@ void MainForm::on_showSettingsDialog() {
   const auto initialLang = SW::Helper_t::currentLanguage();
 
   ConfigDialog configDlg(currentScheme_, isFusionActive, this);
-  configDlg.setWindowTitle(SW::Helper_t::appName() + QStringLiteral(" - Configuración"));
+  configDlg.setWindowTitle(SW::Helper_t::appName() + tr(" - Configuración"));
 
   // Aplicar cambios de tema (Scheme) en tiempo real
   QObject::connect(&configDlg, &ConfigDialog::themeChanged, this, [this](Qt::ColorScheme scheme){
@@ -1936,12 +1926,10 @@ void MainForm::processImportFile(const QString& filePath) {
 
 void MainForm::onImportFromExcelFileTriggered() {
 
-  QString filePath = QFileDialog::getOpenFileName(
-	this,
-	tr("Importar URLs"),
-	SW::Helper_t::getLastOpenedDirectory(),
-	tr("Archivos de Excel y Texto (*.xlsx *.csv *.tsv *.txt);;Excel (*.xlsx);;Archivos de texto (*.csv *.tsv *.txt)")
-	);
+  QString filePath = QFileDialog::getOpenFileName(this,	tr("Importar URLs"),
+												  SW::Helper_t::getLastOpenedDirectory(),
+												  tr("Archivos de Excel y Texto (*.xlsx *.csv *.tsv *.txt);;Excel (*.xlsx);;Archivos de texto (*.csv *.tsv *.txt)")
+												  );
 
   const QFileInfo fileInfo(filePath);
   SW::Helper_t::setLastOpenedDirectory(fileInfo.absolutePath());

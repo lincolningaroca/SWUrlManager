@@ -50,11 +50,8 @@ void LogInDialog::setUp_Form() noexcept{
   ui->btnOtherOptions->setIcon(QIcon(QStringLiteral(":/img/down.svg")));
   layout()->setSizeConstraint(QLayout::SetFixedSize);
 
-  ui->btnOtherOptions->setToolTip(tr("<p>"
-									 "<span> Crear un nuevo usuario y/o<br>"
-									 "restablecer clave o password!"
-									 "</span>"
-									 "</p>"));
+  ui->btnOtherOptions->setToolTip(tr("<p> Crear un nuevo usuario y/o<br>"
+									 "restablecer clave o password!</p>"));
   ui->txtUser->setFocus();
 
 }
@@ -116,7 +113,7 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
   if(checked){
 
 	ui->btnOtherOptions->setIcon(QIcon(":/img/up.svg"));
-	ui->btnOtherOptions->setToolTip(tr("<span>Volver a Inicio de sesión!</span>"));
+	ui->btnOtherOptions->setToolTip(tr("Volver a Inicio de sesión!"));
 
 	createUserWidget_->setMaximumHeight(QWIDGETSIZE_MAX);
 	auto targetHeight = createUserWidget_->sizeHint().height();
@@ -137,10 +134,8 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
 
 	ui->btnOtherOptions->setIcon(QIcon(":/img/down.svg"));
 
-	ui->btnOtherOptions->setToolTip(tr("<span>"
-									   "Crear un nuevo usuario y/o<br>"
-									   "restablecer clave o password!"
-									   "</span>"));
+	ui->btnOtherOptions->setToolTip(tr("<p>Crear un nuevo usuario y/o<br>"
+									   "Restablecer clave o password!</p>"));
 
 	collapseAnimation_->setStartValue(createUserWidget_->height());
 	collapseAnimation_->setEndValue(0);
@@ -166,12 +161,8 @@ void LogInDialog::on_handleToggleAnimation(bool checked){
 void LogInDialog::on_userLogin(){
 
   if(!helperdb_.logIn(ui->txtUser->text().simplified(), ui->txtPassword->text().simplified())){
-	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<span>"
-														   "<strong>"
-														   "Los datos que ingreso son incorrectos\n"
-														   "vuelva a intentarlo."
-														   "</strong>"
-														   "</span>"));
+	QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p>Los datos que ingreso son incorrectos.<br>"
+														   "vuelva a intentarlo.</p>"));
 	ui->txtUser->selectAll();
 	ui->txtUser->setFocus(Qt::OtherFocusReason);
 

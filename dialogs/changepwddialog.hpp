@@ -21,7 +21,9 @@ private:
   void setFocusToWidget();
 
 private slots:
-
-  void on_acceptRole();
   void on_setPassword();
+
+  // QDialog interface
+public slots:
+  virtual void accept() override;
 };

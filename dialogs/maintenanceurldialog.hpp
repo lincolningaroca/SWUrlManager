@@ -15,7 +15,8 @@ class MaintenanceUrlDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit MaintenanceUrlDialog(Qt::ColorScheme colorScheme, SW::OpenMode mode,
+
+ explicit MaintenanceUrlDialog(Qt::ColorScheme colorScheme, SW::OpenMode mode,
 								const QList<QVariant>& dataUrl,
 								uint32_t categoryId,
 								QWidget *parent = nullptr);
@@ -35,11 +36,12 @@ private:
   void readSettings();
   void initForm();
 
-public slots:
-  void on_acceptPushButton();
-
 
   // QWidget interface
 protected:
   virtual void closeEvent(QCloseEvent *event) override;
+
+  // QDialog interface
+public slots:
+  virtual void accept() override;
 };

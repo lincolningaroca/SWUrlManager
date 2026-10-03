@@ -4,7 +4,9 @@
 #include "swwidgets/midlewidget.hpp"
 
 #include <QCloseEvent>
+#include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSettings>
 
 MaintenanceUrlDialog::MaintenanceUrlDialog(Qt::ColorScheme colorScheme,
@@ -27,8 +29,6 @@ MaintenanceUrlDialog::MaintenanceUrlDialog(Qt::ColorScheme colorScheme,
 
   readSettings();
 
-  connect(ui->cancelPushButton, &QPushButton::clicked, this, &MaintenanceUrlDialog::reject);
-  connect(ui->aceptpushButton, &QPushButton::clicked, this, &MaintenanceUrlDialog::on_acceptPushButton);
 }
 
 MaintenanceUrlDialog::~MaintenanceUrlDialog()
@@ -86,10 +86,17 @@ void MaintenanceUrlDialog::initForm(){
   midleWidget = new MidleWidget(this);
   ui->insertLayout->addWidget(midleWidget);
 
+  auto *buttonBox = new QDialogButtonBox(this);
+  auto *okButton = buttonBox->addButton(tr("Guardar datos"), QDialogButtonBox::AcceptRole);
+  auto *cancelButton = buttonBox->addButton(tr("&Cancelar"), QDialogButtonBox::RejectRole);
+  cancelButton->setDefault(true);
+
+  this->layout()->addWidget(buttonBox);
+
   if(mode_ == SW::OpenMode::New){
 
 	setWindowTitle(tr("Agregar nueva url"));
-	ui->aceptpushButton->setText(tr("Guardar datos"));
+
   }else{
 
 	setWindowTitle(tr("Editar datos url"));
@@ -97,14 +104,18 @@ void MaintenanceUrlDialog::initForm(){
 
 	midleWidget->setUrl(dataUrl_.value(1).toString());
 	midleWidget->setDescription(dataUrl_.value(2).toString());
-	ui->aceptpushButton->setText(tr("Guardar cambios"));
+
+	okButton->setText(tr("Guardar cambios"));
   }
+
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &MaintenanceUrlDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &MaintenanceUrlDialog::reject);
 
 }
 
-void MaintenanceUrlDialog::on_acceptPushButton(){
+void MaintenanceUrlDialog::accept(){
 
-  if(ui->aceptpushButton->text().compare("Guardar datos") == 0){
+  if(mode_ == SW::OpenMode::New){
 	if(!SW::Helper_t::urlValidate(midleWidget->url())){
 	  QMessageBox::warning(this, SW::Helper_t::appName(), midleWidget->errorMessage());
 
@@ -112,19 +123,19 @@ void MaintenanceUrlDialog::on_acceptPushButton(){
 	  return;
 	}
 
-  if(helperdb_.urlExists(midleWidget->url(), currentCategoryId_)){
+	if(helperdb_.urlExists(midleWidget->url(), currentCategoryId_)){
 
-	auto warningMsg = tr("<p>La url: <cite><strong>%1</strong></cite></p> ya esta registrada!!").arg(midleWidget->url());
-	QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
+	  auto warningMsg = tr("<p>La url: <b>%1</b>, ya esta registrada!!</p>").arg(midleWidget->url());
+	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 
-	midleWidget->selectAndFocus();
-	return;
-  }
+	  midleWidget->selectAndFocus();
+	  return;
+	}
 
-  if(helperdb_.saveData_url(midleWidget->url(), midleWidget->description(), currentCategoryId_)){
+	if(helperdb_.saveData_url(midleWidget->url(), midleWidget->description(), currentCategoryId_)){
 
-	writeSettings();
-	accept();
+	  writeSettings();
+	  QDialog::accept();
 
 	}
   }else{
@@ -142,8 +153,7 @@ void MaintenanceUrlDialog::on_acceptPushButton(){
 
 	}
 	writeSettings();
-	accept();
+	QDialog::accept();
 
   }
 }
-
