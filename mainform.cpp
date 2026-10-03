@@ -1217,8 +1217,7 @@ void MainForm::on_showSettingsDialog() {
   bool isFusionActive = (qApp->style()->objectName().compare(QStringLiteral("fusion"), Qt::CaseInsensitive) == 0);
 
   // Obtener el idioma actual antes de abrir el diálogo
-  // QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
-  // QString initialLang = settings.value(QStringLiteral("language"), QStringLiteral("es")).toString();
+
   const auto initialLang = SW::Helper_t::currentLanguage();
 
   ConfigDialog configDlg(currentScheme_, isFusionActive, this);
@@ -1237,7 +1236,6 @@ void MainForm::on_showSettingsDialog() {
   if (configDlg.exec() == QDialog::Accepted) {
 
 	// Verificar si el usuario cambió el idioma
-	// QString newLang = settings.value(QStringLiteral("language"), QStringLiteral("es")).toString();
 	const auto newLang = SW::Helper_t::currentLanguage();
 
 	if (initialLang != newLang) {
@@ -1248,6 +1246,7 @@ void MainForm::on_showSettingsDialog() {
 		);
 
 	  // Reiniciar la aplicación pasando los mismos argumentos
+	  on_callLogout();
 	  auto args = qApp->arguments();
 	  args.removeFirst();
 	  QProcess::startDetached(qApp->applicationFilePath(), args);
