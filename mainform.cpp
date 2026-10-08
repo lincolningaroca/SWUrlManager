@@ -507,12 +507,8 @@ void MainForm::exportData(SW::DataImporterExporter::ExportFormat format) {
 	  break;
   }
 
-  const QString filePath = QFileDialog::getSaveFileName(
-	this,
-	tr("Exportar datos"),
-	SW::Helper_t::getLastOpenedDirectory(),
-	filter
-	);
+  const QString filePath = QFileDialog::getSaveFileName(this, tr("Exportar datos"),
+														SW::Helper_t::getLastOpenedDirectory(),	filter);
 
   if (filePath.isEmpty()) return;
 
@@ -523,9 +519,9 @@ void MainForm::exportData(SW::DataImporterExporter::ExportFormat format) {
   if (!SW::DataImporterExporter::exportTableView(ui->tvUrl, filePath, &exportError)) {
 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Error al exportar el archivo:\n%1").arg(exportError));
 
-
-	QMessageBox::information(this, SW::Helper_t::appName(), tr("El archivo fue guardado correctamente en:\n%1").arg(filePath));
-
+  }else{
+	QMessageBox::information(this, SW::Helper_t::appName(),
+							 tr("El archivo fue guardado correctamente en:\n%1").arg(filePath));
   }
 }
 
@@ -559,7 +555,7 @@ void MainForm::startImportWorker(const QString& filePath) {
 
   const auto catId = currentCategoryId();
 
-  auto* worker = new SW::UrlImportWorker(this); // parent = MainForm → target del invokeMethod
+  auto* worker = new SW::UrlImportWorker();
   importThread_ = new QThread(this);
   worker->moveToThread(importThread_);
 
@@ -577,6 +573,24 @@ void MainForm::startImportWorker(const QString& filePath) {
 			importProgressDialog_->setLabelText(message);
 			importProgressDialog_->setRange(0, max);
 			importProgressDialog_->setValue(value);
+		  });
+
+  // NUEVAS CONEXIONES
+  connect(worker, &SW::UrlImportWorker::requestCloseProgressDialog, this,
+		  [this]() {
+			if (importProgressDialog_) {
+			  importProgressDialog_->close();
+			}
+		  });
+
+  connect(worker, &SW::UrlImportWorker::requestShowProgressDialog, this,
+		  [this](const QString& message) {
+			if (importProgressDialog_) {
+			  importProgressDialog_->setLabelText(message);
+			  importProgressDialog_->setRange(0, 0);
+			  importProgressDialog_->setValue(0);
+			  importProgressDialog_->show();
+			}
 		  });
 
   connect(worker, &SW::UrlImportWorker::finished, this,
@@ -606,8 +620,8 @@ void MainForm::startImportWorker(const QString& filePath) {
   });
 
   connect(importThread_, &QThread::started, worker,
-		  [worker, filePath, catId, dek = QByteArray::fromHex(helperdb_.encryptionKey().toLatin1())]() {
-			worker->doImport(filePath, catId, dek);
+		  [worker, filePath, catId, dek = QByteArray::fromHex(helperdb_.encryptionKey().toLatin1()), this]() {
+			worker->doImport(filePath, catId, dek, this);
 		  });
 
   importThread_->start();
@@ -860,13 +874,13 @@ void MainForm::on_makeBackup(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-	QStringLiteral("--host=%1").arg(config.host),
-	QStringLiteral("--port=%1").arg(config.port),
-	QStringLiteral("--username=%1").arg(config.userName),
-	QStringLiteral("--no-password"),
-	QStringLiteral("--format=custom"),
-	QStringLiteral("--file=%1").arg(filePath),
-	config.dbName
+																																																																																																																												   QStringLiteral("--host=%1").arg(config.host),
+																																																																																																																												   QStringLiteral("--port=%1").arg(config.port),
+																																																																																																																												   QStringLiteral("--username=%1").arg(config.userName),
+																																																																																																																												   QStringLiteral("--no-password"),
+																																																																																																																												   QStringLiteral("--format=custom"),
+																																																																																																																												   QStringLiteral("--file=%1").arg(filePath),
+																																																																																																																												   config.dbName
   };
 
   const QString pgDumpPath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_dump"));
@@ -929,14 +943,14 @@ void MainForm::on_restoreDatabase(){
   const auto config = SW::Helper_t::loadDbConfig();
 
   const QStringList args{
-	QStringLiteral("--host=%1").arg(config.host),
-	QStringLiteral("--port=%1").arg(config.port),
-	QStringLiteral("--username=%1").arg(config.userName),
-	QStringLiteral("--dbname=%1").arg(config.dbName),
-	QStringLiteral("--no-password"),
-	QStringLiteral("--clean"),
-	QStringLiteral("--if-exists"),
-	pathBackup
+																																																																																																																												   QStringLiteral("--host=%1").arg(config.host),
+																																																																																																																												   QStringLiteral("--port=%1").arg(config.port),
+																																																																																																																												   QStringLiteral("--username=%1").arg(config.userName),
+																																																																																																																												   QStringLiteral("--dbname=%1").arg(config.dbName),
+																																																																																																																												   QStringLiteral("--no-password"),
+																																																																																																																												   QStringLiteral("--clean"),
+																																																																																																																												   QStringLiteral("--if-exists"),
+																																																																																																																												   pathBackup
   };
 
   const QString pgRestorePath = SW::HelperDataBase_t::getPostgresToolPath(QStringLiteral("pg_restore"));
@@ -962,7 +976,7 @@ void MainForm::on_restoreDatabase(){
 
   QMessageBox::information(this, SW::Helper_t::appName(),
 						   tr("Base de datos restaurada correctamente.<br>"
-							 "La aplicación se reiniciará automáticamente."));
+							  "La aplicación se reiniciará automáticamente."));
 
   // Relanzar la app y cerrar la instancia actual
   SW::CryptoManager::clearCachedLocalDEK();

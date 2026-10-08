@@ -194,7 +194,8 @@ void CreateUserWidget::handleCreateUserClicked(){
 	}
 
   }
-  auto type = ui->cboRestoreType->currentData().value<SW::AuthType>();
+
+  const auto type = static_cast<SW::AuthType>(ui->cboRestoreType->currentData().toInt());
   if(type == SW::AuthType::Numeric_pin){
 	if(ui->txtfirstValue->text().size() < 4 || ui->txtConfirmValue->text().size() <4){
 	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("El PIN numérico debe contener 4 digitos!"));
@@ -210,7 +211,6 @@ void CreateUserWidget::handleCreateUserClicked(){
 	}
 
   }
-
 
   if(helperdb_.userExists(ui->txtNewUser->text())){
 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El nombre de usuario <b>%1</b> ya está registrado.<br>"
@@ -237,6 +237,88 @@ void CreateUserWidget::handleCreateUserClicked(){
   }
 
 }
+// void CreateUserWidget::handleCreateUserClicked(){
+
+//   if(Validate_hasNoEmpty()){
+// 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("Todos los campos son requeridos!"));
+// 	ui->txtNewUser->setFocus();
+// 	return;
+//   }
+
+//   if(ui->txtNewPassword->text().size() < 8 || ui->txtRePassword->text().size() < 8){
+// 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El password o clave, debe tener 8 caracteres como mínimo."));
+// 	ui->txtRePassword->selectAll();
+// 	ui->txtRePassword->setFocus();
+// 	return;
+//   }
+
+//   if(!SW::Helper_t::verify_Values(ui->txtNewPassword->text(), ui->txtRePassword->text())){
+// 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El password o clave de confirmación no coincide!"));
+// 	ui->txtRePassword->selectAll();
+// 	ui->txtRePassword->setFocus();
+// 	return;
+//   }
+
+//   if(!ui->chkGenPassword->isChecked()){
+
+// 	if(!SW::Helper_t::isPasswordSecure(ui->txtRePassword->text())){
+// 	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("<p><b>Debe ingresar una contraseña segura.</b>"
+// 															 "Requisitos mínimos:"
+// 															 "<ul>"
+// 															 "<li>Al menos una letra mayúscula</li>"
+// 															 "<li>Al menos una letra minúscula</li>"
+// 															 "<li>Al menos un número</li>"
+// 															 "<li>Al menos un carácter especial (ej. #$%&@)</li>"
+// 															 "</ul>Ejemplo de clave segura: <b>MiClave@123</b></p>"));
+// 	  ui->txtRePassword->selectAll();
+// 	  ui->txtRePassword->setFocus(Qt::OtherFocusReason);
+// 	  return;
+// 	}
+
+//   }
+//   auto type = ui->cboRestoreType->currentData().value<SW::AuthType>();
+//   if(type == SW::AuthType::Numeric_pin){
+// 	if(ui->txtfirstValue->text().size() < 4 || ui->txtConfirmValue->text().size() <4){
+// 	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("El PIN numérico debe contener 4 digitos!"));
+// 	  ui->txtfirstValue->selectAll();
+// 	  ui->txtfirstValue->setFocus();
+// 	  return;
+// 	}
+// 	if(!SW::Helper_t::verify_Values(ui->txtfirstValue->text(), ui->txtConfirmValue->text())){
+// 	  QMessageBox::warning(this, SW::Helper_t::appName(), tr("El número de confirmación no coincide!"));
+// 	  ui->txtConfirmValue->selectAll();
+// 	  ui->txtConfirmValue->setFocus();
+// 	  return;
+// 	}
+
+//   }
+
+
+//   if(helperdb_.userExists(ui->txtNewUser->text())){
+// 	QMessageBox::warning(this, SW::Helper_t::appName(), tr("El nombre de usuario <b>%1</b> ya está registrado.<br>"
+// 														   "Por favor, intente con otro nombre.").arg(
+// 															ui->txtNewUser->text().simplified()));
+// 	ui->txtNewUser->selectAll();
+// 	ui->txtNewUser->setFocus(Qt::OtherFocusReason);
+// 	return;
+//   }
+
+//   const auto user = ui->txtNewUser->text();
+
+//   const auto password = ui->txtRePassword->text();
+//   QString first_value =ui->txtfirstValue->text();
+//   QString confirm_value = ui->txtConfirmValue->text();
+
+//   if(helperdb_.createUser(user, password, SW::Helper_t::currentUser_.value(SW::User::U_user),
+// 						   ui->cboRestoreType->currentText(), first_value, confirm_value)){
+// 	QMessageBox::information(this, SW::Helper_t::appName(), tr("El nuevo usuario fue creado con éxito!"));
+// 	clearControls();
+
+// 	emit userCreated();
+
+//   }
+
+// }
 
 bool CreateUserWidget::Validate_hasNoEmpty() const noexcept{
   return ui->txtNewUser->text().isEmpty() || ui->txtNewPassword->text().isEmpty() || ui->txtRePassword->text().isEmpty() ||
@@ -279,8 +361,10 @@ void CreateUserWidget::setUp_Form() noexcept{
   ui->txtConfirmValue->setEchoMode(QLineEdit::Password);
 
   //set the combo box options
-  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pin numérico"), QVariant::fromValue(SW::AuthType::Numeric_pin));
-  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pregunta secreta"), QVariant::fromValue(SW::AuthType::Secret_Question));
+  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pin numérico"),
+							  static_cast<int>(SW::AuthType::Numeric_pin));
+  ui->cboRestoreType->addItem(QIcon(":/img/paper_pin.svg"), tr("Pregunta secreta"),
+							  static_cast<int>(SW::AuthType::Secret_Question));
   ui->checkBox->setChecked(true);
   ui->checkBox->setDisabled(true);
 
@@ -315,7 +399,7 @@ void CreateUserWidget::setOptionsToComboBox(int index) noexcept{
 
   if(index < 0) return;
 
-  auto type = ui->cboRestoreType->itemData(index).value<SW::AuthType>();
+  const auto type = static_cast<SW::AuthType>(ui->cboRestoreType->itemData(index).toInt());
 
   if(type == SW::AuthType::Secret_Question){
 	ui->txtfirstValue->clear();

@@ -195,6 +195,7 @@ bool DataImporterExporter::exportToXlsx(QTableView *tableView, const QString &fi
   QSet<QString> excludedColumns = {"url_id", "categoryid"};
 
   QXlsx::Document xlsxDocument;
+  qDebug() << "hojas:" << xlsxDocument.sheetNames();
 
   QXlsx::Format headerFormat;
   headerFormat.setFontBold(true);
