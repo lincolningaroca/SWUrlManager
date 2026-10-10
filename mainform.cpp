@@ -5,18 +5,20 @@
 #include "dialogs/categorydialog.hpp"
 #include "dialogs/changepwddialog.hpp"
 #include "dialogs/configdialog.hpp"
-#include "dialogs/reportbugdialog.hpp"
+#include "dialogs/createnewuserdialog.hpp"
 #include "dialogs/dlgnewcategory.hpp"
 #include "dialogs/logindialog.hpp"
-#include "swwidgets/midlewidget.hpp"
 #include "dialogs/publicurldialog.hpp"
+#include "dialogs/reportbugdialog.hpp"
 #include "dialogs/resetpassworddialog.hpp"
+#include "swwidgets/midlewidget.hpp"
 #include "swwidgets/switemdelegate.hpp"
 #include "swwidgets/swtablemodel.hpp"
 #include "util/backupcrypto.hpp"
 #include "util/cryptomanager.hpp"
 #include "util/dataimporterexporter.hpp"
-#include "dialogs/createnewuserdialog.hpp"
+#include "util/helper.hpp"
+#include "util/urlimportworker.hpp"
 
 #include <QAction>
 #include <QCheckBox>
@@ -77,7 +79,7 @@ MainForm::MainForm(QWidget *parent)
 
   initFrm();
 
-  QObject::connect(midleWidget, &MidleWidget::textColorChanged, this, [this](const QColor& color){
+  QObject::connect(midleWidget, &MidleWidget::textColorChanged, this, [](const QColor& color){
 	QSettings settings(qApp->organizationName(), SW::Helper_t::appName());
 	settings.beginGroup(QStringLiteral("Editor"));
 	settings.setValue(QStringLiteral("textColor"), color.name());
@@ -701,7 +703,7 @@ void MainForm::on_addNewUrl(){
 	}
 
 	auto currentRow = ui->tvUrl->currentIndex().row();
-	auto id = ui->tvUrl->model()->index(currentRow,0).data().toInt();
+	auto id = ui->tvUrl->model()->index(currentRow,0).data().toUInt();
 
 	const auto categoryId = currentCategoryId();
 
@@ -1767,7 +1769,7 @@ bool MainForm::hasValidTableData() const noexcept {
 		 && query.value(0).toBool();
 }
 
-bool MainForm::hasValidUserTableData(int userId) const noexcept {
+bool MainForm::hasValidUserTableData(uint32_t userId) const noexcept {
 
   QSqlQuery query(db_);
   query.prepare(R"(

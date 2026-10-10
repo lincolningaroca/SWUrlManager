@@ -1,6 +1,6 @@
 #pragma once
 
-#include "helperdatabase/helperdb.hpp"
+#include "util/sw_types.hpp"
 
 #include <QCoreApplication>
 #include <QList>

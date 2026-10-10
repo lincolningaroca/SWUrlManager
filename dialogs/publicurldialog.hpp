@@ -1,7 +1,6 @@
 #pragma once
 
 #include "helperdatabase/helperdb.hpp"
-#include "util/helper.hpp"
 
 #include <QDialog>
 #include <QSqlDatabase>
@@ -29,7 +28,7 @@ private:
 
   const QSqlDatabase db_{};
   SW::HelperDataBase_t helperdb_{};
-  SWTableModel *model{nullptr};
+  SWTableModel *model_{nullptr};
 
   QAction *deleteUrl_{nullptr};
   QAction *editUrl_{nullptr};

@@ -26,9 +26,9 @@ private:
   Ui::MaintenanceUrlDialog *ui;
 
   const uint32_t currentCategoryId_{};
-  MidleWidget *midleWidget{nullptr};
+  MidleWidget *midleWidget_{nullptr};
   SW::HelperDataBase_t helperdb_{};
-  int id{};
+  uint32_t id_{};
   SW::OpenMode mode_;
   const QList<QVariant> &dataUrl_{};
 

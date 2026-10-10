@@ -2,6 +2,7 @@
 #include "ui_logindialog.h"
 
 #include "swwidgets/createuserwidget.hpp"
+#include "util/helper.hpp"
 
 #include <QCloseEvent>
 #include <QLineEdit>

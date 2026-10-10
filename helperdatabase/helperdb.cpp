@@ -1,6 +1,7 @@
 #include "helperdb.hpp"
 
 #include "util/helper.hpp"
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>

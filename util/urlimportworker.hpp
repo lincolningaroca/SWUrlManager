@@ -1,7 +1,5 @@
 #pragma once
 
-#include "helperdatabase/helperdb.hpp"
-
 #include <QObject>
 #include <QString>
 #include <QStringList>

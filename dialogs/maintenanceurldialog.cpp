@@ -1,7 +1,7 @@
 #include "maintenanceurldialog.hpp"
 #include "ui_maintenanceurldialog.h"
 
-#include "swwidgets/midlewidget.hpp"
+#include "swwidgets/midleWidget.hpp"
 
 #include <QCloseEvent>
 #include <QDialogButtonBox>
@@ -24,8 +24,8 @@ MaintenanceUrlDialog::MaintenanceUrlDialog(Qt::ColorScheme colorScheme,
   initForm();
 
   const auto iconColor = SW::Helper_t::currentIconColor(colorScheme);
-  midleWidget->applyIcons(iconColor);
-  midleWidget->setPlacesHolders();
+  midleWidget_->applyIcons(iconColor);
+  midleWidget_->setPlacesHolders();
 
   readSettings();
 
@@ -49,9 +49,9 @@ void MaintenanceUrlDialog::writeSettings() const
 
   settings.beginGroup(QStringLiteral("Editor_p"));
 
-  settings.setValue(QStringLiteral("fontFamily"), midleWidget->currentFont());
-  settings.setValue(QStringLiteral("fontSize"), midleWidget->currentFontSize());
-  settings.setValue(QStringLiteral("textColor"), midleWidget->textColor());
+  settings.setValue(QStringLiteral("fontFamily"), midleWidget_->currentFont());
+  settings.setValue(QStringLiteral("fontSize"), midleWidget_->currentFontSize());
+  settings.setValue(QStringLiteral("textColor"), midleWidget_->textColor());
   settings.endGroup();
 }
 
@@ -77,14 +77,14 @@ void MaintenanceUrlDialog::readSettings(){
   }
   settings.endGroup();
 
-  midleWidget->restoreFont(fontFamily, fontSize, textColor);
+  midleWidget_->restoreFont(fontFamily, fontSize, textColor);
 
 }
 
 void MaintenanceUrlDialog::initForm(){
 
-  midleWidget = new MidleWidget(this);
-  ui->insertLayout->addWidget(midleWidget);
+  midleWidget_ = new MidleWidget(this);
+  ui->insertLayout->addWidget(midleWidget_);
 
   auto *buttonBox = new QDialogButtonBox(this);
   auto *okButton = buttonBox->addButton(tr("Guardar datos"), QDialogButtonBox::AcceptRole);
@@ -100,10 +100,10 @@ void MaintenanceUrlDialog::initForm(){
   }else{
 
 	setWindowTitle(tr("Editar datos url"));
-	id = dataUrl_.value(0).toInt();
+	id_ = dataUrl_.value(0).toUInt();
 
-	midleWidget->setUrl(dataUrl_.value(1).toString());
-	midleWidget->setDescription(dataUrl_.value(2).toString());
+	midleWidget_->setUrl(dataUrl_.value(1).toString());
+	midleWidget_->setDescription(dataUrl_.value(2).toString());
 
 	okButton->setText(tr("Guardar cambios"));
   }
@@ -116,23 +116,23 @@ void MaintenanceUrlDialog::initForm(){
 void MaintenanceUrlDialog::accept(){
 
   if(mode_ == SW::OpenMode::New){
-	if(!SW::Helper_t::urlValidate(midleWidget->url())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), midleWidget->errorMessage());
+	if(!SW::Helper_t::urlValidate(midleWidget_->url())){
+	  QMessageBox::warning(this, SW::Helper_t::appName(), midleWidget_->errorMessage());
 
-	  midleWidget->selectAndFocus();
+	  midleWidget_->selectAndFocus();
 	  return;
 	}
 
-	if(helperdb_.urlExists(midleWidget->url(), currentCategoryId_)){
+	if(helperdb_.urlExists(midleWidget_->url(), currentCategoryId_)){
 
-	  auto warningMsg = tr("<p>La url: <b>%1</b>, ya esta registrada!!</p>").arg(midleWidget->url());
+	  auto warningMsg = tr("<p>La url: <b>%1</b>, ya esta registrada!!</p>").arg(midleWidget_->url());
 	  QMessageBox::warning(this, SW::Helper_t::appName(), warningMsg);
 
-	  midleWidget->selectAndFocus();
+	  midleWidget_->selectAndFocus();
 	  return;
 	}
 
-	if(helperdb_.saveData_url(midleWidget->url(), midleWidget->description(), currentCategoryId_)){
+	if(helperdb_.saveData_url(midleWidget_->url(), midleWidget_->description(), currentCategoryId_)){
 
 	  writeSettings();
 	  QDialog::accept();
@@ -140,14 +140,14 @@ void MaintenanceUrlDialog::accept(){
 	}
   }else{
 
-	if(!SW::Helper_t::urlValidate(midleWidget->url())){
-	  QMessageBox::warning(this, SW::Helper_t::appName(), midleWidget->errorMessage());
+	if(!SW::Helper_t::urlValidate(midleWidget_->url())){
+	  QMessageBox::warning(this, SW::Helper_t::appName(), midleWidget_->errorMessage());
 
-	  midleWidget->selectAndFocus();
+	  midleWidget_->selectAndFocus();
 	  return;
 	}
 
-	if(!helperdb_.updateData_url(midleWidget->url(), midleWidget->description(), id, currentCategoryId_)){
+	if(!helperdb_.updateData_url(midleWidget_->url(), midleWidget_->description(), id_, currentCategoryId_)){
 	  QMessageBox::critical(this, SW::Helper_t::appName(), tr("Fallo la ejecución de la sentencia!"));
 	  return;
 

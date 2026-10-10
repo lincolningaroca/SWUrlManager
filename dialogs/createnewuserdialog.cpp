@@ -2,6 +2,7 @@
 #include "ui_createnewuserdialog.h"
 
 #include "swwidgets/createuserwidget.hpp"
+#include "util/helper.hpp"
 
 #include <QCloseEvent>
 #include <QSettings>

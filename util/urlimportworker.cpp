@@ -1,5 +1,6 @@
 #include "urlimportworker.hpp"
 
+#include "helperdatabase/helperdb.hpp"
 #include "util/dataimporterexporter.hpp"
 #include "util/helper.hpp"
 

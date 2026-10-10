@@ -2,8 +2,6 @@
 
 #include "helperdatabase/helperdb.hpp"
 #include "util/dataimporterexporter.hpp"
-#include "util/helper.hpp"
-#include "util/urlimportworker.hpp"
 
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -98,7 +96,7 @@ private:
   void applyIcons(Qt::ColorScheme scheme) noexcept;
 
   bool hasValidTableData() const noexcept;
-  bool hasValidUserTableData(int userId) const noexcept;
+  bool hasValidUserTableData(uint32_t userId) const noexcept;
   bool validateSelectedRow() noexcept;
   bool deleteAll() noexcept;
 

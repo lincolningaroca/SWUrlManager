@@ -61,7 +61,7 @@ void PublicUrlDialog::setupUiConnections(){
 
   QObject::connect(ui->newToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::New);});
   QObject::connect(ui->editToolButton, &QToolButton::clicked, this, [this](){on_showMaintenanceDialog(SW::OpenMode::Edit);});
-  QObject::connect(ui->quitarToolButton, &QToolButton::clicked, this, PublicUrlDialog::on_deleteUrl);
+  QObject::connect(ui->quitarToolButton, &QToolButton::clicked, this, &PublicUrlDialog::on_deleteUrl);
   QObject::connect(ui->openPushButton, &QToolButton::clicked, this, &PublicUrlDialog::on_openUrl);
 
 }
@@ -118,7 +118,7 @@ void PublicUrlDialog::on_deleteUrl(){
   msgBox.button(QMessageBox::No)->setText(tr("Cancelar"));
 
   if(msgBox.exec() == QMessageBox::Yes){
-	const auto urlId=ui->urlTableView->model()->index(currentRow, 0).data().toInt();
+	const auto urlId=ui->urlTableView->model()->index(currentRow, 0).data().toUInt();
 	if(helperdb_.deleteUrls(SW::DeleteUrlMode::ByUrlId, 0, urlId)){
 
 	  on_loadDataTableView();
@@ -176,10 +176,10 @@ void PublicUrlDialog::on_loadDataTableView(){
 	qDebug() << "fn_get_urls error:" << qry.lastError().text();
   }
 
-  model->setQuery(std::move(qry));
+  model_->setQuery(std::move(qry));
 
-  model->setHeaderData(1, Qt::Horizontal, tr("Dirección URL"));
-  model->setHeaderData(2, Qt::Horizontal, tr("Descripción"));
+  model_->setHeaderData(1, Qt::Horizontal, tr("Dirección URL"));
+  model_->setHeaderData(2, Qt::Horizontal, tr("Descripción"));
 
 }
 
@@ -266,8 +266,8 @@ void PublicUrlDialog::setupContextMenu(){
 
 void PublicUrlDialog::initialTableSetup(){
 
-  model = new SWTableModel(this);
-  ui->urlTableView->setModel(model);
+  model_ = new SWTableModel(this);
+  ui->urlTableView->setModel(model_);
 
   ui->urlTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
